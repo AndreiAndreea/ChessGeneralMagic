@@ -1,13 +1,18 @@
 #pragma once
-#include "Spot.h"
+
+#include "Piece.h"
+
+#include<memory>
+
+using Position = std::pair<int, int>;
 
 class Board
 {
-private:
-	Spot board[8][8];
 public:
 	Board();
-	Spot* getSpot(int x, int y);
-	void resetBoard();
-};
+	void InitializeBoard();
+	bool MakeMove(Position startPos, Position endPos, Board& board);
 
+private:
+	PiecePtr m_board[8][8];
+};

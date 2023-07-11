@@ -1,11 +1,20 @@
 #pragma once
-class Piece
+
+#include "IPiece.h"
+
+#include <memory>
+
+class Piece : public IPiece
 {
-private:
+protected:
 	bool white = false;
+	char type;
 public:
 	Piece(bool white);
-	bool isWhite();
-	void setColor(bool white);
-	virtual bool canMove()=0;
+	bool IsWhite();
+	void SetColor(bool white);
+	void SetType(char type);
+	char GetType(); 
 };
+
+using PiecePtr = std::shared_ptr<Piece>;

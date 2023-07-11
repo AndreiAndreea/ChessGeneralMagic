@@ -10,7 +10,7 @@ class Game : public IGame
 public:
 
 	void Play() override;
-	EPlayer getWinner() override;
-	bool isGameOver() override;
+	EPlayer GetWinner() override;
+	bool IsGameOver() override;
 
 };

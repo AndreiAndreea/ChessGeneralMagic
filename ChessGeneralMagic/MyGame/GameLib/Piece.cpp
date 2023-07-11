@@ -2,16 +2,26 @@
 
 Piece::Piece(bool white)
 {
-	this->setColor(white);
+	this->SetColor(white);
 }
 
 
-bool Piece::isWhite()
+bool Piece::IsWhite()
 {
 	return this->white;
 }
 
-void Piece::setColor(bool white)
+void Piece::SetColor(bool white)
 {
 	this->white = white;
+}
+
+void Piece::SetType(char type)
+{
+	this->type = type;
+}
+
+char Piece::GetType()
+{
+	return type;
 }

@@ -16,8 +16,8 @@ public:
 	static IGamePtr Produce();
 
 	virtual void Play() = 0;
-	virtual EPlayer getWinner() = 0;
-	virtual bool isGameOver() = 0;
+	virtual EPlayer GetWinner() = 0;
+	virtual bool IsGameOver() = 0;
 
 	virtual ~IGame() = default;
 };
