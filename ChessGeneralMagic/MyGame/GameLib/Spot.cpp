@@ -20,3 +20,8 @@ Piece* Spot::getPiece()
 {
 	return piece;
 }
+
+void Spot::setPiece(Piece* p)
+{
+	piece = p;
+}

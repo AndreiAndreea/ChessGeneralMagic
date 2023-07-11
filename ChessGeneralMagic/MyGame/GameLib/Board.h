@@ -7,6 +7,7 @@ private:
 	Spot board[8][8];
 public:
 	Board();
-	
+	Spot* getSpot(int x, int y);
+	void resetBoard();
 };
 
