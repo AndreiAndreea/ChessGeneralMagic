@@ -4,9 +4,8 @@ class Piece
 private:
 	bool white = false;
 public:
-	Piece();
+	Piece(bool white);
 	bool isWhite();
-	void setColor();
+	void setColor(bool white);
 	virtual bool canMove()=0;
 };
-
