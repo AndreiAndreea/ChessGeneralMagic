@@ -5,6 +5,7 @@ Piece::Piece(bool white)
 	this->setColor(white);
 }
 
+
 bool Piece::isWhite()
 {
 	return this->white;
