@@ -22,5 +22,5 @@ public:
 	void setPosition(int x, int y);
 	Position getPosition();
 	Piece* getPiece();
+	void setPiece(Piece* p);
 };
-
