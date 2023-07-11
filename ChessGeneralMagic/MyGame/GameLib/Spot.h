@@ -19,9 +19,8 @@ private:
 	Position pos;
 public:
 	Spot();
-	void setPosition();
-	void setTypePiece();
+	void setPosition(int x, int y);
 	Position getPosition();
-	Piece getPiece();
+	Piece* getPiece();
 };
 
