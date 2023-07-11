@@ -3,4 +3,3 @@ void Game::Play()
 {
 	std::cout << "Test";
 }
-
