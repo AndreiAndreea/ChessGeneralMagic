@@ -2,12 +2,15 @@
 #include<iostream>
 #include "Board.h"
 #include "Player.h"
+#include "IGame.h"
 
-
-class Game
+class Game : public IGame
 {
 
 public:
 
-	void Play();
+	void Play() override;
+	EPlayer getWinner() override;
+	bool isGameOver() override;
+
 };

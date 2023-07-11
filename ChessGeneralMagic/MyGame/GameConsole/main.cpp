@@ -1,10 +1,8 @@
 #include<iostream>
 
-#include "Game.h"
+#include "IGame.h"
 
 int main()
 {
-	Game game;
-	game.Play();
 	return 0;
 }
