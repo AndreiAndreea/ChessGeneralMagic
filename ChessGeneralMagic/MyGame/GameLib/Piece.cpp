@@ -1,42 +1,23 @@
 #include "Piece.h"
 
-Piece::Piece(bool white)
-{
-	this->SetColor(white);
-}
-
-
-bool Piece::IsWhite()
-{
-	return this->white;
-}
-
-void Piece::SetColor(bool white)
-{
-	this->white = white;
-}
-
-void Piece::SetType(std::string type)
-{
-	this->type = type;
-}
-
-std::string Piece::GetType()
-{
-	return type;
-}
 
 EPieceType Piece::GetType() const
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return m_type;
 }
 
 bool Piece::CanMove()
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return true;
+}
+
+Piece::Piece(EPieceType type, EPieceColor color)
+{
+	m_type = type;
+	m_color = color;
 }
 
 EPieceColor Piece::GetColor() const
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return m_color;
 }

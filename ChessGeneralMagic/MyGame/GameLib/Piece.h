@@ -9,12 +9,12 @@ using Position = std::pair<int, int>;
 class Piece : public IPiece
 {
 public:
-	Piece(EPieceType, EPieceColor);
+	Piece(EPieceType type, EPieceColor color);
 
 	// IPiece implementation
 	EPieceColor GetColor() const override;
 	EPieceType GetType() const override;
-	
+
 	bool CanMove() override;
 
 private:

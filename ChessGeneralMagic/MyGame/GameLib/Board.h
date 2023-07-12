@@ -9,17 +9,20 @@
 #include "Queen.h"
 
 #include<memory>
+#include<vector>
 
 //using Position = std::pair<int, int>;
+using BoardType = std::vector<std::vector<PiecePtr>>;
 
 class Board
 {
 public:
 	Board();
 	void InitializeBoard();
-	bool MakeMove(Position startPos, Position endPos, Board& board);
-	void printBoard();
+	bool MakeMove(Position startPos, Position endPos);
+	BoardType GetBoard() const;
+	//void printBoard();
 
 private:
-	PiecePtr m_board[10][10];
+	BoardType m_board;
 };

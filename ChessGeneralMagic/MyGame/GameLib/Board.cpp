@@ -9,9 +9,16 @@ Board::Board() {
 void Board::InitializeBoard() {
 
 	// initializing the board with spots(each square)
+
+	m_board.resize(9);
+	for (int i = 1; i <= 8; i++)
+	{
+		m_board[i].resize(9);
+	}
+
 	for (int x = 3; x <= 6; x++) {
 		for (int y = 1; y <= 8; y++) {
-			m_board[x][y]=nullptr;
+			m_board[x][y] = nullptr;
 		}
 	}
 
@@ -25,11 +32,11 @@ void Board::InitializeBoard() {
 	m_board[1][3] = std::make_shared<Bishop>(EPieceColor::White);
 	m_board[1][6] = std::make_shared<Bishop>(EPieceColor::White);
 
-	
+
 	m_board[1][4] = std::make_shared<Queen>(EPieceColor::White);
 	m_board[1][5] = std::make_shared<King>(EPieceColor::White);
 
-	for (int i = 1; i<=8; i++)
+	for (int i = 1; i <= 8; i++)
 	{
 		m_board[2][i] = std::make_shared<Pawn>(EPieceColor::White);
 	}
@@ -53,24 +60,30 @@ void Board::InitializeBoard() {
 	}
 }
 
-bool Board::MakeMove(Position startPos, Position endPos, Board& board)
+bool Board::MakeMove(Position startPos, Position endPos)
 {
-	auto piece = board.m_board[startPos.first][startPos.second];
+	auto piece = m_board[startPos.first][startPos.second];
 	//piece->canMove()
 	return true;
 }
 
-void Board::printBoard()
+BoardType Board::GetBoard() const
 {
-	for (int x = 1; x <= 8; x++) {
-		for (int y = 1; y <= 8; y++) {
-			if (m_board[x][y] == nullptr) {
-				std::cout << "0 ";
-			}
-			else {
-				std::cout<<m_board[x][y]->GetType()<<m_board[x][y]->IsWhite()<<" ";
-			}
-		}
-		std::cout << std::endl;
-	}
+	return m_board;
 }
+
+
+//void Board::printBoard()
+//{
+//	for (int x = 1; x <= 8; x++) {
+//		for (int y = 1; y <= 8; y++) {
+//			if (m_board[x][y] == nullptr) {
+//				std::cout << "0 ";
+//			}
+//			else {
+//				std::cout<<m_board[x][y]->GetType()<<" ";
+//			}
+//		}
+//		std::cout << std::endl;
+//	}
+//}

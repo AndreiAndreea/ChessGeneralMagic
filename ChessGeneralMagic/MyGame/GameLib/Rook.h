@@ -1,12 +1,11 @@
 #pragma once
 
 #include "Piece.h"
-#include "Board.h"
+class Board;
 
-class Rook: public Piece
+class Rook : public Piece
 {
 public:
 	Rook(EPieceColor color);
-	bool CanMove(Position stratPos, Position endPos, Board board);
+	bool CanMove(Position stratPos, Position endPos, const Board& board);
 };
-
