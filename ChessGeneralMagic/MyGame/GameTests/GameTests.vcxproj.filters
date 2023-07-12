@@ -28,6 +28,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="testRook.cpp">
+    <ClCompile Include="BishopTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

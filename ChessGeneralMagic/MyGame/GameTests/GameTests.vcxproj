@@ -150,6 +150,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BishopTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="testRook.cpp" />
   </ItemGroup>
