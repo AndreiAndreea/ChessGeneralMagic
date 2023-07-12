@@ -15,17 +15,17 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 	//checking the direction of the movement
 	if (color == EPieceColor::White)
 	{
-		if (startPos.first - endPos.first >= 0)
+		if (startPos.first >= endPos.first)
 			return false;
 	}
 	else
 	{
-		if (start.x - end.x <= 0)
+		if (startPos.first <= endPos.first)
 			return false;
 	}
 
-	////checking capturing possibility
-	//if (start.y )
+	//checking capturing possibility
+	if (startPos.second )
 
     return false;
 }

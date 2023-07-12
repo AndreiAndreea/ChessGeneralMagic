@@ -14,9 +14,6 @@ bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
 
 	BoardType localBoard = board.GetBoard();
 
-	int maxi = startPos.first > endPos.first ? startPos.first : endPos.first;
-	int mini = startPos.first > endPos.first ? startPos.first : endPos.first;
-
 	// vertical movement
 	if (startPos.first < endPos.first)
 	{

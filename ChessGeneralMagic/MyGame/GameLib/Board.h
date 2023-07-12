@@ -18,6 +18,7 @@ class Board
 {
 public:
 	Board();
+	Board(BoardType board);
 	void InitializeBoard();
 	bool MakeMove(Position startPos, Position endPos);
 	BoardType GetBoard() const;
