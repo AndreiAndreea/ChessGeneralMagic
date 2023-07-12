@@ -24,8 +24,9 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 			return false;
 	}
 
-	//checking capturing possibility
-	if (startPos.second )
 
-    return false;
+	//checking capturing possibility
+	if (startPos.second ! )
+
+    return true;
 }

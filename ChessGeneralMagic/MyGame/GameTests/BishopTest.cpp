@@ -29,7 +29,7 @@ TEST_F(BishopTest, ValidMove) {
 	Position endPos(5, 5);
 	bool canMove = bishop->CanMove(startPos, endPos, board);
 
-	EXPECT_TRUE(canMove);
+ 	EXPECT_TRUE(canMove);
 }
 
 TEST_F(BishopTest, ValidMove2) {

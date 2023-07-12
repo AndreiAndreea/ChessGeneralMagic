@@ -22,23 +22,23 @@ protected:
 TEST_F(RookTest, InvalidMovement)
 {
 	Board board;
-	Position pos1(1, 1);
-	Position pos2(1, 6);
-	EXPECT_FALSE(rok->CanMove(pos1, pos2, board));
+	Position startPos(1, 1);
+	Position endPos(1, 6);
+	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
 TEST_F(RookTest, InvalidMovement2)
 {
 	Board board;
-	Position pos1(2, 1);
-	Position pos2(6, 2);
-	EXPECT_FALSE(rok->CanMove(pos1, pos2, board));
+	Position startPos(2, 1);
+	Position endPos(6, 2);
+	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
 TEST_F(RookTest, ValidMovement)
 {
 	Board board;
-	Position pos1(6, 3);
-	Position pos2(2, 3);
-	EXPECT_TRUE(rok->CanMove(pos1, pos2, board));
+	Position startPos(6, 3);
+	Position endPos(2, 3);
+	EXPECT_TRUE(rok->CanMove(startPos, endPos, board));
 }

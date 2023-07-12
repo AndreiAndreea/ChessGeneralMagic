@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BishopTest.cpp" />
+    <ClCompile Include="KnightTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="testRook.cpp" />
   </ItemGroup>
