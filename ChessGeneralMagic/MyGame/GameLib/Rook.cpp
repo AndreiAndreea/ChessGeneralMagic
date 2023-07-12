@@ -45,5 +45,5 @@ bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
 				return false;
 		}
 
-	return false;
+	return true;
 }

@@ -6,6 +6,6 @@ class King: public Piece
 {
 public:
 	King(EPieceColor color);
-	bool CanMove();
+	bool CanMove(Position startPos, Position endPos, const Board& board);
 };
 

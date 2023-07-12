@@ -15,7 +15,7 @@ public:
 	EPieceColor GetColor() const override;
 	EPieceType GetType() const override;
 
-	bool CanMove() override;
+	bool CanMove(Position startPos, Position endPos, const Board& board) override;
 
 private:
 	EPieceType m_type;
