@@ -1,6 +1,12 @@
 #pragma once
 
 #include "Piece.h"
+#include "Rook.h"
+#include "Bishop.h"
+#include "Knight.h"
+#include "Pawn.h"
+#include "King.h"
+#include "Queen.h"
 
 #include<memory>
 

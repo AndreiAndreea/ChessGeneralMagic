@@ -16,12 +16,12 @@ void Piece::SetColor(bool white)
 	this->white = white;
 }
 
-void Piece::SetType(char type)
+void Piece::SetType(std::string type)
 {
 	this->type = type;
 }
 
-char Piece::GetType()
+std::string Piece::GetType()
 {
 	return type;
 }

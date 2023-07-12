@@ -2,11 +2,11 @@
 
 #include "Piece.h"
 
-class Rook: public Piece
+class Bishop: public Piece
 {
 public:
-	Rook();
-	Rook(bool white);
+	Bishop();
+	Bishop(bool white);
 	bool CanMove();
 };
 

@@ -15,45 +15,46 @@ void Board::InitializeBoard() {
 	}
 
 	//initializing the white pieces 
-	//board[1][1].setPiece(new Rook(true));
-	//board[1][8].setPiece(new Rook(true));
+	m_board[1][1] = std::make_shared<Rook>(true);
+	m_board[1][8] = std::make_shared<Rook>(true);
 
-	//board[1][2].setPiece(new Knight(true));
-	//board[1][7].setPiece(new Knight(true));
+	m_board[1][2] = std::make_shared<Knight>(true);
+	m_board[1][7] = std::make_shared<Knight>(true);
 
-	//board[1][3].setPiece(new Bishop(true));
-	//board[1][6].setPiece(new Bishop(true));
+	m_board[1][3] = std::make_shared<Bishop>(true);
+	m_board[1][6] = std::make_shared<Bishop>(true);
 
-	//board[1][4].setPiece(new Qween(true));
-	//board[1][5].setPiece((new King(true)));
+	
+	m_board[1][4] = std::make_shared<Queen>(true);
+	m_board[1][5] = std::make_shared<King>(true);
 
-	//for (int i = 1; i<=8; i++)
-	//{
-	//	board[2][i].setPiece(new Pawn(true))
-	//}
+	for (int i = 1; i<=8; i++)
+	{
+		m_board[2][i] = std::make_shared<Pawn>(true);
+	}
 
 	// initializing the black pieces
-	//board[8][1].setPiece(new Rook(false));
-	//board[8][8].setPiece(new Rook(false));
+	m_board[8][1] = std::make_shared<Rook>(false);
+	m_board[8][8] = std::make_shared<Rook>(false);
 
-	//board[8][2].setPiece(new Knight(false));
-	//board[8][7].setPiece(new Knight(false));
+	m_board[8][2] = std::make_shared<Knight>(true);
+	m_board[8][7] = std::make_shared<Knight>(true);
 
-	//board[8][3].setPiece(new Bishop(false));
-	//board[8][6].setPiece(new Bishop(false));
+	m_board[8][3] = std::make_shared<Bishop>(true);
+	m_board[8][6] = std::make_shared<Bishop>(true);
 
-	//board[8][4].setPiece(new Qween(false));
-	//board[8][5].setPiece((new King(false)));
+	m_board[8][4] = std::make_shared<Queen>(true);
+	m_board[8][5] = std::make_shared<King>(true);
 
-	//for (int i = 1; i <= 8; i++)
-	//{
-	//	board[7][i].setPiece(new Pawn(false))
-	//}
+	for (int i = 1; i <= 8; i++)
+	{
+		m_board[7][i] = std::make_shared<Pawn>(true);
+	}
 }
 
 bool Board::MakeMove(Position startPos, Position endPos, Board& board)
 {
 	auto piece = board.m_board[startPos.first][startPos.second];
-	piece->canMove()
+	//piece->canMove()
 	return true;
 }
