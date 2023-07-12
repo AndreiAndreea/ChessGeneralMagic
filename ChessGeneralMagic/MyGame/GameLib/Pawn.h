@@ -5,8 +5,7 @@
 class Pawn: public Piece
 {
 public:
-	Pawn();
-	Pawn(bool white);
+	Pawn(EPieceColor color);
 	bool CanMove();
 };
 

@@ -1,6 +1,8 @@
 #include "King.h"
 
-King::King(bool white) : Piece(white) { type = "Kg"; }
+King::King(EPieceColor color) : Piece(EPieceType::King, color)
+{
+}
 
 bool King::CanMove()
 {

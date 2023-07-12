@@ -1,6 +1,8 @@
 #include "Bishop.h"
 
-Bishop::Bishop(bool white) : Piece() { }
+Bishop::Bishop(EPieceColor color) : Piece (EPieceType::Bishop, color)
+{
+}
 
 bool Bishop::CanMove()
 {

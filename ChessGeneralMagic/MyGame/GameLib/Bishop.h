@@ -5,8 +5,7 @@
 class Bishop: public Piece
 {
 public:
-	Bishop();
-	Bishop(bool white);
+	Bishop(EPieceColor color);
 	bool CanMove();
 };
 

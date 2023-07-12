@@ -6,7 +6,7 @@ class Knight: public Piece
 {
 public:
 	Knight();
-	Knight(bool white);
+	Knight(EPieceColor color);
 	bool CanMove();
 };
 
