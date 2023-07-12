@@ -3,7 +3,6 @@
 #include "Bishop.h"
 #include "Board.h"
 
-// Define a fixture for the Bishop tests
 class BishopTest : public testing::Test {
 
 	void SetUp() override
@@ -23,7 +22,6 @@ protected:
 
 TEST_F(BishopTest, ValidMove) {
 	Board board;
-	//Bishop bishop(EPieceColor::White);
 
 	Position startPos(2, 2);
 	Position endPos(5, 5);
@@ -34,10 +32,19 @@ TEST_F(BishopTest, ValidMove) {
 
 TEST_F(BishopTest, ValidMove2) {
 	Board board;
-	//Bishop bishop(EPieceColor::White);
 
 	Position startPos(4, 3);
 	Position endPos(6, 5);
+	bool canMove = bishop->CanMove(startPos, endPos, board);
+
+	EXPECT_TRUE(canMove);
+}
+
+TEST_F(BishopTest, ValidMove3) {
+	Board board;
+
+	Position startPos(4, 4);
+	Position endPos(2, 6);
 	bool canMove = bishop->CanMove(startPos, endPos, board);
 
 	EXPECT_TRUE(canMove);

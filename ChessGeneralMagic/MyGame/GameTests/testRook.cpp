@@ -42,3 +42,11 @@ TEST_F(RookTest, ValidMovement)
 	Position endPos(2, 3);
 	EXPECT_TRUE(rok->CanMove(startPos, endPos, board));
 }
+
+TEST_F(RookTest, ValidMovement2)
+{
+	Board board;
+	Position startPos(5, 7);
+	Position endPos(7,7);
+	EXPECT_TRUE(rok->CanMove(startPos, endPos, board));
+}
