@@ -1,5 +1,6 @@
 #include "Board.h"
 #include <stdexcept>
+#include<iostream>
 
 Board::Board() {
 	InitializeBoard();
@@ -15,40 +16,40 @@ void Board::InitializeBoard() {
 	}
 
 	//initializing the white pieces 
-	m_board[1][1] = std::make_shared<Rook>(true);
-	m_board[1][8] = std::make_shared<Rook>(true);
+	m_board[1][1] = std::make_shared<Rook>(EPieceColor::White);
+	m_board[1][8] = std::make_shared<Rook>(EPieceColor::White);
 
-	m_board[1][2] = std::make_shared<Knight>(true);
-	m_board[1][7] = std::make_shared<Knight>(true);
+	m_board[1][2] = std::make_shared<Knight>(EPieceColor::White);
+	m_board[1][7] = std::make_shared<Knight>(EPieceColor::White);
 
-	m_board[1][3] = std::make_shared<Bishop>(true);
-	m_board[1][6] = std::make_shared<Bishop>(true);
+	m_board[1][3] = std::make_shared<Bishop>(EPieceColor::White);
+	m_board[1][6] = std::make_shared<Bishop>(EPieceColor::White);
 
 	
-	m_board[1][4] = std::make_shared<Queen>(true);
-	m_board[1][5] = std::make_shared<King>(true);
+	m_board[1][4] = std::make_shared<Queen>(EPieceColor::White);
+	m_board[1][5] = std::make_shared<King>(EPieceColor::White);
 
 	for (int i = 1; i<=8; i++)
 	{
-		m_board[2][i] = std::make_shared<Pawn>(true);
+		m_board[2][i] = std::make_shared<Pawn>(EPieceColor::White);
 	}
 
 	// initializing the black pieces
-	m_board[8][1] = std::make_shared<Rook>(false);
-	m_board[8][8] = std::make_shared<Rook>(false);
+	m_board[8][1] = std::make_shared<Rook>(EPieceColor::Black);
+	m_board[8][8] = std::make_shared<Rook>(EPieceColor::Black);
 
-	m_board[8][2] = std::make_shared<Knight>(true);
-	m_board[8][7] = std::make_shared<Knight>(true);
+	m_board[8][2] = std::make_shared<Knight>(EPieceColor::Black);
+	m_board[8][7] = std::make_shared<Knight>(EPieceColor::Black);
 
-	m_board[8][3] = std::make_shared<Bishop>(true);
-	m_board[8][6] = std::make_shared<Bishop>(true);
+	m_board[8][3] = std::make_shared<Bishop>(EPieceColor::Black);
+	m_board[8][6] = std::make_shared<Bishop>(EPieceColor::Black);
 
-	m_board[8][4] = std::make_shared<Queen>(true);
-	m_board[8][5] = std::make_shared<King>(true);
+	m_board[8][4] = std::make_shared<Queen>(EPieceColor::Black);
+	m_board[8][5] = std::make_shared<King>(EPieceColor::Black);
 
 	for (int i = 1; i <= 8; i++)
 	{
-		m_board[7][i] = std::make_shared<Pawn>(true);
+		m_board[7][i] = std::make_shared<Pawn>(EPieceColor::Black);
 	}
 }
 
@@ -57,4 +58,19 @@ bool Board::MakeMove(Position startPos, Position endPos, Board& board)
 	auto piece = board.m_board[startPos.first][startPos.second];
 	//piece->canMove()
 	return true;
+}
+
+void Board::printBoard()
+{
+	for (int x = 1; x <= 8; x++) {
+		for (int y = 1; y <= 8; y++) {
+			if (m_board[x][y] == nullptr) {
+				std::cout << "0 ";
+			}
+			else {
+				std::cout<<m_board[x][y]->GetType()<<m_board[x][y]->IsWhite()<<" ";
+			}
+		}
+		std::cout << std::endl;
+	}
 }

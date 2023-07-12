@@ -10,7 +10,7 @@
 
 #include<memory>
 
-using Position = std::pair<int, int>;
+//using Position = std::pair<int, int>;
 
 class Board
 {
@@ -18,7 +18,8 @@ public:
 	Board();
 	void InitializeBoard();
 	bool MakeMove(Position startPos, Position endPos, Board& board);
+	void printBoard();
 
 private:
-	PiecePtr m_board[8][8];
+	PiecePtr m_board[10][10];
 };

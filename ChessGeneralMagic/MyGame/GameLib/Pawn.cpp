@@ -1,6 +1,6 @@
 #include "Pawn.h"
 
-Pawn::Pawn(bool white) : Piece(white) {}
+Pawn::Pawn(bool white) : Piece(white) { type = "P"; }
 
 
 bool Pawn::CanMove()

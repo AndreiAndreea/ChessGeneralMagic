@@ -25,3 +25,18 @@ std::string Piece::GetType()
 {
 	return type;
 }
+
+EPieceType Piece::GetType() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+bool Piece::CanMove()
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}
+
+EPieceColor Piece::GetColor() const
+{
+	throw std::logic_error("The method or operation is not implemented.");
+}

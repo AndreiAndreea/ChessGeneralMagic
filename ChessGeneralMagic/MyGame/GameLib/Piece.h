@@ -4,20 +4,22 @@
 
 #include <string>
 #include <memory>
+using Position = std::pair<int, int>;
 
 class Piece : public IPiece
 {
-protected:
-	bool white = false;
-	std::string type;
 public:
-	Piece();
-	Piece(bool white);
-	bool IsWhite();
-	void SetColor(bool white);
-	void SetType(std::string type);
-	std::string GetType(); 
-	void SetPiece();
+	Piece(EPieceType, EPieceColor);
+
+	// IPiece implementation
+	EPieceColor GetColor() const override;
+	EPieceType GetType() const override;
+	
+	bool CanMove() override;
+
+private:
+	EPieceType m_type;
+	EPieceColor m_color;
 };
 
 using PiecePtr = std::shared_ptr<Piece>;
