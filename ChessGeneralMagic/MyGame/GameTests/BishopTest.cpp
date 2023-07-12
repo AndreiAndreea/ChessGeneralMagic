@@ -4,7 +4,7 @@
 #include "Board.h"
 
 // Define a fixture for the Bishop tests
-class BishopTest : public ::testing::Test {
+class BishopTest : public testing::Test {
 
 	void SetUp() override
 	{	
