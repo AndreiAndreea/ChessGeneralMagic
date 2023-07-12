@@ -1,6 +1,11 @@
 #include "Queen.h"
 
-Queen::Queen(bool white) : Piece(white) { type = "Q"; }
+
+Queen::Queen(EPieceColor color) 
+    :Piece(EPieceType::Queen,color)
+{
+
+}
 
 bool Queen::CanMove()
 {

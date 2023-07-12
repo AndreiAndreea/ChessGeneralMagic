@@ -5,8 +5,7 @@
 class Queen: public Piece
 {
 public:
-	Queen();
-	Queen(bool white);
+	Queen(EPieceColor color);
 	bool CanMove();
 };
 

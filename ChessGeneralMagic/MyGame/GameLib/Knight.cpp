@@ -1,3 +1,13 @@
 #include "Knight.h"
 
-Knight::Knight(bool white) : Piece(white) {}
+Knight::Knight(EPieceColor color)
+    :Piece(EPieceType::Knight,color)
+{
+
+}
+
+bool Knight::CanMove()
+{
+    return false;
+}
+

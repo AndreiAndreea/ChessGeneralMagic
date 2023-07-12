@@ -1,6 +1,5 @@
 #include "Rook.h"
 
-Rook::Rook(bool white) : Piece(white) { type = "R";}
 
 Rook::Rook(EPieceColor color)
 	: Piece(EPieceType::Rook, color)
