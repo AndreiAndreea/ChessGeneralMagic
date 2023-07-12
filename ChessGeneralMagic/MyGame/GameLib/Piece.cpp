@@ -1,14 +1,8 @@
 #include "Piece.h"
 
-
 EPieceType Piece::GetType() const
 {
 	return m_type;
-}
-
-bool Piece::CanMove()
-{
-	return true;
 }
 
 Piece::Piece(EPieceType type, EPieceColor color)

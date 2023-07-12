@@ -1,4 +1,6 @@
 #include "Knight.h"
+#include "Board.h"
+
 
 Knight::Knight(EPieceColor color)
     :Piece(EPieceType::Knight,color)
@@ -6,7 +8,7 @@ Knight::Knight(EPieceColor color)
 
 }
 
-bool Knight::CanMove()
+bool Knight::CanMove(Position startPos, Position endPos, const Board& board)
 {
     return false;
 }

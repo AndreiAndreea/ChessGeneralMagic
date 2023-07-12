@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Piece.h"
+
 class Board;
 
 class Rook : public Piece

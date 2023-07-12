@@ -1,4 +1,5 @@
 #include "Pawn.h"
+#include "Board.h"
 
 
 Pawn::Pawn(EPieceColor color)
@@ -7,19 +8,21 @@ Pawn::Pawn(EPieceColor color)
 
 }
 
-bool Pawn::CanMove()
+bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	////checking the direction of the movement
-	//if (white)
-	//{
-	//	if (start.x - end.x >= 0)
-	//		return false;
-	//}
-	//else
-	//{
-	//	if (start.x - end.x <= 0)
-	//		return false;
-	//}
+	EPieceColor color = GetColor();
+
+	//checking the direction of the movement
+	if (color == EPieceColor::White)
+	{
+		if (startPos.first - endPos.first >= 0)
+			return false;
+	}
+	else
+	{
+		if (start.x - end.x <= 0)
+			return false;
+	}
 
 	////checking capturing possibility
 	//if (start.y )

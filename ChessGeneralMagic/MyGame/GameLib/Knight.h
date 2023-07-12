@@ -2,10 +2,12 @@
 
 #include "Piece.h"
 
+class Board;
+
 class Knight: public Piece
 {
 public:
 	Knight(EPieceColor color);
-	bool CanMove();
+	bool CanMove(Position startPos, Position endPos, const Board& board);
 };
 

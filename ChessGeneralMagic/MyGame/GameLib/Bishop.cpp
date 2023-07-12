@@ -1,4 +1,6 @@
 #include "Bishop.h"
+#include "Board.h"
+
 
 Bishop::Bishop(EPieceColor color) 
     : Piece (EPieceType::Bishop, color)
@@ -6,7 +8,7 @@ Bishop::Bishop(EPieceColor color)
 
 }
 
-bool Bishop::CanMove()
+bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 {
     return false;
 }

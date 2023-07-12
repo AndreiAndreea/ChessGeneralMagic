@@ -1,5 +1,9 @@
 #pragma once
 
+#include <iostream>
+
+class Board;
+
 enum class EPieceColor
 {
 	Black,
@@ -15,6 +19,8 @@ enum class EPieceType
 	Queen,
 	Pawn
 };
+
+using Position = std::pair<int, int>;
 
 class IPiece
 {

@@ -4,7 +4,8 @@
 
 #include <string>
 #include <memory>
-using Position = std::pair<int, int>;
+
+class Board;
 
 class Piece : public IPiece
 {
@@ -14,8 +15,6 @@ public:
 	// IPiece implementation
 	EPieceColor GetColor() const override;
 	EPieceType GetType() const override;
-
-	bool CanMove(Position startPos, Position endPos, const Board& board) override;
 
 private:
 	EPieceType m_type;
