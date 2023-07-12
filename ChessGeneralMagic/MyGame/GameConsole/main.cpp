@@ -7,6 +7,6 @@ int main()
 {
 	Board board;
 	board.InitializeBoard();
-	board.printBoard();
+	//board.printBoard();
 	return 0;
 }

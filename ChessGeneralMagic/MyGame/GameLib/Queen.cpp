@@ -2,7 +2,7 @@
 
 
 Queen::Queen(EPieceColor color) 
-    :Piece(EPieceType::Queen,color)
+    : Piece(EPieceType::Queen,color)
 {
 
 }

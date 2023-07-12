@@ -1,8 +1,10 @@
 #include "Pawn.h"
 
 
-Pawn::Pawn(EPieceColor color): Piece(EPieceType::Pawn, color)
+Pawn::Pawn(EPieceColor color)
+	: Piece(EPieceType::Pawn, color)
 {
+
 }
 
 bool Pawn::CanMove()
