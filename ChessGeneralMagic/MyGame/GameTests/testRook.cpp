@@ -43,6 +43,15 @@ TEST_F(RookTest, InvalidMovement3)
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
+//move in the same spot
+TEST_F(RookTest, InvalidMovement4)
+{
+	Board board;
+	Position startPos(2, 3);
+	Position endPos(2, 3);
+	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
+}
+
 TEST_F(RookTest, ValidMovement)
 {
 	Board board;

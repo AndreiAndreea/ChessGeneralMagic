@@ -1,16 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="BishopTest.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="testRook.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\gtest\gtest-all.cc" />
     <ClCompile Include="$(MSBuildThisFileDirectory)src\gmock\gmock-all.cc" />
-    <ClCompile Include="KnightTest.cpp" />
-    <ClCompile Include="QueenTest.cpp" />
-    <ClCompile Include="PawnTest.cpp" />
+    <ClCompile Include="BishopTest.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="KnightTest.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="testRook.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="PawnTest.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="QueenTest.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
+    <ClCompile Include="KingTest.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="PiecesTests">
+      <UniqueIdentifier>{172eb1d3-a1f9-451e-8a09-8dbc5c75a8cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
