@@ -10,7 +10,11 @@ Pawn::Pawn(EPieceColor color)
 
 bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	EPieceColor color = GetColor();
+
+	EPieceColor currentColor = GetColor();
+	BoardType localBoard = board.GetBoard();
+	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
+		return false;
 
 	//checking the direction of the movement
 	if (color == EPieceColor::White)

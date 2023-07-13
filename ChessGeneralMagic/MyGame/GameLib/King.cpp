@@ -10,5 +10,11 @@ King::King(EPieceColor color)
 
 bool King::CanMove(Position startPos, Position endPos, const Board& board)
 {
-    return false;
+	EPieceColor currentColor = GetColor();
+	BoardType localBoard = board.GetBoard();
+	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
+		return false;
+
+
+    return true;
 }

@@ -10,6 +10,11 @@ Knight::Knight(EPieceColor color)
 
 bool Knight::CanMove(Position startPos, Position endPos, const Board& board)
 {
+	EPieceColor currentColor = GetColor();
+    BoardType localBoard = board.GetBoard();
+	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
+		return false;
+
     if (abs(startPos.first - endPos.first) == 2 && abs(startPos.second - endPos.second) == 1 || abs(startPos.first - endPos.first) == 1 && abs(startPos.second - endPos.second) == 2)
         return true;
     return false;
