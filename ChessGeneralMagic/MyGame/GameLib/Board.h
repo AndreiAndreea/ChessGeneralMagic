@@ -25,5 +25,8 @@ public:
 	//void printBoard();
 
 private:
+	//bool IsKingIn
+
+private:
 	BoardType m_board;
 };

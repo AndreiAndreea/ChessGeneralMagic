@@ -20,41 +20,19 @@ protected:
 
 };
 
+
 TEST_F(BishopTest, ValidMove) {
 	Board board;
+	std::vector<std::pair<Position, Position>> possibleMoves= { {Position(2,2), Position(5,5)}, {Position(4,3), Position(6,5)} };
 
-	Position startPos(2, 2);
-	Position endPos(5, 5);
-	bool canMove = bishop->CanMove(startPos, endPos, board);
-
- 	EXPECT_TRUE(canMove);
-}
-
-TEST_F(BishopTest, ValidMove2) {
-	Board board;
-
-	Position startPos(4, 3);
-	Position endPos(6, 5);
-	bool canMove = bishop->CanMove(startPos, endPos, board);
-
-	EXPECT_TRUE(canMove);
+	for(auto it: possibleMoves)
+	EXPECT_TRUE(bishop->CanMove(it.first, it.second, board));
 }
 
 TEST_F(BishopTest, InvalidMove) {
 	Board board;
+	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,6)}, {Position(2,2), Position(4,5)} };
 
-	Position startPos(4, 4);
-	Position endPos(2, 6);
-	bool canMove = bishop->CanMove(startPos, endPos, board);
-
-	EXPECT_FALSE(canMove);
-}
-
-TEST_F(BishopTest, InvalidMove2) {
-	Board board;
-	Position startPos(2, 2);
-	Position endPos(4, 5);
-	bool canMove = bishop->CanMove(startPos, endPos, board);
-
-	EXPECT_FALSE(canMove);
+	for (auto it : possibleMoves)
+	EXPECT_FALSE(bishop->CanMove(it.first, it.second, board));
 }

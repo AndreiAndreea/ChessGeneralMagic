@@ -63,7 +63,7 @@ void Board::InitializeBoard() {
 bool Board::MakeMove(Position startPos, Position endPos)
 {
 	auto piece = m_board[startPos.first][startPos.second];
-	//piece->canMove()
+	//daca se poate muta piesa + daca nu ramane regele in sah
 	return true;
 }
 
