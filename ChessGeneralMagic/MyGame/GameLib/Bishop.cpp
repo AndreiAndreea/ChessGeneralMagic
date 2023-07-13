@@ -12,10 +12,9 @@ bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 
 	EPieceColor currentColor = GetColor();
 
-	if (startPos.first != endPos.first && startPos.second != endPos.second || (startPos.first == endPos.first && startPos.second == endPos.second))
-		return false;
-
 	BoardType localBoard = board.GetBoard();
+	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
+		return false;
 
 	if (std::abs(startPos.first - endPos.first) != std::abs(startPos.second - endPos.second))
 		return false;

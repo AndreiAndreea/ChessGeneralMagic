@@ -17,7 +17,7 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 		return false;
 
 	//checking the direction of the movement
-	if (color == EPieceColor::White)
+	if (currentColor == EPieceColor::White)
 	{
 		if (startPos.first >= endPos.first)
 			return false;
@@ -28,9 +28,23 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 			return false;
 	}
 
+	if (std::abs(startPos.first - endPos.first) == 2 && (startPos.first != 7 && startPos.first != 2))
+		return false;
 
-	//checking capturing possibility
-	if (startPos.second ! )
+	if (std::abs(startPos.first - endPos.first) > 2)
+		return false;
+
+	//diagonally
+	if (endPos.second != startPos.second)
+		if (std::abs(endPos.second != startPos.second) > 1)
+			return false;
+		else
+			if (localBoard[endPos.first][endPos.second] == nullptr)
+
+				return false;
+
+	if (std::abs(startPos.first - endPos.first) > 2)
+		return false;
 
     return true;
 }

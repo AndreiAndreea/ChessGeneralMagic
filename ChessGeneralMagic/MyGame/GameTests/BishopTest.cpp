@@ -40,17 +40,17 @@ TEST_F(BishopTest, ValidMove2) {
 	EXPECT_TRUE(canMove);
 }
 
-TEST_F(BishopTest, ValidMove3) {
+TEST_F(BishopTest, InvalidMove) {
 	Board board;
 
 	Position startPos(4, 4);
 	Position endPos(2, 6);
 	bool canMove = bishop->CanMove(startPos, endPos, board);
 
-	EXPECT_TRUE(canMove);
+	EXPECT_FALSE(canMove);
 }
 
-TEST_F(BishopTest, InvalidMove) {
+TEST_F(BishopTest, InvalidMove2) {
 	Board board;
 	Position startPos(2, 2);
 	Position endPos(4, 5);

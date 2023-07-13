@@ -71,3 +71,13 @@ TEST_F(QueenTest, InvalidMove2)
 
 	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
 }
+
+TEST_F(QueenTest, InvalidMove3)
+{
+	Board board;
+
+	Position startPos(4,3);
+	Position endPos(7,3);
+
+	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
+}

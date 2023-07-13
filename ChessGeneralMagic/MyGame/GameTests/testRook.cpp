@@ -35,15 +35,15 @@ TEST_F(RookTest, InvalidMovement2)
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
-TEST_F(RookTest, ValidMovement)
+TEST_F(RookTest, InvalidMovement3)
 {
 	Board board;
 	Position startPos(6, 3);
 	Position endPos(2, 3);
-	EXPECT_TRUE(rok->CanMove(startPos, endPos, board));
+	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
-TEST_F(RookTest, ValidMovement2)
+TEST_F(RookTest, ValidMovement)
 {
 	Board board;
 	Position startPos(5, 7);
