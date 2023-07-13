@@ -22,6 +22,7 @@
     <ClCompile Include="KingTest.cpp">
       <Filter>PiecesTests</Filter>
     </ClCompile>
+    <ClCompile Include="IsKingInCheckTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

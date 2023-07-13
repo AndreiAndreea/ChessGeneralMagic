@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 enum class EPlayer
 {
 	White,
@@ -16,8 +18,8 @@ public:
 	static IGamePtr Produce();
 
 	virtual void Play() = 0;
-	virtual EPlayer GetWinner() = 0;
-	virtual bool IsGameOver() = 0;
+	virtual EPlayer GetWinner() const = 0;
+	virtual bool IsGameOver() const = 0;
 
 	virtual ~IGame() = default;
 };
