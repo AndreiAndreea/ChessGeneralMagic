@@ -2,39 +2,76 @@
 
 #include "Board.h"
 
-
-TEST( BoardTest , ValodMove)
+//is not in check
+TEST(BoardTest, ValidMove)
 {
 	Board board;
-	BoardType curentBoard = board.GetBoard();
 
-	board.GetBoard()[5][5] = std::make_shared<King>(EPieceColor::Black);
-	board.GetBoard()[2][2] = std::make_shared<Queen>(EPieceColor::White);
-	board.GetBoard()[3][3] = std::make_shared<Bishop>(EPieceColor::Black);
-	auto ceva =board.IsKingInCheck(Position(3, 3), Position(4, 4), EPieceColor::Black);
-	EXPECT_TRUE(ceva);
-}
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
+	board.SetPiece(Position(3, 3), EPieceColor::Black, EPieceType::Bishop);
 
-TEST(BoardTest, FalseQueen)
-{
-	Board board;
-	BoardType curentBoard = board.GetBoard();
-
-	board.GetBoard()[5][5] = std::make_shared<King>(EPieceColor::Black);
-	board.GetBoard()[2][2] = std::make_shared<Queen>(EPieceColor::White);
-	board.GetBoard()[3][3] = std::make_shared<Bishop>(EPieceColor::Black);
-	auto ceva = board.IsKingInCheck(Position(3, 3), Position(2, 4), EPieceColor::Black);
+	auto ceva = board.IsKingInCheck(Position(3, 3), Position(4, 4), EPieceColor::Black);
 	EXPECT_FALSE(ceva);
 }
 
-//TEST(BoardTest, FalseRook)
-//{
-//	Board board;
-//	BoardType curentBoard = board.GetBoard();
-//
-//	curentBoard[5][5] = std::make_shared<King>(EPieceColor::Black);
-//	curentBoard[2][5] = std::make_shared<Rook>(EPieceColor::White);
-//	curentBoard[3][5] = std::make_shared<Rook>(EPieceColor::Black);
-//
-//	EXPECT_FALSE(board.IsKingInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
-//}
+//is in check
+TEST(BoardTest, AttackQueen)
+{
+	Board board;
+
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
+	board.SetPiece(Position(3, 3), EPieceColor::Black, EPieceType::Bishop);
+
+	auto ceva = board.IsKingInCheck(Position(3, 3), Position(2, 4), EPieceColor::Black);
+	EXPECT_TRUE(ceva);
+}
+
+//is in check
+TEST(BoardTest, AttackRook)
+{
+	Board board;
+
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(2, 5), EPieceColor::White, EPieceType::Rook);
+	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Rook);
+
+	EXPECT_TRUE(board.IsKingInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
+}
+
+//is in check by pawn
+TEST(BoardTest, PawnAttack)
+{
+	Board board;
+
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::Pawn);
+	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Rook);
+
+	EXPECT_TRUE(board.IsKingInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
+}
+
+//is not in check by pawn
+TEST(BoardTest, PawnAttack2)
+{
+	Board board;
+
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::Pawn);
+	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Bishop);
+
+	EXPECT_FALSE(board.IsKingInCheck(Position(3, 5), Position(4, 4), EPieceColor::Black));
+}
+
+//is in check by knight
+TEST(BoardTest, KnightAttack)
+{
+	Board board;
+
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::Pawn);
+	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Bishop);
+
+	EXPECT_FALSE(board.IsKingInCheck(Position(3, 5), Position(4, 4), EPieceColor::Black));
+}

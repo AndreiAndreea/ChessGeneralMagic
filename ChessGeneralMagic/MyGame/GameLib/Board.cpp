@@ -104,19 +104,48 @@ BoardType Board::GetBoard() const
 	return m_board;
 }
 
+void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
+{
+
+	switch (type)
+	{
+	case EPieceType::Rook:
+		m_board[pos.first][pos.second] = std::make_shared<Rook>(color);
+		break;
+	case EPieceType::Bishop:
+		m_board[pos.first][pos.second] = std::make_shared<Bishop>(color);
+		break;
+	case EPieceType::Pawn:
+		m_board[pos.first][pos.second] = std::make_shared<Pawn>(color);
+		break;
+	case EPieceType::King:
+		m_board[pos.first][pos.second] = std::make_shared<King>(color);
+		break;
+	case EPieceType::Knight:
+		m_board[pos.first][pos.second] = std::make_shared<Knight>(color);
+		break;
+	case EPieceType::Queen:
+		m_board[pos.first][pos.second] = std::make_shared<Queen>(color);
+		break;
+	default:
+		break;
+	}
+}
+
 bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
 {
 	Position kingPos;
 	//search king position on board
-	for (int i = 1; i <= 8; i++)
+	bool found = 0;
+	for (int i = 1; i <= 8 && found == 0; i++)
 	{
-		for (int j = 1; j <= 8; j++)
+		for (int j = 1; j <= 8 && found == 0; j++)
 		{
 			if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() == pieceColor && m_board[i][j]->GetType() == EPieceType::King)
 			{
 				kingPos.first = i;
 				kingPos.second = j;
-				break;
+				found = 1;
 			}
 		}
 	}
@@ -130,8 +159,8 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (!(i == startPos.first && kingPos.second == startPos.second))
 			if (m_board[i][kingPos.second] != nullptr)
 			{
-				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Rook || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
-					return false;
+				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[i][kingPos.second]->GetType() == EPieceType::Rook || m_board[i][kingPos.second]->GetType() == EPieceType::Queen))
+					return true;
 				break;
 			}
 		i++;
@@ -146,8 +175,8 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (!(i == startPos.first && kingPos.second == startPos.second))
 			if (m_board[i][kingPos.second] != nullptr)
 			{
-				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Rook || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
-					return false;
+				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[i][kingPos.second]->GetType() == EPieceType::Rook || m_board[i][kingPos.second]->GetType() == EPieceType::Queen))
+					return true;
 				break;
 			}
 		i--;
@@ -162,7 +191,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			if (m_board[kingPos.first][i] != nullptr)
 			{
 				if (m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Rook || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
-					return false;
+					return true;
 				break;
 			}
 		i++;
@@ -177,7 +206,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			if (m_board[kingPos.first][i] != nullptr)
 			{
 				if (m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Rook || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
-					return false;
+					return true;
 				break;
 			}
 		i--;
@@ -194,7 +223,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				return false;
+				return true;
 
 		currentRow--;
 		currentCol++;
@@ -209,7 +238,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				return false;
+				return true;
 
 		currentRow++;
 		currentCol++;
@@ -224,7 +253,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				return false;
+				return true;
 
 		currentRow++;
 		currentCol--;
@@ -239,13 +268,48 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				return false;
+				return true;
 
 		currentRow--;
 		currentCol--;
 	}
 
-	return true;
+	//check pawn threat
+	if (pieceColor == EPieceColor::White)
+	{
+		if (kingPos.first + 1 <= 8)
+		{
+			if (kingPos.second - 1 >= 1 && m_board[kingPos.first + 1][kingPos.second - 1] != nullptr && m_board[kingPos.first + 1][kingPos.second - 1]->GetColor() != pieceColor && (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second))
+				return true;
+
+			if (kingPos.second + 1 <= 8 && m_board[kingPos.first + 1][kingPos.second + 1] != nullptr && m_board[kingPos.first + 1][kingPos.second + 1]->GetColor() != pieceColor && (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second))
+				return true;
+		}
+	}
+
+	if (pieceColor == EPieceColor::Black)
+	{
+		if (kingPos.first - 1 >= 1)
+		{
+			if (kingPos.second - 1 >= 1 && m_board[kingPos.first - 1][kingPos.second - 1] != nullptr && m_board[kingPos.first - 1][kingPos.second - 1]->GetColor() != pieceColor && (kingPos.first -1 != endPos.first || kingPos.second - 1 != endPos.second))
+				return true;
+
+			if (kingPos.second + 1 <= 8 && m_board[kingPos.first - 1][kingPos.second + 1] != nullptr && m_board[kingPos.first - 1][kingPos.second + 1]->GetColor() != pieceColor && (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second))
+				return true;
+		}
+	}
+
+	//check knight threat
+
+	for(int i=kingPos.first-2;i<=kingPos.first+2;i++)
+		for (int j = kingPos.second - 2; j <= kingPos.second + 2; j++)
+		{
+			if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
+				if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() != pieceColor && m_board[i][j]->GetType() == EPieceType::Knight && (i!=endPos.first || j!=endPos.second))
+					return true;
+		}
+	
+	return false;
 }
 
 

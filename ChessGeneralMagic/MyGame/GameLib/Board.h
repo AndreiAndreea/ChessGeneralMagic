@@ -23,6 +23,7 @@ public:
 	void InitializeBoard();
 	bool MakeMove(Position startPos, Position endPos);
 	BoardType GetBoard() const;
+	void SetPiece(Position startPos, EPieceColor color, EPieceType type);
 
 	//void printBoard();
 	bool IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
