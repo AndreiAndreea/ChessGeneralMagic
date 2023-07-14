@@ -83,8 +83,7 @@ void Board::InitializeBoard() {
 	m_board[8][6] = std::make_shared<Bishop>(EPieceColor::Black);
 
 	m_board[8][4] = std::make_shared<Queen>(EPieceColor::Black);
-	m_board[8][5] = nullptr;
-		//std::make_shared<King>(EPieceColor::Black);
+	m_board[8][5] = std::make_shared<King>(EPieceColor::Black);
 
 	for (int i = 1; i <= 8; i++)
 	{
@@ -194,7 +193,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (currentCol == endPos.second && currentRow == endPos.first)
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
-			if (m_board[currentRow][currentCol] != nullptr && m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Bishop || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
+			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
 				return false;
 
 		currentRow--;
@@ -209,7 +208,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (currentCol == endPos.second && currentRow == endPos.first)
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
-			if (m_board[currentRow][currentCol] != nullptr && m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Bishop || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
+			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
 				return false;
 
 		currentRow++;
@@ -224,7 +223,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (currentCol == endPos.second && currentRow == endPos.first)
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
-			if (m_board[currentRow][currentCol] != nullptr && m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Bishop || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
+			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
 				return false;
 
 		currentRow++;
@@ -239,7 +238,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (currentCol == endPos.second && currentRow == endPos.first)
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
-			if (m_board[currentRow][currentCol] != nullptr && m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Bishop || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
+			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
 				return false;
 
 		currentRow--;
