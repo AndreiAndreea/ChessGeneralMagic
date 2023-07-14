@@ -2,25 +2,28 @@
 #include "Board.h"
 
 
-King::King(EPieceColor color) 
-    : Piece(EPieceType::King, color)
+King::King(EPieceColor color)
+	: Piece(EPieceType::King, color)
 {
 
 }
 
-bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, const Board& board)
+bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, Board board)
 {
 	BoardType localBoard = board.GetBoard();
 	EPieceColor kingColor = GetColor();
 
-	for (int i = 1; i <=8; i++)
+	bool can;
+	can = localBoard[7][4]->CanMove(Position(7, 4), endPos, board);
+
+	for (int i = 1; i <= 8; i++)
 	{
 		for (int j = 1; j <= 8; j++)
 		{
-			auto culoare = localBoard[i][j]->GetColor();
-			auto can = localBoard[i][j]->CanMove(Position(i, j), endPos, board);
-			if ((localBoard[i][j] != nullptr) && (culoare != kingColor) && (can == 1) && (localBoard[i][j]->GetType() != EPieceType::King));
+			board.SetPiece(endPos, kingColor, EPieceType::King);
+			if ((localBoard[i][j] != nullptr) && (localBoard[i][j]->GetColor() != kingColor) && (localBoard[i][j]->GetType() != EPieceType::King) && (localBoard[i][j]->CanMove(Position(i, j), endPos, board) == 1))
 				return true;
+			board.GetBoard()[endPos.first][endPos.second] = nullptr;
 		}
 	}
 	return false;
@@ -42,6 +45,6 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 	if (VerifyKingMovmentCheck(startPos, endPos, board))
 		return false;
 
-    return true;
+	return true;
 }
 

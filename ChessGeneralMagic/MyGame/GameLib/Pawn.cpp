@@ -28,8 +28,15 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 			return false;
 	}
 
-	if (std::abs(startPos.first - endPos.first) == 2 && (startPos.first != 7 && startPos.first != 2))
-		return false;
+	if (std::abs(startPos.first - endPos.first) == 2)
+	{
+		if ((startPos.first != 7 && startPos.first != 2))
+			return false;
+
+		if (localBoard[endPos.first][endPos.second] != nullptr)
+			return false;
+	}
+
 
 	if (std::abs(startPos.first - endPos.first) > 2)
 		return false;

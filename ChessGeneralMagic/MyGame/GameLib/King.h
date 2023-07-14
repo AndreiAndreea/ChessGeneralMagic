@@ -11,6 +11,6 @@ public:
 	bool CanMove(Position startPos, Position endPos, const Board& board);
 	
 private:
-	bool VerifyKingMovmentCheck(Position startPos, Position endPos, const Board& board);
+	bool VerifyKingMovmentCheck(Position startPos, Position endPos,  Board board);
 };
 
