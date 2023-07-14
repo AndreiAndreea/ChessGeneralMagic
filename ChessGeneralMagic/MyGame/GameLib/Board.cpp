@@ -91,14 +91,6 @@ void Board::InitializeBoard() {
 	}
 }
 
-bool Board::MakeMove(Position startPos, Position endPos)
-{
-	auto piece = m_board[startPos.first][startPos.second];
-	//daca se poate muta piesa + daca nu ramane regele in sah
-	piece->GetColor();
-	return true;
-}
-
 BoardType Board::GetBoard() const
 {
 	return m_board;
@@ -315,17 +307,41 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 }
 
 
-//void Board::printBoard()
-//{
-//	for (int x = 1; x <= 8; x++) {
-//		for (int y = 1; y <= 8; y++) {
-//			if (m_board[x][y] == nullptr) {
-//				std::cout << "0 ";
-//			}
-//			else {
-//				std::cout<<m_board[x][y]->GetType()<<" ";
-//			}
-//		}
-//		std::cout << std::endl;
-//	}
-//}
+void Board::printBoard()
+{
+	for (int x = 1; x <= 8; x++) {
+		for (int y = 1; y <= 8; y++) {
+			if (m_board[x][y] == nullptr) {
+				std::cout << "0   ";
+			}
+			else {
+
+				switch (m_board[x][y]->GetType())
+				{
+				case EPieceType::Rook:
+					std::cout<<"R   ";
+					break;
+				case EPieceType::Bishop:
+					std::cout << "B   ";
+					break;
+				case EPieceType::Pawn:
+					std::cout << "P   ";
+					break;
+				case EPieceType::King:
+					std::cout << "K   ";
+					break;
+				case EPieceType::Knight:
+					std::cout << "Kn  ";
+					break;
+				case EPieceType::Queen:
+					std::cout << "Q   ";
+					break;
+				default:
+					break;
+				}
+
+			}
+		}
+		std::cout << std::endl;
+	}
+}
