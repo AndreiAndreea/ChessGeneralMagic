@@ -135,7 +135,6 @@ void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
 bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
 {
 	Position kingPos;
-	std::vector<bool> verifyPossibleCheck;
 
 	//search king position on board
 	bool found = 0;
@@ -162,8 +161,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			if (m_board[i][kingPos.second] != nullptr)
 			{
 				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[i][kingPos.second]->GetType() == EPieceType::Rook || m_board[i][kingPos.second]->GetType() == EPieceType::Queen))
-					verifyPossibleCheck.push_back(true);
-					//return true;
+					return true;
 				break;
 			}
 		i++;
@@ -179,7 +177,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			if (m_board[i][kingPos.second] != nullptr)
 			{
 				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[i][kingPos.second]->GetType() == EPieceType::Rook || m_board[i][kingPos.second]->GetType() == EPieceType::Queen))
-					verifyPossibleCheck.push_back(true);
+					return true;
 				break;
 			}
 		i--;
@@ -194,7 +192,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			if (m_board[kingPos.first][i] != nullptr)
 			{
 				if (m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Rook || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
-					verifyPossibleCheck.push_back(true);
+					return true;
 				break;
 			}
 		i++;
@@ -209,7 +207,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			if (m_board[kingPos.first][i] != nullptr)
 			{
 				if (m_board[kingPos.first][i]->GetColor() != pieceColor && (m_board[kingPos.first][i]->GetType() == EPieceType::Rook || m_board[kingPos.first][i]->GetType() == EPieceType::Queen))
-					verifyPossibleCheck.push_back(true);
+					return true;
 				break;
 			}
 		i--;
@@ -226,7 +224,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				verifyPossibleCheck.push_back(true);
+				return true;
 
 		currentRow--;
 		currentCol++;
@@ -241,7 +239,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				verifyPossibleCheck.push_back(true);
+				return true;
 
 		currentRow++;
 		currentCol++;
@@ -256,7 +254,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				verifyPossibleCheck.push_back(true);
+				return true;
 
 		currentRow++;
 		currentCol--;
@@ -271,7 +269,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
 			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
-				verifyPossibleCheck.push_back(true);
+				return true;
 
 		currentRow--;
 		currentCol--;
@@ -283,10 +281,10 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (kingPos.first + 1 <= 8)
 		{
 			if (kingPos.second - 1 >= 1 && m_board[kingPos.first + 1][kingPos.second - 1] != nullptr && m_board[kingPos.first + 1][kingPos.second - 1]->GetColor() != pieceColor && (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second))
-				verifyPossibleCheck.push_back(true);
+				return true;
 
 			if (kingPos.second + 1 <= 8 && m_board[kingPos.first + 1][kingPos.second + 1] != nullptr && m_board[kingPos.first + 1][kingPos.second + 1]->GetColor() != pieceColor && (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second))
-				verifyPossibleCheck.push_back(true);
+				return true;
 		}
 	}
 
@@ -295,10 +293,10 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		if (kingPos.first - 1 >= 1)
 		{
 			if (kingPos.second - 1 >= 1 && m_board[kingPos.first - 1][kingPos.second - 1] != nullptr && m_board[kingPos.first - 1][kingPos.second - 1]->GetColor() != pieceColor && (kingPos.first -1 != endPos.first || kingPos.second - 1 != endPos.second))
-				verifyPossibleCheck.push_back(true);
+				return true;
 
 			if (kingPos.second + 1 <= 8 && m_board[kingPos.first - 1][kingPos.second + 1] != nullptr && m_board[kingPos.first - 1][kingPos.second + 1]->GetColor() != pieceColor && (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second))
-				verifyPossibleCheck.push_back(true);
+				return true;
 		}
 	}
 
@@ -309,11 +307,10 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 		{
 			if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
 				if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() != pieceColor && m_board[i][j]->GetType() == EPieceType::Knight && (i!=endPos.first || j!=endPos.second))
-					verifyPossibleCheck.push_back(true);
+					return true;
 		}
 	
-	if (verifyPossibleCheck.size() != 0)
-		return true;
+
 	return false;
 }
 

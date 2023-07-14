@@ -28,8 +28,8 @@ public:
 	//void printBoard();
 	bool IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
 
-private:
-	bool VerifyKingMovmentCheck(Position startPos, Position endPos);
+//private:
+//	bool VerifyKingMovmentCheck(Position startPos, Position endPos);
 
 private:
 	BoardType m_board;
