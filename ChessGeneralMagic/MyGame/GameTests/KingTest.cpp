@@ -22,10 +22,9 @@ protected:
 
 TEST_F(KingTest, ValidMove) {
 	Board board;
-	std::vector<std::pair<Position, Position>> possibleMoves = {{Position(4,4), Position(3,4)}};
-
-	for (auto it : possibleMoves)
-		EXPECT_TRUE(king->CanMove(it.first, it.second, board));
+	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::King);
+	
+	EXPECT_TRUE(king->CanMove(Position(4, 4), Position(3, 4), board));
 }
 
 

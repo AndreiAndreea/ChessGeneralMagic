@@ -12,11 +12,14 @@ bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, const Boar
 {
 	BoardType localBoard = board.GetBoard();
 	EPieceColor kingColor = GetColor();
+
 	for (int i = 1; i <=8; i++)
 	{
 		for (int j = 1; j <= 8; j++)
 		{
-			if (localBoard[i][j] != nullptr && localBoard[i][j]->GetColor() != kingColor && localBoard[i][j]->CanMove(Position(i, j), endPos, board))
+			auto culoare = localBoard[i][j]->GetColor();
+			auto can = localBoard[i][j]->CanMove(Position(i, j), endPos, board);
+			if ((localBoard[i][j] != nullptr) && (culoare != kingColor) && (can == 1) && (localBoard[i][j]->GetType() != EPieceType::King));
 				return true;
 		}
 	}
@@ -36,8 +39,8 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 	if (std::abs(startPos.first - endPos.first) > 1 && std::abs(startPos.second - endPos.second) > 1)
 		return false;
 
-	//if (VerifyKingMovmentCheck(startPos, endPos, board))
-	//	return false;
+	if (VerifyKingMovmentCheck(startPos, endPos, board))
+		return false;
 
     return true;
 }
