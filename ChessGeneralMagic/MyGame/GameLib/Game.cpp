@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#include <iostream>
-
 Game::Game()
 {
 }
@@ -25,17 +23,12 @@ bool Game::IsGameOver() const
 	return false;
 }
 
-//void Game::Play()
-//{
-//	std::cout << "Test";
-//}
-
 void Game::MakeMove(Position startPos, Position endPos)
 {
 	m_board.MakeMove(startPos, endPos);
 }
 
-IPieceInfoPtr Game::GetPieceInfo(int i, int j)
+IPieceInfoPtr Game::GetPieceInfo(int i, int j) const
 {
 	if (auto piece = m_board.GetBoard()[i][j])
 		return std::make_shared<PieceInfo>(piece->GetType(), piece->GetColor());
@@ -49,12 +42,12 @@ PieceInfo::PieceInfo(EPieceType type, EPieceColor color)
 
 }
 
-EPieceColor PieceInfo::GetColor()
+EPieceColor PieceInfo::GetColor() const
 {
 	return m_color;
 }
 
-EPieceType PieceInfo::GetType()
+EPieceType PieceInfo::GetType() const
 {
 	return m_type;
 }

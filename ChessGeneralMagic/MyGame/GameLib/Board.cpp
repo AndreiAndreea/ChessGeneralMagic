@@ -145,6 +145,17 @@ void Board::SetPieceToNullptr(Position pos)
 	m_board[pos.first][pos.second] = nullptr;
 }
 
+static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType> types)
+{
+	if (!piece)
+		return false;
+
+	if (piece->IsOpposite(color, { EPieceType::Bishop, EPieceType::Queen }))
+		return true;
+
+	return false;
+}
+
 bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
 {
 	Position kingPos;
@@ -155,7 +166,7 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 	{
 		for (int j = 1; j <= 8 && found == 0; j++)
 		{
-			if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() == pieceColor && m_board[i][j]->GetType() == EPieceType::King)
+			if (m_board[i][j] && m_board[i][j]->Is(EPieceType::King, pieceColor))
 			{
 				kingPos.first = i;
 				kingPos.second = j;
@@ -170,10 +181,11 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 	{
 		if (i == endPos.first && kingPos.second == endPos.second)
 			break;
+		auto piece = m_board[i][kingPos.second];
 		if (!(i == startPos.first && kingPos.second == startPos.second))
-			if (m_board[i][kingPos.second] != nullptr)
+			if ( piece)
 			{
-				if (m_board[i][kingPos.second]->GetColor() != pieceColor && (m_board[i][kingPos.second]->GetType() == EPieceType::Rook || m_board[i][kingPos.second]->GetType() == EPieceType::Queen))
+				if (piece->GetColor() != pieceColor && (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Queen))
 					return true;
 				break;
 			}
@@ -235,8 +247,10 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 	{
 		if (currentCol == endPos.second && currentRow == endPos.first)
 			break;
-		if (!(currentCol == startPos.second && currentRow == startPos.first))
-			if (m_board[currentRow][currentCol] != nullptr && m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
+
+		auto piece = m_board[currentRow][currentCol];
+		if (!(currentRow == startPos.first && currentCol == startPos.second ))
+			if (IsOpposite(piece, pieceColor, { EPieceType::Bishop, EPieceType::Queen }))
 				return true;
 
 		currentRow--;
