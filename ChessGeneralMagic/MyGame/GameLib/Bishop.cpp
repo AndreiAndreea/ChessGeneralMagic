@@ -9,7 +9,13 @@ Bishop::Bishop(EPieceColor color)
 
 bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	EPieceColor currentColor = GetColor();
+	PositionList possibleMoves;
+	possibleMoves = GetPossibleMoves(startPos,board);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
+		return true;
+
+	return false;
+	/*EPieceColor currentColor = GetColor();
 
 	PieceMatrix localBoard = board.GetBoard();
 	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
@@ -38,7 +44,7 @@ bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 		currentRow += rowStep;
 		currentCol += colStep;
 	}
-	return true;
+	return true;*/
 }
 
 //create a vector with all of the possible moves of a piece

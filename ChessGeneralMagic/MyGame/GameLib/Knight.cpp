@@ -9,14 +9,21 @@ Knight::Knight(EPieceColor color)
 
 bool Knight::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	EPieceColor currentColor = GetColor();
+	PositionList possibleMoves;
+	possibleMoves = GetPossibleMoves(startPos, board);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
+		return true;
+
+	return false;
+
+	/*EPieceColor currentColor = GetColor();
     PieceMatrix localBoard = board.GetBoard();
 	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
 		return false;
 
     if (abs(startPos.first - endPos.first) == 2 && abs(startPos.second - endPos.second) == 1 || abs(startPos.first - endPos.first) == 1 && abs(startPos.second - endPos.second) == 2)
         return true;
-    return false;
+    return false;*/
 }
 
 PositionList Knight:: GetPossibleMoves(Position piecePos, const Board& board)
