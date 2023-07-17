@@ -311,38 +311,67 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 }
 
 
-void Board::printBoard()
+void Board::PrintBoard()
 {
 	for (int x = 1; x <= 8; x++) {
 		for (int y = 1; y <= 8; y++) {
 			if (m_board[x][y] == nullptr) {
-				std::cout << "0   ";
+				std::cout << "0    ";
 			}
 			else {
-
-				switch (m_board[x][y]->GetType())
+				if (m_board[x][y]->GetColor() == EPieceColor::White)
 				{
-				case EPieceType::Rook:
-					std::cout<<"R   ";
-					break;
-				case EPieceType::Bishop:
-					std::cout << "B   ";
-					break;
-				case EPieceType::Pawn:
-					std::cout << "P   ";
-					break;
-				case EPieceType::King:
-					std::cout << "K   ";
-					break;
-				case EPieceType::Knight:
-					std::cout << "Kn  ";
-					break;
-				case EPieceType::Queen:
-					std::cout << "Q   ";
-					break;
-				default:
-					break;
+					switch (m_board[x][y]->GetType())
+					{
+					case EPieceType::Rook:
+						std::cout << "Rw   ";
+						break;
+					case EPieceType::Bishop:
+						std::cout << "Bw   ";
+						break;
+					case EPieceType::Pawn:
+						std::cout << "Pw   ";
+						break;
+					case EPieceType::King:
+						std::cout << "Kw   ";
+						break;
+					case EPieceType::Knight:
+						std::cout << "Knw  ";
+						break;
+					case EPieceType::Queen:
+						std::cout << "Qw  ";
+						break;
+					default:
+						break;
+					}
 				}
+				else
+				{
+					switch (m_board[x][y]->GetType())
+					{
+					case EPieceType::Rook:
+						std::cout << "Rb   ";
+						break;
+					case EPieceType::Bishop:
+						std::cout << "Bb   ";
+						break;
+					case EPieceType::Pawn:
+						std::cout << "Pb   ";
+						break;
+					case EPieceType::King:
+						std::cout << "Kb   ";
+						break;
+					case EPieceType::Knight:
+						std::cout << "Knb  ";
+						break;
+					case EPieceType::Queen:
+						std::cout << "Qb  ";
+						break;
+					default:
+						break;
+					}
+				}
+
 
 			}
 		}

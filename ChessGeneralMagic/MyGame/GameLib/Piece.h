@@ -20,6 +20,7 @@ public:
 private:
 	EPieceType m_type;
 	EPieceColor m_color;
+	std::vector<Position> m_possibleMoves;
 };
 
 using PiecePtr = std::shared_ptr<Piece>;

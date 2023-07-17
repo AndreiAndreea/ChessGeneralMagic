@@ -48,3 +48,20 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 	return true;
 }
 
+void King::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+{
+
+	possibleMoves.clear();
+
+	Position futurePos;
+	futurePos = piecePos;
+	for(int i=piecePos.first-1;i<=piecePos.first+1 && i>=1 && i<=8;i++)
+		for (int j = piecePos.second - 1; j <= piecePos.second + 1 && j <= 8 & j >= 1; j++)
+		{
+			if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor() && !VerifyKingMovmentCheck(piecePos,Position(i,j),board))
+				possibleMoves.push_back(Position(i, j));
+			if (board.GetBoard()[i][j] == nullptr && !VerifyKingMovmentCheck(piecePos, Position(i, j), board))
+				possibleMoves.push_back(Position(i, j));
+		}
+}
+

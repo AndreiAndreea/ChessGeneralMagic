@@ -10,6 +10,7 @@ class Pawn: public Piece
 public:
 	Pawn(EPieceColor color);
 	bool CanMove(Position startPos, Position endPos, const Board& board);
+	void SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board);
 };
 
 

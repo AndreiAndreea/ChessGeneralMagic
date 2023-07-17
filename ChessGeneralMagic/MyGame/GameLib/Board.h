@@ -25,8 +25,11 @@ public:
 	void SetPiece(Position pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(Position pos);
 
-	void printBoard();
+	void PrintBoard();
+	//cant move piece if king is left in check
 	bool IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
+	//checking if it is checkmate
+	//bool IsCheckmate() const;
 
 private:
 	BoardType m_board;

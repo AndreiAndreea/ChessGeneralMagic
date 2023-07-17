@@ -17,3 +17,7 @@ bool Queen::CanMove(Position startPos, Position endPos, const Board& board)
 
     return true;
 }
+
+void Queen::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+{
+}

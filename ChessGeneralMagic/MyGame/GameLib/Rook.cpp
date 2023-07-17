@@ -50,3 +50,7 @@ bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
 
 	return true;
 }
+
+void Rook::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+{
+}
