@@ -30,14 +30,14 @@ bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, Board boar
 
 bool King::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	PositionList possibleMoves;
-	possibleMoves = GetPossibleMoves(startPos, board);
-	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
-		return true;
+	//PositionList possibleMoves;
+	//possibleMoves = GetPossibleMoves(startPos, board);
+	//if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
+	//	return true;
 
-	return false;
+	//return false;
 
-	/*EPieceColor currentColor = GetColor();
+	EPieceColor currentColor = GetColor();
 	PieceMatrix localBoard = board.GetBoard();
 	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
 		return false;
@@ -51,7 +51,7 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 	if (VerifyKingMovmentCheck(startPos, endPos, board))
 		return false;
 
-	return true;*/
+	return true;
 }
 
 PositionList King:: GetPossibleMoves(Position piecePos, const Board& board)

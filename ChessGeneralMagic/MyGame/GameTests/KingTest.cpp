@@ -36,14 +36,6 @@ TEST_F(KingTest, InvalidMove) {
 		EXPECT_FALSE(king->CanMove(it.first, it.second, board));
 }
 
-TEST_F(KingTest, ValidMoveCheck) {
-	Board board;
-	board.SetPiece(Position(5, 5), EPieceColor::White, EPieceType::King);
-	board.SetPiece(Position(3, 4), EPieceColor::Black, EPieceType::Bishop);
-	board.SetPiece(Position(6, 6), EPieceColor::Black, EPieceType::Rook);
-
-	EXPECT_TRUE(king->CanMove(Position(5, 5), Position(5, 4), board));
-}
 
 TEST_F(KingTest, ValidMoveCheck2)
 {
@@ -88,4 +80,13 @@ TEST_F(KingTest, InValidMoveCheck4) {
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Knight);
 
 	EXPECT_FALSE(king->CanMove(Position(3, 2), Position(4, 3), board));
+}
+
+TEST_F(KingTest, InvalidMoveCheck5) {
+	Board board;
+	board.SetPiece(Position(5, 5), EPieceColor::White, EPieceType::King);
+	board.SetPiece(Position(3, 4), EPieceColor::Black, EPieceType::Bishop);
+	board.SetPiece(Position(6, 6), EPieceColor::Black, EPieceType::Rook);
+
+	EXPECT_FALSE(king->CanMove(Position(5, 5), Position(5, 4), board));
 }
