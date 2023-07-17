@@ -24,6 +24,9 @@
     </ClCompile>
     <ClCompile Include="IsKingInCheckTest.cpp" />
     <ClCompile Include="PossibleMovesTests.cpp" />
+    <ClCompile Include="PosibleMovesRook.cpp">
+      <Filter>PiecesTests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

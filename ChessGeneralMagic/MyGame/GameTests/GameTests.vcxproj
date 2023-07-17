@@ -156,6 +156,7 @@
     <ClCompile Include="KnightTest.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PawnTest.cpp" />
+    <ClCompile Include="PosibleMovesRook.cpp" />
     <ClCompile Include="PossibleMovesTests.cpp" />
     <ClCompile Include="QueenTest.cpp" />
     <ClCompile Include="testRook.cpp" />
