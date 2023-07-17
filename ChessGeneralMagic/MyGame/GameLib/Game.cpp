@@ -1,5 +1,9 @@
 #include "Game.h"
 
+Game::Game()
+{
+}
+
 Board Game::GetBoard()
 {
 	return m_board;
@@ -7,8 +11,22 @@ Board Game::GetBoard()
 
 void Game::Play()
 {
-	std::cout << "Test";
 }
+
+EPlayer Game::GetWinner() const
+{
+	return EPlayer();
+}
+
+bool Game::IsGameOver() const
+{
+	return false;
+}
+
+//void Game::Play()
+//{
+//	std::cout << "Test";
+//}
 
 void Game::MakeMove(Position startPos, Position endPos, Board& board)
 {
@@ -22,6 +40,6 @@ void Game::MakeMove(Position startPos, Position endPos, Board& board)
 				//throw
 			}
 		board.SetPiece(endPos, piece->GetColor(), piece->GetType());
-		board.GetBoard()[startPos.first][startPos.second] = nullptr;
+		board.SetPieceToNullptr(startPos);
 	}
 }

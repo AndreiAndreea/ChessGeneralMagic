@@ -19,5 +19,5 @@ public:
 
 private:
 	Board m_board;
-	Player m_whitePlayer, m_blackPlayer;
+	//Player m_whitePlayer, m_blackPlayer;
 };

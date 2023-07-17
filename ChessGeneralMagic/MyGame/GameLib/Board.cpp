@@ -124,6 +124,11 @@ void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
 	}
 }
 
+void Board::SetPieceToNullptr(Position pos)
+{
+	m_board[pos.first][pos.second] = nullptr;
+}
+
 bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
 {
 	Position kingPos;
@@ -293,9 +298,8 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 	}
 
 	//check knight threat
-
-	for(int i=kingPos.first-2;i<=kingPos.first+2;i++)
-		for (int j = kingPos.second - 2; j <= kingPos.second + 2; j++)
+	for(int i=kingPos.first-2;i<=kingPos.first+2 && i<=8 && i>=1;i++)
+		for (int j = kingPos.second - 2; j <= kingPos.second + 2 && j<=8 && j>=1; j++)
 		{
 			if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
 				if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() != pieceColor && m_board[i][j]->GetType() == EPieceType::Knight && (i!=endPos.first || j!=endPos.second))

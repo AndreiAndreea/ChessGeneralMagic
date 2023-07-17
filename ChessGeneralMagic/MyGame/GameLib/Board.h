@@ -22,7 +22,8 @@ public:
 
 	void InitializeBoard();
 	BoardType GetBoard() const;
-	void SetPiece(Position startPos, EPieceColor color, EPieceType type);
+	void SetPiece(Position pos, EPieceColor color, EPieceType type);
+	void SetPieceToNullptr(Position pos);
 
 	void printBoard();
 	bool IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
