@@ -10,7 +10,7 @@ Rook::Rook(EPieceColor color)
 bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
 {
 	EPieceColor currentColor = GetColor();
-	BoardType localBoard = board.GetBoard();
+	PieceMatrix localBoard = board.GetBoard();
 
 	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
 		return false;

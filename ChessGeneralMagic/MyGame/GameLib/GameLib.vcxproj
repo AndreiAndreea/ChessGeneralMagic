@@ -145,6 +145,8 @@
   <ItemGroup>
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="EPieceColor.h" />
+    <ClInclude Include="EPieceType.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="IPiece.h" />

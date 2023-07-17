@@ -6,7 +6,7 @@ Board::Board() {
 	InitializeBoard();
 }
 
-Board::Board(std::vector<std::pair<PiecePtr, Position>> piecePos)
+Board::Board(ConfigMatrix piecePos)
 {
 	//InitializeBoard();
 	for (auto it : piecePos)
@@ -91,9 +91,25 @@ void Board::InitializeBoard() {
 	}
 }
 
-BoardType Board::GetBoard() const
+PieceMatrix Board::GetBoard() const
 {
 	return m_board;
+}
+
+void Board::MakeMove(Position startPos, Position endPos)
+{
+	auto piece = m_board[startPos.first][startPos.second];
+	if (piece->CanMove(startPos, endPos, *this))
+	{
+		if (piece->GetType() != EPieceType::King)
+			if (IsKingInCheck(startPos, endPos, piece->GetColor()))
+			{
+				std::cout << "Regele e in sah! Nu se poate face mutarea.";
+				//throw
+			}
+		SetPiece(endPos, piece->GetColor(), piece->GetType());
+		SetPieceToNullptr(startPos);
+	}
 }
 
 void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
@@ -308,73 +324,4 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 	
 
 	return false;
-}
-
-
-void Board::PrintBoard()
-{
-	for (int x = 1; x <= 8; x++) {
-		for (int y = 1; y <= 8; y++) {
-			if (m_board[x][y] == nullptr) {
-				std::cout << "0    ";
-			}
-			else {
-				if (m_board[x][y]->GetColor() == EPieceColor::White)
-				{
-					switch (m_board[x][y]->GetType())
-					{
-					case EPieceType::Rook:
-						std::cout << "Rw   ";
-						break;
-					case EPieceType::Bishop:
-						std::cout << "Bw   ";
-						break;
-					case EPieceType::Pawn:
-						std::cout << "Pw   ";
-						break;
-					case EPieceType::King:
-						std::cout << "Kw   ";
-						break;
-					case EPieceType::Knight:
-						std::cout << "Knw  ";
-						break;
-					case EPieceType::Queen:
-						std::cout << "Qw  ";
-						break;
-					default:
-						break;
-					}
-				}
-				else
-				{
-					switch (m_board[x][y]->GetType())
-					{
-					case EPieceType::Rook:
-						std::cout << "Rb   ";
-						break;
-					case EPieceType::Bishop:
-						std::cout << "Bb   ";
-						break;
-					case EPieceType::Pawn:
-						std::cout << "Pb   ";
-						break;
-					case EPieceType::King:
-						std::cout << "Kb   ";
-						break;
-					case EPieceType::Knight:
-						std::cout << "Knb  ";
-						break;
-					case EPieceType::Queen:
-						std::cout << "Qb  ";
-						break;
-					default:
-						break;
-					}
-				}
-
-
-			}
-		}
-		std::cout << std::endl;
-	}
 }

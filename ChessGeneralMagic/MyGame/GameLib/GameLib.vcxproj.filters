@@ -60,6 +60,12 @@
     <ClInclude Include="Rook.h">
       <Filter>Header Files\Pieces</Filter>
     </ClInclude>
+    <ClInclude Include="EPieceColor.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
+    <ClInclude Include="EPieceType.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">

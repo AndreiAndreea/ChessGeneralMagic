@@ -12,25 +12,30 @@
 #include<vector>
 
 //using Position = std::pair<int, int>;
-using BoardType = std::vector<std::vector<PiecePtr>>;
+using PieceMatrix = std::vector<std::vector<PiecePtr>>;
+using ConfigMatrix = std::vector<std::pair<PiecePtr, Position>>;
 
 class Board
 {
 public:
 	Board();
-	Board(std::vector<std::pair<PiecePtr, Position>> piecePos);
+	Board( ConfigMatrix piecePos);
 
 	void InitializeBoard();
-	BoardType GetBoard() const;
+
+	PieceMatrix GetBoard() const;
+
+	void MakeMove(Position startPos, Position endPos);
+
 	void SetPiece(Position pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(Position pos);
 
-	void PrintBoard();
 	//cant move piece if king is left in check
+
 	bool IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
 	//checking if it is checkmate
 	//bool IsCheckmate() const;
 
 private:
-	BoardType m_board;
+	PieceMatrix m_board;
 };
