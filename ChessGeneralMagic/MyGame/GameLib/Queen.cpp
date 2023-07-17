@@ -40,6 +40,21 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		i++;
 	}
 
+
+	i = piecePos.second - 1;
+	while (i >= 1)
+	{
+		if (localBoard[piecePos.first][i] != nullptr)
+		{
+			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(piecePos.first,i));
+			break;
+		}
+		else
+			possibleMoves.push_back(Position( piecePos.first,i));
+		i--;
+	}
+
 	i = piecePos.first - 1;
 	while (i >= 1)
 	{
@@ -58,30 +73,18 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 	i = piecePos.second + 1;
 	while (i <= 8)
 	{
-		if (localBoard[i][piecePos.second] != nullptr)
+		if (localBoard[piecePos.first][i] != nullptr)
 		{
-			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(i, piecePos.second));
+			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(piecePos.first,i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(i, piecePos.second));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i++;
 	}
 
-	i = piecePos.second - 1;
-	while (i >= 1)
-	{
-		if (localBoard[i][piecePos.second] != nullptr)
-		{
-			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(i, piecePos.second));
-			break;
-		}
-		else
-			possibleMoves.push_back(Position(i, piecePos.second));
-		i--;
-	}
+
 
 	//bishop direction
 

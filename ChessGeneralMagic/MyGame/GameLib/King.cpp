@@ -12,9 +12,6 @@ bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, Board boar
 	PieceMatrix localBoard = board.GetBoard();
 	EPieceColor kingColor = GetColor();
 
-	bool can;
-	can = localBoard[7][4]->CanMove(Position(7, 4), endPos, board);
-
 	for (int i = 1; i <= 8; i++)
 	{
 		for (int j = 1; j <= 8; j++)
@@ -61,13 +58,17 @@ PositionList King:: GetPossibleMoves(Position piecePos, const Board& board)
 
 	Position futurePos;
 	futurePos = piecePos;
-	for(int i=piecePos.first-1;i<=piecePos.first+1 && i>=1 && i<=8;i++)
-		for (int j = piecePos.second - 1; j <= piecePos.second + 1 && j <= 8 & j >= 1; j++)
+	for(int i=piecePos.first-1;i<=piecePos.first+1 ;i++)
+		for (int j = piecePos.second - 1; j <= piecePos.second + 1 ; j++)
 		{
-			if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor() && !VerifyKingMovmentCheck(piecePos,Position(i,j),board))
-				possibleMoves.push_back(Position(i, j));
-			if (board.GetBoard()[i][j] == nullptr && !VerifyKingMovmentCheck(piecePos, Position(i, j), board))
-				possibleMoves.push_back(Position(i, j));
+			if (i >= 1 && i <= 8 && j <= 8 && j >= 1)
+			{
+				if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor() && !VerifyKingMovmentCheck(piecePos, Position(i, j), board))
+					possibleMoves.push_back(Position(i, j));
+				if (board.GetBoard()[i][j] == nullptr && !VerifyKingMovmentCheck(piecePos, Position(i, j), board))
+					possibleMoves.push_back(Position(i, j));
+			}
+			
 		}
 
 	return possibleMoves;
