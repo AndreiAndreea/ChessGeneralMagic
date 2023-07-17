@@ -27,6 +27,7 @@ public:
 
 	void MakeMove(Position startPos, Position endPos);
 
+	//private
 	void SetPiece(Position pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(Position pos);
 

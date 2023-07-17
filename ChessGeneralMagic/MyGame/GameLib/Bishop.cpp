@@ -42,9 +42,9 @@ bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 }
 
 //create a vector with all of the possible moves of a piece
-void Bishop::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 {
-	possibleMoves.clear();
+	PositionList possibleMoves;
 
 	int currentRow = piecePos.first - 1;
 	int currentCol = piecePos.second + 1;
@@ -124,4 +124,6 @@ void Bishop::SetPossibleMoves(Position piecePos, std::vector<Position>& possible
 		currentRow--;
 		currentCol--;
 	}
+
+	return possibleMoves;
 }

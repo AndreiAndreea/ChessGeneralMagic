@@ -56,9 +56,9 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
     return true;
 }
 
-void Pawn::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+PositionList Pawn:: GetPossibleMoves(Position piecePos, const Board& board)
 {
-	possibleMoves.clear();
+	PositionList possibleMoves;
 
 	//check pawn threat
 	if (GetColor() == EPieceColor::White)
@@ -89,31 +89,33 @@ void Pawn::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMo
 		}
 	}
 
-	//if (GetColor() == EPieceColor::Black)
-	//{
-	//	if (piecePos.first - 1 >=1)
-	//	{
-	//		if (board.GetBoard()[piecePos.first - 1][piecePos.second] != nullptr && board.GetBoard()[piecePos.first - 1][piecePos.second]->GetColor() != GetColor())
-	//			possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second));
-	//		if (board.GetBoard()[piecePos.first + 1][piecePos.second] == nullptr)
-	//			possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second));
+	if (GetColor() == EPieceColor::Black)
+	{
+		if (piecePos.first - 1 >=1)
+		{
+			if (board.GetBoard()[piecePos.first - 1][piecePos.second] != nullptr && board.GetBoard()[piecePos.first - 1][piecePos.second]->GetColor() != GetColor())
+				possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second));
+			if (board.GetBoard()[piecePos.first - 1][piecePos.second] == nullptr)
+				possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second));
 
-	//		if (piecePos.second + 1 <= 8)
-	//			if (board.GetBoard()[piecePos.first + 1][piecePos.second + 1] != nullptr && board.GetBoard()[piecePos.first + 1][piecePos.second + 1]->GetColor() != GetColor())
-	//				possibleMoves.push_back(Position(piecePos.first + 1, piecePos.second + 1));
+			if (piecePos.second + 1 <= 8)
+				if (board.GetBoard()[piecePos.first - 1][piecePos.second + 1] != nullptr && board.GetBoard()[piecePos.first - 1][piecePos.second + 1]->GetColor() != GetColor())
+					possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second + 1));
 
-	//		if (piecePos.second - 1 >= 1)
-	//			if (board.GetBoard()[piecePos.first + 1][piecePos.second - 1] != nullptr && board.GetBoard()[piecePos.first + 1][piecePos.second - 1]->GetColor() != GetColor())
-	//				possibleMoves.push_back(Position(piecePos.first + 1, piecePos.second - 1));
+			if (piecePos.second - 1 >= 1)
+				if (board.GetBoard()[piecePos.first - 1][piecePos.second - 1] != nullptr && board.GetBoard()[piecePos.first - 1][piecePos.second - 1]->GetColor() != GetColor())
+					possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second - 1));
 
-	//		//verify for lines 2
-	//		if (piecePos.first == 2)
-	//		{
-	//			if (board.GetBoard()[piecePos.first + 2][piecePos.second] != nullptr && board.GetBoard()[piecePos.first + 2][piecePos.second]->GetColor() != GetColor())
-	//				possibleMoves.push_back(Position(piecePos.first + 2, piecePos.second));
-	//			if (board.GetBoard()[piecePos.first + 2][piecePos.second] == nullptr)
-	//				possibleMoves.push_back(Position(piecePos.first + 2, piecePos.second));
-	//		}
-	//	}
-	//}
+			//verify for lines 7
+			if (piecePos.first == 7)
+			{
+				if (board.GetBoard()[piecePos.first - 2][piecePos.second] != nullptr && board.GetBoard()[piecePos.first - 2][piecePos.second]->GetColor() != GetColor())
+					possibleMoves.push_back(Position(piecePos.first - 2, piecePos.second));
+				if (board.GetBoard()[piecePos.first - 2][piecePos.second] == nullptr)
+					possibleMoves.push_back(Position(piecePos.first - 2, piecePos.second));
+			}
+		}
+	}
+
+	return possibleMoves;
 }

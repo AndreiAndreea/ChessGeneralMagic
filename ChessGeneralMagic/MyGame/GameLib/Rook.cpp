@@ -51,6 +51,68 @@ bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
 	return true;
 }
 
-void Rook::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 {
+	PositionList possibleMoves;
+	EPieceColor pieceColor = GetColor();
+	auto localBoard = board.GetBoard();
+
+	int i = piecePos.first + 1;
+	while (i <= 8)
+	{
+		if (localBoard[i][piecePos.second] != nullptr)
+		{
+			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(i, piecePos.second));
+			break;
+		}
+		else
+			possibleMoves.push_back(Position(i, piecePos.second));
+		i++;
+	}
+
+	i = piecePos.first - 1;
+	while (i >= 1)
+	{
+
+		if (localBoard[i][piecePos.second] != nullptr)
+		{
+			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(i, piecePos.second));
+			break;
+		}
+		else
+			possibleMoves.push_back(Position(i, piecePos.second));
+		i--;
+	}
+
+	i = piecePos.second + 1;
+	while (i <= 8)
+	{
+		if (localBoard[i][piecePos.second] != nullptr)
+		{
+			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(i, piecePos.second));
+			break;
+		}
+		else
+			possibleMoves.push_back(Position(i, piecePos.second));
+		i++;
+	}
+
+	i = piecePos.second - 1;
+	while (i >= 1)
+	{
+		if (localBoard[i][piecePos.second] != nullptr)
+		{
+			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(i, piecePos.second));
+			break;
+		}
+		else
+			possibleMoves.push_back(Position(i, piecePos.second));
+		i--;
+	}
+
+	return possibleMoves;
 }

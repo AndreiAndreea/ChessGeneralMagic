@@ -1,7 +1,6 @@
 #include "King.h"
 #include "Board.h"
 
-
 King::King(EPieceColor color)
 	: Piece(EPieceType::King, color)
 {
@@ -48,10 +47,10 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 	return true;
 }
 
-void King::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+PositionList King:: GetPossibleMoves(Position piecePos, const Board& board)
 {
 
-	possibleMoves.clear();
+	PositionList possibleMoves;
 
 	Position futurePos;
 	futurePos = piecePos;
@@ -63,5 +62,6 @@ void King::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMo
 			if (board.GetBoard()[i][j] == nullptr && !VerifyKingMovmentCheck(piecePos, Position(i, j), board))
 				possibleMoves.push_back(Position(i, j));
 		}
-}
 
+	return possibleMoves;
+}

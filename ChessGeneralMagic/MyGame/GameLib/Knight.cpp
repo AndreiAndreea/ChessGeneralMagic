@@ -19,9 +19,9 @@ bool Knight::CanMove(Position startPos, Position endPos, const Board& board)
     return false;
 }
 
-void Knight::SetPossibleMoves(Position piecePos, std::vector<Position>& possibleMoves, const Board& board)
+PositionList Knight:: GetPossibleMoves(Position piecePos, const Board& board)
 {
-    possibleMoves.clear();
+	PositionList possibleMoves;
 
 	for (int i = piecePos.first - 2; i <= piecePos.first + 2 && i <= 8 && i >= 1; i++)
 		for (int j = piecePos.second - 2; j <= piecePos.second + 2 && j <= 8 && j >= 1; j++)
@@ -33,7 +33,7 @@ void Knight::SetPossibleMoves(Position piecePos, std::vector<Position>& possible
 				if (board.GetBoard()[i][j] == nullptr)
 					possibleMoves.push_back(Position(i, j));
 			}
-				
 		}
-}
 
+	return possibleMoves;
+}
