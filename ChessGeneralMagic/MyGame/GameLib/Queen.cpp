@@ -18,9 +18,8 @@ bool Queen::CanMove(Position startPos, Position endPos, const Board& board)
 	return true;
 }
 
-PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
+void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 {
-	PositionList possibleMoves;
 	EPieceColor pieceColor = GetColor();
 	auto localBoard = board.GetBoard();
 
@@ -31,11 +30,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[i][piecePos.second] != nullptr)
 		{
 			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(i, piecePos.second));
+				m_possibleMoves.push_back(Position(i, piecePos.second));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(i, piecePos.second));
+			m_possibleMoves.push_back(Position(i, piecePos.second));
 		i++;
 	}
 
@@ -46,11 +45,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first, i));
+				m_possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.first, i));
+			m_possibleMoves.push_back(Position(piecePos.first, i));
 		i--;
 	}
 
@@ -61,11 +60,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[i][piecePos.second] != nullptr)
 		{
 			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(i, piecePos.second));
+				m_possibleMoves.push_back(Position(i, piecePos.second));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(i, piecePos.second));
+			m_possibleMoves.push_back(Position(i, piecePos.second));
 		i--;
 	}
 
@@ -75,11 +74,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first, i));
+				m_possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.first, i));
+			m_possibleMoves.push_back(Position(piecePos.first, i));
 		i++;
 	}
 
@@ -99,11 +98,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 		currentRow--;
 		currentCol++;
 	}
@@ -119,11 +118,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 		currentRow++;
 		currentCol++;
 	}
@@ -139,11 +138,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 
 		currentRow++;
 		currentCol--;
@@ -160,15 +159,13 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 
 		currentRow--;
 		currentCol--;
 	}
-
-	return possibleMoves;
 }

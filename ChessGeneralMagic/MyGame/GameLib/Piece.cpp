@@ -22,6 +22,12 @@ bool Piece::IsOpposite(EPieceColor color, std::initializer_list<EPieceType> list
 	return false;
 }
 
+PositionList Piece::GetPossibleMoves() const
+{
+	return m_possibleMoves;
+}
+
+
 Piece::Piece(EPieceType type, EPieceColor color)
 {
 	m_type = type;

@@ -20,7 +20,9 @@ public:
 	bool Is(EPieceType type, EPieceColor color) const override;
 	bool IsOpposite(EPieceColor color, std::initializer_list<EPieceType> list) const;
 
-private:
+	PositionList GetPossibleMoves() const override;
+
+protected:
 	EPieceType m_type;
 	EPieceColor m_color;
 	std::vector<Position> m_possibleMoves;

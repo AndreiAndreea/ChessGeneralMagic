@@ -11,7 +11,7 @@ TEST(BoardTest, ValidMove)
 	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
 	board.SetPiece(Position(3, 3), EPieceColor::Black, EPieceType::Bishop);
 
-	auto ceva = board.IsKingInCheck(Position(3, 3), Position(4, 4), EPieceColor::Black);
+	auto ceva = board.IsKingLeftInCheck(Position(3, 3), Position(4, 4), EPieceColor::Black);
 	EXPECT_FALSE(ceva);
 }
 
@@ -24,7 +24,7 @@ TEST(BoardTest, AttackQueen)
 	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
 	board.SetPiece(Position(3, 3), EPieceColor::Black, EPieceType::Bishop);
 
-	auto ceva = board.IsKingInCheck(Position(3, 3), Position(2, 4), EPieceColor::Black);
+	auto ceva = board.IsKingLeftInCheck(Position(3, 3), Position(2, 4), EPieceColor::Black);
 	EXPECT_TRUE(ceva);
 }
 
@@ -37,7 +37,7 @@ TEST(BoardTest, AttackRook)
 	board.SetPiece(Position(2, 5), EPieceColor::White, EPieceType::Rook);
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Rook);
 
-	EXPECT_TRUE(board.IsKingInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
 }
 
 //is in check by pawn
@@ -49,7 +49,7 @@ TEST(BoardTest, PawnAttack)
 	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::Pawn);
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Rook);
 
-	EXPECT_TRUE(board.IsKingInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(3, 5), Position(3, 4), EPieceColor::Black));
 }
 
 //is not in check by pawn
@@ -61,7 +61,7 @@ TEST(BoardTest, PawnAttack2)
 	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::Pawn);
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Bishop);
 
-	EXPECT_FALSE(board.IsKingInCheck(Position(3, 5), Position(4, 4), EPieceColor::Black));
+	EXPECT_FALSE(board.IsKingLeftInCheck(Position(3, 5), Position(4, 4), EPieceColor::Black));
 }
 
 //is in check by knight
@@ -73,7 +73,7 @@ TEST(BoardTest, KnightAttack)
 	board.SetPiece(Position(3, 4), EPieceColor::White, EPieceType::Knight);
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Bishop);
 
-	EXPECT_TRUE(board.IsKingInCheck(Position(3, 5), Position(4, 4), EPieceColor::Black));
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(3, 5), Position(4, 4), EPieceColor::Black));
 }
 
 //is not in check by knight
@@ -85,7 +85,7 @@ TEST(BoardTest, KnightAttack2)
 	board.SetPiece(Position(3, 4), EPieceColor::White, EPieceType::Knight);
 	board.SetPiece(Position(4, 5), EPieceColor::Black, EPieceType::Bishop);
 
-	EXPECT_FALSE(board.IsKingInCheck(Position(4, 5), Position(3, 4), EPieceColor::Black));
+	EXPECT_FALSE(board.IsKingLeftInCheck(Position(4, 5), Position(3, 4), EPieceColor::Black));
 }
 
 //is in check by 2 knights, one is taken
@@ -98,7 +98,7 @@ TEST(BoardTest, KnightAttack3)
 	board.SetPiece(Position(4, 3), EPieceColor::White, EPieceType::Knight);
 	board.SetPiece(Position(4, 5), EPieceColor::Black, EPieceType::Bishop);
 
-	EXPECT_TRUE(board.IsKingInCheck(Position(4, 5), Position(3, 4), EPieceColor::Black));
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(4, 5), Position(3, 4), EPieceColor::Black));
 }
 
 //is in check by queen and rook, one is taken
@@ -111,5 +111,5 @@ TEST(BoardTest, QueenRookAttack)
 	board.SetPiece(Position(5, 2), EPieceColor::White, EPieceType::Rook);
 	board.SetPiece(Position(3, 7), EPieceColor::Black, EPieceType::Bishop);
 
-	EXPECT_TRUE(board.IsKingInCheck(Position(3, 7), Position(2, 8), EPieceColor::Black));
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(3, 7), Position(2, 8), EPieceColor::Black));
 }

@@ -102,7 +102,7 @@ void Board::MakeMove(Position startPos, Position endPos)
 	if (piece->CanMove(startPos, endPos, *this))
 	{
 		if (piece->GetType() != EPieceType::King)
-			if (IsKingInCheck(startPos, endPos, piece->GetColor()))
+			if (IsKingLeftInCheck(startPos, endPos, piece->GetColor()))
 			{
 				std::cout << "Regele e in sah! Nu se poate face mutarea.";
 				//throw
@@ -156,7 +156,7 @@ static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType
 	return false;
 }
 
-bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
+bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
 {
 	Position kingPos;
 
@@ -339,4 +339,59 @@ bool Board::IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceC
 	
 
 	return false;
+}
+
+bool Board::IsKingInCheck(Position currentPos, EPieceColor color) const
+{
+
+	for (int i = 1; i <= 8; i++)
+	{
+		for (int j = 1; j <= 8; j++)
+		{
+			if (m_board[i][j] && (m_board[i][j]->GetColor() != color) && m_board[i][j]->CanMove(Position(i, j), currentPos, *this))
+				return true;
+		}
+	}
+	return false;
+}
+
+bool Board::IsCheckmate(EPieceColor color) const
+{
+	Position kingPos;
+
+	//search for king's position on board
+	bool found = 0;
+	for (int i = 1; i <= 8 && found == 0; i++)
+	{
+		for (int j = 1; j <= 8 && found == 0; j++)
+		{
+			if (m_board[i][j] && m_board[i][j]->Is(EPieceType::King, color))
+			{
+				kingPos.first = i;
+				kingPos.second = j;
+				found = 1;
+			}
+		}
+	}
+
+	//if king is in check -> verify if it is checkmate
+	if (IsKingInCheck(kingPos, color))
+	{
+		for (int i = 1; i <= 8; i++)
+		{
+			for (int j = 1; j <= 8; j++)
+			{
+				if (m_board[i][j]->GetColor() == color)
+				{
+					for (auto it : m_board[i][j]->GetPossibleMoves())
+					{
+						//if the king is not left in check, there is a possible move to be made to save the king
+						if (!IsKingLeftInCheck(Position(i, j), it, color))
+							return false;
+					}
+				}
+			}
+		}
+	}
+return true;
 }

@@ -9,49 +9,16 @@ Bishop::Bishop(EPieceColor color)
 
 bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	//PositionList possibleMoves;
-	//possibleMoves = GetPossibleMoves(startPos,board);
-	//if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
-	//	return true;
+	SetPossibleMoves(startPos, board);
+	if (std::find(m_possibleMoves.begin(), m_possibleMoves.end(), endPos) != m_possibleMoves.end())
+		return true;
 
-	//return false;
-	EPieceColor currentColor = GetColor();
-
-	PieceMatrix localBoard = board.GetBoard();
-	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
-		return false;
-
-	if (std::abs(startPos.first - endPos.first) != std::abs(startPos.second - endPos.second))
-		return false;
-
-	int startRow = startPos.first;
-	int startCol = startPos.second;
-
-	int endRow = endPos.first;
-	int endCol = endPos.second;
-
-	int rowStep = (startRow < endRow) ? 1 : -1;
-	int colStep = (startCol < endCol) ? 1 : -1;
-
-	int currentRow = startRow + rowStep;
-	int currentCol = startCol + colStep;
-
-	while (currentRow != endRow && currentCol != endCol)
-	{
-		if (localBoard[currentRow][currentCol] != nullptr)
-			return false;
-
-		currentRow += rowStep;
-		currentCol += colStep;
-	}
-	return true;
+	return false;
 }
 
 //create a vector with all of the possible moves of a piece
-PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
+void Bishop::SetPossibleMoves(Position piecePos, const Board& board)
 {
-	PositionList possibleMoves;
-
 	int currentRow = piecePos.first - 1;
 	int currentCol = piecePos.second + 1;
 
@@ -63,11 +30,11 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 		currentRow--;
 		currentCol++;
 	}
@@ -82,11 +49,11 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 		currentRow++;
 		currentCol++;
 	}
@@ -101,11 +68,11 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 
 		currentRow++;
 		currentCol--;
@@ -121,15 +88,14 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
+			m_possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+		m_possibleMoves.push_back(Position(currentRow, currentCol));
 
 		currentRow--;
 		currentCol--;
 	}
 
-	return possibleMoves;
 }

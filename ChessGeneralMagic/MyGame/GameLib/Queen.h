@@ -9,6 +9,6 @@ class Queen: public Piece
 public:
 	Queen(EPieceColor color);
 	bool CanMove(Position startPos, Position endPos, const Board& board);
-	PositionList GetPossibleMoves(Position piecePos, const Board& board);
+	void SetPossibleMoves(Position piecePos, const Board& board);
 
 };

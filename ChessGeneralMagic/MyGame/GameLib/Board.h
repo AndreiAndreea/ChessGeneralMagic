@@ -32,10 +32,11 @@ public:
 	void SetPieceToNullptr(Position pos);
 
 	//cant move piece if king is left in check
-
-	bool IsKingInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
+	bool IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
+	//check if king is in check after opposite player move
+	bool IsKingInCheck(Position currentPos, EPieceColor color) const;
 	//checking if it is checkmate
-	//bool IsCheckmate() const;
+	bool IsCheckmate(EPieceColor color) const;
 
 private:
 	PieceMatrix m_board;
