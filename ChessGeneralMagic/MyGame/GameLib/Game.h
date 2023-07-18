@@ -32,10 +32,14 @@ public:
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
-	void MakeMove(Position startPos, Position endPos) override;
+	bool MakeMove(std::string startPosStr, std::string endPosStr) override;
+
+private:
+	Position ConvertToPos(std::string pos);
+	bool IsInputValid(Position startPos, Position endPos);
 
 private:
 	Board m_board;
-	bool m_turn;
+	int m_turn;
 	//Player m_whitePlayer, m_blackPlayer;
 };

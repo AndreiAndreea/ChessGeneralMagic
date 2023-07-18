@@ -59,8 +59,8 @@ int main()
 {
 	Game game;
 	PrintBoard(game);
-	game.MakeMove(Position(2, 2), Position(3, 2));
-	std::cout << "\n\n\n";
-	PrintBoard(game);
+	//game.MakeMove(Position(2, 2), Position(3, 2));
+	/*std::cout << "\n\n\n";
+	PrintBoard(game);*/
 	return 0;
 }

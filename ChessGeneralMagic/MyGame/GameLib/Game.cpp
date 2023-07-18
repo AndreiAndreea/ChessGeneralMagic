@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : m_turn(false)
+Game::Game() : m_turn(0)
 {
 }
 
@@ -23,7 +23,7 @@ EPlayer Game::GetWinner() const
 {
 	if (IsGameOver())
 	{
-		if (m_turn == true)
+		if (m_turn)
 			return EPlayer::White;
 		return EPlayer::Black;
 	}
@@ -34,7 +34,7 @@ EPlayer Game::GetWinner() const
 bool Game::IsGameOver() const
 {
 	EPieceColor color;
-	if (m_turn == true)
+	if (m_turn)
 		color = EPieceColor::Black;
 	else
 		color = EPieceColor::White;
@@ -43,9 +43,48 @@ bool Game::IsGameOver() const
 	return false;
 }
 
-void Game::MakeMove(Position startPos, Position endPos)
+bool Game::MakeMove(std::string startPosStr, std::string endPosStr)
 {
-	m_board.MakeMove(startPos, endPos);
+	Position startPos = ConvertToPos(startPosStr);
+	Position endPos = ConvertToPos(endPosStr);
+
+	if (IsInputValid(startPos, endPos) && m_board.MakeMove(startPos, endPos))
+	{
+		m_turn = 1 - m_turn;
+		return true;
+	}
+	return false;
+
+}
+
+Position Game::ConvertToPos(std::string pos)
+{
+	Position convertedPos;
+	convertedPos.second = pos[0] - 'A' + 1;
+	convertedPos.first = 9 - (pos[1] - '0');
+	return convertedPos;
+}
+
+bool Game::IsInputValid(Position startPos, Position endPos)
+{
+	if (startPos.first < 1 || startPos.first > 8 || startPos.second < 1 || startPos.second > 8)
+		return false;
+	if (m_board.GetBoard()[startPos.first][startPos.second])
+		if (m_turn)
+		{
+			if (m_board.GetBoard()[startPos.first][startPos.second]->GetColor() != EPieceColor::Black)
+				return false;
+		}
+		else
+		{
+			if (m_board.GetBoard()[startPos.first][startPos.second]->GetColor() != EPieceColor::White)
+				return false;
+		}
+
+	if (endPos.first < 1 || endPos.first > 8 || endPos.second < 1 || endPos.second > 8)
+		return false;
+		
+	return true;
 }
 
 IPieceInfoPtr Game::GetPieceInfo(int i, int j) const

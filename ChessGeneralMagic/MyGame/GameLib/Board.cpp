@@ -54,40 +54,40 @@ void Board::InitializeBoard() {
 	}
 
 	//initializing the white pieces 
-	m_board[1][1] = std::make_shared<Rook>(EPieceColor::White);
-	m_board[1][8] = std::make_shared<Rook>(EPieceColor::White);
+	m_board[1][1] = std::make_shared<Rook>(EPieceColor::Black);
+	m_board[1][8] = std::make_shared<Rook>(EPieceColor::Black);
 
-	m_board[1][2] = std::make_shared<Knight>(EPieceColor::White);
-	m_board[1][7] = std::make_shared<Knight>(EPieceColor::White);
+	m_board[1][2] = std::make_shared<Knight>(EPieceColor::Black);
+	m_board[1][7] = std::make_shared<Knight>(EPieceColor::Black);
 
-	m_board[1][3] = std::make_shared<Bishop>(EPieceColor::White);
-	m_board[1][6] = std::make_shared<Bishop>(EPieceColor::White);
+	m_board[1][3] = std::make_shared<Bishop>(EPieceColor::Black);
+	m_board[1][6] = std::make_shared<Bishop>(EPieceColor::Black);
 
 
-	m_board[1][4] = std::make_shared<Queen>(EPieceColor::White);
-	m_board[1][5] = std::make_shared<King>(EPieceColor::White);
+	m_board[1][4] = std::make_shared<Queen>(EPieceColor::Black);
+	m_board[1][5] = std::make_shared<King>(EPieceColor::Black);
 
 	for (int i = 1; i <= 8; i++)
 	{
-		m_board[2][i] = std::make_shared<Pawn>(EPieceColor::White);
+		m_board[2][i] = std::make_shared<Pawn>(EPieceColor::Black);
 	}
 
 	// initializing the black pieces
-	m_board[8][1] = std::make_shared<Rook>(EPieceColor::Black);
-	m_board[8][8] = std::make_shared<Rook>(EPieceColor::Black);
+	m_board[8][1] = std::make_shared<Rook>(EPieceColor::White);
+	m_board[8][8] = std::make_shared<Rook>(EPieceColor::White);
 
-	m_board[8][2] = std::make_shared<Knight>(EPieceColor::Black);
-	m_board[8][7] = std::make_shared<Knight>(EPieceColor::Black);
+	m_board[8][2] = std::make_shared<Knight>(EPieceColor::White);
+	m_board[8][7] = std::make_shared<Knight>(EPieceColor::White);
 
-	m_board[8][3] = std::make_shared<Bishop>(EPieceColor::Black);
-	m_board[8][6] = std::make_shared<Bishop>(EPieceColor::Black);
+	m_board[8][3] = std::make_shared<Bishop>(EPieceColor::White);
+	m_board[8][6] = std::make_shared<Bishop>(EPieceColor::White);
 
-	m_board[8][4] = std::make_shared<Queen>(EPieceColor::Black);
-	m_board[8][5] = std::make_shared<King>(EPieceColor::Black);
+	m_board[8][4] = std::make_shared<Queen>(EPieceColor::White);
+	m_board[8][5] = std::make_shared<King>(EPieceColor::White);
 
 	for (int i = 1; i <= 8; i++)
 	{
-		m_board[7][i] = std::make_shared<Pawn>(EPieceColor::Black);
+		m_board[7][i] = std::make_shared<Pawn>(EPieceColor::White);
 	}
 }
 
@@ -96,7 +96,7 @@ PieceMatrix Board::GetBoard() const
 	return m_board;
 }
 
-void Board::MakeMove(Position startPos, Position endPos)
+bool Board::MakeMove(Position startPos, Position endPos)
 {
 	auto piece = m_board[startPos.first][startPos.second];
 	if (piece->CanMove(startPos, endPos, *this))
@@ -106,9 +106,11 @@ void Board::MakeMove(Position startPos, Position endPos)
 			{
 				std::cout << "Regele e in sah! Nu se poate face mutarea.";
 				//throw
+				return false;
 			}
 		SetPiece(endPos, piece->GetColor(), piece->GetType());
 		SetPieceToNullptr(startPos);
+		return true;
 	}
 }
 
@@ -303,7 +305,7 @@ bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pi
 	}
 
 	//check pawn threat
-	if (pieceColor == EPieceColor::White)
+	if (pieceColor == EPieceColor::Black)
 	{
 		if (kingPos.first + 1 <= 8)
 		{
@@ -315,7 +317,7 @@ bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pi
 		}
 	}
 
-	if (pieceColor == EPieceColor::Black)
+	if (pieceColor == EPieceColor::White)
 	{
 		if (kingPos.first - 1 >= 1)
 		{
@@ -397,3 +399,4 @@ bool Board::IsCheckmate(EPieceColor color) const
 	}
 	return true;
 }
+

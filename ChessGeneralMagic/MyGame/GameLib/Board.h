@@ -25,7 +25,7 @@ public:
 
 	PieceMatrix GetBoard() const;
 
-	void MakeMove(Position startPos, Position endPos);
+	bool MakeMove(Position startPos, Position endPos);
 
 	//private
 	void SetPiece(Position pos, EPieceColor color, EPieceType type);
@@ -37,6 +37,8 @@ public:
 	bool IsKingInCheck(Position currentPos, EPieceColor color) const;
 	//checking if it is checkmate
 	bool IsCheckmate(EPieceColor color) const;
+
+
 
 private:
 	PieceMatrix m_board;

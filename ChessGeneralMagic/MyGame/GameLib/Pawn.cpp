@@ -67,7 +67,7 @@ PositionList Pawn::GetPossibleMoves(Position piecePos, const Board& board)
 	PositionList possibleMoves;
 
 	//check pawn threat
-	if (GetColor() == EPieceColor::White)
+	if (GetColor() == EPieceColor::Black)
 	{
 		if (piecePos.first + 1 <= 8)
 		{
@@ -94,7 +94,7 @@ PositionList Pawn::GetPossibleMoves(Position piecePos, const Board& board)
 		}
 	}
 
-	if (GetColor() == EPieceColor::Black)
+	if (GetColor() == EPieceColor::White)
 	{
 		if (piecePos.first - 1 >= 1)
 		{

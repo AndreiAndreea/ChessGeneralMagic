@@ -4,6 +4,7 @@
 #include "EPieceType.h"
 
 #include <memory>
+#include <string>
 
 enum class EPlayer
 {
@@ -33,7 +34,7 @@ public:
 	virtual void Play() = 0;
 	virtual EPlayer GetWinner() const = 0;
 	virtual bool IsGameOver() const = 0;
-	virtual void MakeMove(Position startPos, Position endPos) = 0;
+	virtual bool MakeMove(std::string startPosStr, std::string endPosStr) = 0;
 
 	virtual IPieceInfoPtr GetPieceInfo(int i, int j) const = 0;
 
