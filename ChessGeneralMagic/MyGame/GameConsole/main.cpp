@@ -1,8 +1,6 @@
 #include<iostream>
 
 #include "IGame.h"
-#include "Board.h"
-#include "Game.h"
 
 std::string PieceToStr(IPieceInfoPtr pieceInfo)
 {
@@ -36,7 +34,7 @@ std::string PieceToStr(IPieceInfoPtr pieceInfo)
 	return result;
 }
 
-void PrintBoard( const Game& game)
+void PrintBoard( const IGame& game)
 {
 	auto board = game.GetBoard();
 	for (int i = 1; i <= 8; i++)
@@ -57,7 +55,7 @@ void PrintBoard( const Game& game)
 
 int main()
 {
-	Game game;
+	IGamePtr game = IGame::Produce();
 	PrintBoard(game);
 	//game.MakeMove(Position(2, 2), Position(3, 2));
 	/*std::cout << "\n\n\n";
