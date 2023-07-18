@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game()
+Game::Game() : m_turn(false)
 {
 }
 
@@ -16,15 +16,30 @@ Board Game::GetBoard() const
 
 void Game::Play()
 {
+
 }
 
 EPlayer Game::GetWinner() const
 {
-	return EPlayer();
+	if (IsGameOver())
+	{
+		if (m_turn == true)
+			return EPlayer::White;
+		return EPlayer::Black;
+	}
+	//exception or 
+	return EPlayer::None;
 }
 
 bool Game::IsGameOver() const
 {
+	EPieceColor color;
+	if (m_turn == true)
+		color = EPieceColor::Black;
+	else
+		color = EPieceColor::White;
+	if (m_board.IsCheckmate(color))
+		return true;
 	return false;
 }
 

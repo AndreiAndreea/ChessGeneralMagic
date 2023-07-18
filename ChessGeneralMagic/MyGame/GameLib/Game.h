@@ -36,5 +36,6 @@ public:
 
 private:
 	Board m_board;
+	bool m_turn;
 	//Player m_whitePlayer, m_blackPlayer;
 };

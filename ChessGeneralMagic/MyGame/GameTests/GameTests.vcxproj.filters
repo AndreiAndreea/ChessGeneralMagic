@@ -27,6 +27,7 @@
     <ClCompile Include="PosibleMovesRook.cpp">
       <Filter>PiecesTests</Filter>
     </ClCompile>
+    <ClCompile Include="IsCheckmate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

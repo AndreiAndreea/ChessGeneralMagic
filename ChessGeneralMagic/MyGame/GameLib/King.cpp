@@ -12,16 +12,18 @@ bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, Board boar
 	PieceMatrix localBoard = board.GetBoard();
 	EPieceColor kingColor = GetColor();
 
+	board.SetPiece(endPos, kingColor, EPieceType::King);
+	board.SetPieceToNullptr(startPos);
 	for (int i = 1; i <= 8; i++)
 	{
 		for (int j = 1; j <= 8; j++)
 		{
-			board.SetPiece(endPos, kingColor, EPieceType::King);
 			if (localBoard[i][j] && (localBoard[i][j]->GetColor() != kingColor) && (localBoard[i][j]->GetType() != EPieceType::King) && localBoard[i][j]->CanMove(Position(i, j), endPos, board))
 				return true;
-			board.GetBoard()[endPos.first][endPos.second] = nullptr;
 		}
 	}
+	board.GetBoard()[endPos.first][endPos.second] = nullptr;
+	board.SetPiece(startPos, kingColor, EPieceType::King);
 	return false;
 }
 

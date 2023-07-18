@@ -64,12 +64,12 @@ TEST_F(PawnTest, InvalidMove2) {
 }
 
 
-TEST_F(PawnTest, ValidMove3) {
+TEST_F(PawnTest, InvalidMove3) {
 	Board board;
 	board.SetPiece(Position(5, 4), EPieceColor::White, EPieceType::King);
 	Position startPos(7, 4);
 	Position endPos(5, 4);
 	bool canMove = pawn->CanMove(startPos, endPos, board);
 
-	EXPECT_TRUE(canMove);
+	EXPECT_FALSE(canMove);
 }
