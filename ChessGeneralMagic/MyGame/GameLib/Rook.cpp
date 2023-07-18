@@ -64,6 +64,7 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 	EPieceColor pieceColor = GetColor();
 	auto localBoard = board.GetBoard();
 
+	//vertical down
 	int i = piecePos.first + 1;
 	while (i <= 8)
 	{
@@ -78,20 +79,22 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 		i++;
 	}
 
+	//horizontal left
 	i = piecePos.second - 1;
 	while (i >= 1)
 	{
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.second, i));
+				possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.second, i));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i--;
 	}
 
+	//vertical up
 	i = piecePos.first - 1;
 	while (i >= 1)
 	{
@@ -107,20 +110,19 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 		i--;
 	}
 
+	//horizontal right
 	i = piecePos.second + 1;
 	while (i <= 8)
 	{
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.second, i));
+				possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.second, i));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i++;
 	}
-
-
 	return possibleMoves;
 }

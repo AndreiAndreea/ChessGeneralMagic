@@ -1,8 +1,8 @@
 #include "Queen.h"
 #include "Board.h"
 
-Queen::Queen(EPieceColor color) 
-    : Piece(EPieceType::Queen,color)
+Queen::Queen(EPieceColor color)
+	: Piece(EPieceType::Queen, color)
 {
 
 }
@@ -20,12 +20,11 @@ bool Queen::CanMove(Position startPos, Position endPos, const Board& board)
 
 PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 {
-    PositionList possibleMoves;
+	PositionList possibleMoves;
 	EPieceColor pieceColor = GetColor();
 	auto localBoard = board.GetBoard();
 
 	// rook direction
-
 	int i = piecePos.first + 1;
 	while (i <= 8)
 	{
@@ -47,11 +46,11 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first,i));
+				possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position( piecePos.first,i));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i--;
 	}
 
@@ -76,7 +75,7 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first,i));
+				possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
@@ -88,13 +87,14 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 
 	//bishop direction
 
+	//diagonally upwards right
 	int currentRow = piecePos.first - 1;
 	int currentCol = piecePos.second + 1;
 
-	while (currentCol <= 8 && currentRow >= 1)
+	while (currentRow >= 1 && currentCol <= 8)
 	{
 
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() == GetColor())
 			break;
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
@@ -108,6 +108,7 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		currentCol++;
 	}
 
+	//diagonally downwards right
 	currentRow = piecePos.first + 1;
 	currentCol = piecePos.second + 1;
 
@@ -127,6 +128,7 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		currentCol++;
 	}
 
+	//diagonally downwards left
 	currentRow = piecePos.first + 1;
 	currentCol = piecePos.second - 1;
 
@@ -147,6 +149,7 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		currentCol--;
 	}
 
+	//diagonally upwards left
 	currentRow = piecePos.first - 1;
 	currentCol = piecePos.second - 1;
 
@@ -167,5 +170,5 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		currentCol--;
 	}
 
-    return PositionList();
+	return possibleMoves;
 }

@@ -15,7 +15,7 @@ bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
-	//return false;
+	return false;
 
 	//EPieceColor currentColor = GetColor();
 	//PieceMatrix localBoard = board.GetBoard();
