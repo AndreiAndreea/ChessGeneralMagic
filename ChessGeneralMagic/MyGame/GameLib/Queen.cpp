@@ -171,5 +171,5 @@ PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 		currentCol--;
 	}
 
-    return PositionList();
+	return possibleMoves;
 }

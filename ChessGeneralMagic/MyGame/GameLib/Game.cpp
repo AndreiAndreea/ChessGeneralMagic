@@ -4,6 +4,11 @@ Game::Game()
 {
 }
 
+IGamePtr IGame::Produce()
+{
+	return std::make_shared<Game>();
+}
+
 Board Game::GetBoard() const
 {
 	return m_board;

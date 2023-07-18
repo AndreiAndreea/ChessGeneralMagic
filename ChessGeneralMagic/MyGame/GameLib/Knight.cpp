@@ -9,15 +9,16 @@ Knight::Knight(EPieceColor color)
 
 bool Knight::CanMove(Position startPos, Position endPos, const Board& board)
 {
-	SetPossibleMoves(startPos, board);
-	if (std::find(m_possibleMoves.begin(), m_possibleMoves.end(), endPos) != m_possibleMoves.end())
+	auto possibleMoves = GetPossibleMoves(startPos, board);
+	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
 	return false;
 }
 
-void Knight::SetPossibleMoves(Position piecePos, const Board& board)
+PositionList Knight::GetPossibleMoves(Position piecePos, const Board& board)
 {
+	PositionList possibleMoves;
 
 	for (int i = piecePos.first - 2; i <= piecePos.first + 2; i++)
 		for (int j = piecePos.second - 2; j <= piecePos.second + 2; j++)
@@ -26,9 +27,10 @@ void Knight::SetPossibleMoves(Position piecePos, const Board& board)
 				if (abs(piecePos.first - i) == 2 && abs(piecePos.second - j) == 1 || abs(piecePos.first - i) == 1 && abs(piecePos.second - j) == 2)
 				{
 					if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor())
-						m_possibleMoves.push_back(Position(i, j));
+						possibleMoves.push_back(Position(i, j));
 					if (board.GetBoard()[i][j] == nullptr)
-						m_possibleMoves.push_back(Position(i, j));
+						possibleMoves.push_back(Position(i, j));
 				}
 		}
+	return possibleMoves;
 }

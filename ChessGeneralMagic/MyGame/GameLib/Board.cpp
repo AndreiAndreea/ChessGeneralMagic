@@ -375,23 +375,23 @@ bool Board::IsCheckmate(EPieceColor color) const
 	}
 
 	//if king is in check -> verify if it is checkmate
-	if (IsKingInCheck(kingPos, color))
-	{
-		for (int i = 1; i <= 8; i++)
-		{
-			for (int j = 1; j <= 8; j++)
-			{
-				if (m_board[i][j]->GetColor() == color)
-				{
-					for (auto it : m_board[i][j]->GetPossibleMoves())
-					{
-						//if the king is not left in check, there is a possible move to be made to save the king
-						if (!IsKingLeftInCheck(Position(i, j), it, color))
-							return false;
-					}
-				}
-			}
-		}
-	}
-return true;
+	//if (IsKingInCheck(kingPos, color))
+	//{
+	//	for (int i = 1; i <= 8; i++)
+	//	{
+	//		for (int j = 1; j <= 8; j++)
+	//		{
+	//			if (m_board[i][j]->GetColor() == color)
+	//			{
+	//				for (auto it : m_board[i][j]->GetPossibleMoves())
+	//				{
+	//					//if the king is not left in check, there is a possible move to be made to save the king
+	//					if (!IsKingLeftInCheck(Position(i, j), it, color))
+	//						return false;
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+	return true;
 }
