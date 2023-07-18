@@ -1,8 +1,8 @@
 #include "Queen.h"
 #include "Board.h"
 
-Queen::Queen(EPieceColor color)
-	: Piece(EPieceType::Queen, color)
+Queen::Queen(EPieceColor color) 
+    : Piece(EPieceType::Queen,color)
 {
 
 }
@@ -18,23 +18,25 @@ bool Queen::CanMove(Position startPos, Position endPos, const Board& board)
 	return true;
 }
 
-void Queen::SetPossibleMoves(Position piecePos, const Board& board)
+PositionList Queen::GetPossibleMoves(Position piecePos, const Board& board)
 {
+    PositionList possibleMoves;
 	EPieceColor pieceColor = GetColor();
 	auto localBoard = board.GetBoard();
 
 	// rook direction
+
 	int i = piecePos.first + 1;
 	while (i <= 8)
 	{
 		if (localBoard[i][piecePos.second] != nullptr)
 		{
 			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				m_possibleMoves.push_back(Position(i, piecePos.second));
+				possibleMoves.push_back(Position(i, piecePos.second));
 			break;
 		}
 		else
-			m_possibleMoves.push_back(Position(i, piecePos.second));
+			possibleMoves.push_back(Position(i, piecePos.second));
 		i++;
 	}
 
@@ -45,11 +47,11 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				m_possibleMoves.push_back(Position(piecePos.first, i));
+				possibleMoves.push_back(Position(piecePos.first,i));
 			break;
 		}
 		else
-			m_possibleMoves.push_back(Position(piecePos.first, i));
+			possibleMoves.push_back(Position( piecePos.first,i));
 		i--;
 	}
 
@@ -60,11 +62,11 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[i][piecePos.second] != nullptr)
 		{
 			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				m_possibleMoves.push_back(Position(i, piecePos.second));
+				possibleMoves.push_back(Position(i, piecePos.second));
 			break;
 		}
 		else
-			m_possibleMoves.push_back(Position(i, piecePos.second));
+			possibleMoves.push_back(Position(i, piecePos.second));
 		i--;
 	}
 
@@ -74,11 +76,11 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				m_possibleMoves.push_back(Position(piecePos.first, i));
+				possibleMoves.push_back(Position(piecePos.first,i));
 			break;
 		}
 		else
-			m_possibleMoves.push_back(Position(piecePos.first, i));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i++;
 	}
 
@@ -90,19 +92,19 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 	int currentRow = piecePos.first - 1;
 	int currentCol = piecePos.second + 1;
 
-	while (currentRow >= 1 && currentCol <= 8)
+	while (currentCol <= 8 && currentRow >= 1)
 	{
 
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() == GetColor())
+		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
 			break;
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			m_possibleMoves.push_back(Position(currentRow, currentCol));
+			possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		m_possibleMoves.push_back(Position(currentRow, currentCol));
+		possibleMoves.push_back(Position(currentRow, currentCol));
 		currentRow--;
 		currentCol++;
 	}
@@ -118,11 +120,11 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			m_possibleMoves.push_back(Position(currentRow, currentCol));
+			possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		m_possibleMoves.push_back(Position(currentRow, currentCol));
+		possibleMoves.push_back(Position(currentRow, currentCol));
 		currentRow++;
 		currentCol++;
 	}
@@ -138,11 +140,11 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			m_possibleMoves.push_back(Position(currentRow, currentCol));
+			possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		m_possibleMoves.push_back(Position(currentRow, currentCol));
+		possibleMoves.push_back(Position(currentRow, currentCol));
 
 		currentRow++;
 		currentCol--;
@@ -159,13 +161,15 @@ void Queen::SetPossibleMoves(Position piecePos, const Board& board)
 
 		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
 		{
-			m_possibleMoves.push_back(Position(currentRow, currentCol));
+			possibleMoves.push_back(Position(currentRow, currentCol));
 			break;
 		}
 
-		m_possibleMoves.push_back(Position(currentRow, currentCol));
+		possibleMoves.push_back(Position(currentRow, currentCol));
 
 		currentRow--;
 		currentCol--;
 	}
+
+    return PositionList();
 }
