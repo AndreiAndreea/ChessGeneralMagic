@@ -22,18 +22,18 @@ protected:
 
 
 //moving upwards 2 spots
-TEST_F(PawnTest, ValidMove) {
+TEST_F(PawnTest, InvalidMove) {
 	Board board;
 
 	Position startPos(7, 2);
 	Position endPos(5, 2);
 	bool canMove = pawn->CanMove(startPos, endPos, board);
 
-	EXPECT_TRUE(canMove);
+	EXPECT_FALSE(canMove);
 }
 
 //upwards diagonally
-TEST_F(PawnTest, ValidMove2) {
+TEST_F(PawnTest, InvalidMove1) {
 	Board board;
 
 	Position startPos(3, 5);
@@ -44,7 +44,7 @@ TEST_F(PawnTest, ValidMove2) {
 }
 
 //moving backwards vertically
-TEST_F(PawnTest, InvalidMove) {
+TEST_F(PawnTest, ValidMove) {
 	Board board;
 	Position startPos(5, 4);
 	Position endPos(6, 4);
@@ -54,20 +54,20 @@ TEST_F(PawnTest, InvalidMove) {
 }
 
 //moving backwards diagonally
-TEST_F(PawnTest, InvalidMove2) {
+TEST_F(PawnTest, ValidMove1) {
 	Board board;
-	Position startPos(5, 4);
-	Position endPos(6, 6);
+	Position startPos(6, 4);
+	Position endPos(7, 5);
 	bool canMove = pawn->CanMove(startPos, endPos, board);
 
 	EXPECT_FALSE(canMove);
 }
 
 
-TEST_F(PawnTest, InvalidMove3) {
+TEST_F(PawnTest, InvalidMove2) {
 	Board board;
 	board.SetPiece(Position(5, 4), EPieceColor::White, EPieceType::King);
-	Position startPos(7, 4);
+	Position startPos(3, 4);
 	Position endPos(5, 4);
 	bool canMove = pawn->CanMove(startPos, endPos, board);
 

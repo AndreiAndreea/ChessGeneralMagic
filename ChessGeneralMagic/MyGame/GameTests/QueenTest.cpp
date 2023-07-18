@@ -24,7 +24,7 @@ TEST_F(QueenTest, ValidMove)
 	Board board;
 
 	Position startPos(4,6);
-	Position endPos(2,6);
+	Position endPos(7,3);
 
 	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
 }
@@ -77,7 +77,7 @@ TEST_F(QueenTest, InvalidMove3)
 	Board board;
 
 	Position startPos(4,3);
-	Position endPos(7,3);
+	Position endPos(2,5);
 
 	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
 }

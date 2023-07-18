@@ -27,7 +27,7 @@ TEST_F(RookTest, InvalidMovement)
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
-TEST_F(RookTest, InvalidMovement2)
+TEST_F(RookTest, ValidMovement1)
 {
 	Board board;
 	Position startPos(2, 1);
@@ -35,16 +35,16 @@ TEST_F(RookTest, InvalidMovement2)
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
-TEST_F(RookTest, InvalidMovement3)
+TEST_F(RookTest, ValidMovement2)
 {
 	Board board;
 	Position startPos(6, 3);
 	Position endPos(2, 3);
-	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
+	EXPECT_TRUE(rok->CanMove(startPos, endPos, board));
 }
 
 //move in the same spot
-TEST_F(RookTest, InvalidMovement4)
+TEST_F(RookTest, InvalidMovement2)
 {
 	Board board;
 	Position startPos(2, 3);
@@ -52,10 +52,10 @@ TEST_F(RookTest, InvalidMovement4)
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }
 
-TEST_F(RookTest, ValidMovement)
+TEST_F(RookTest, InvalidMovement1)
 {
 	Board board;
 	Position startPos(5, 7);
 	Position endPos(7,7);
-	EXPECT_TRUE(rok->CanMove(startPos, endPos, board));
+	EXPECT_FALSE(rok->CanMove(startPos, endPos, board));
 }

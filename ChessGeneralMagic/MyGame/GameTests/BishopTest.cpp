@@ -31,7 +31,7 @@ TEST_F(BishopTest, ValidMove) {
 
 TEST_F(BishopTest, InvalidMove) {
 	Board board;
-	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,6)}, {Position(2,2), Position(4,5)} };
+	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(7,7)}, {Position(2,2), Position(4,5)} };
 
 	for (auto it : possibleMoves)
 		EXPECT_FALSE(bishop->CanMove(it.first, it.second, board));

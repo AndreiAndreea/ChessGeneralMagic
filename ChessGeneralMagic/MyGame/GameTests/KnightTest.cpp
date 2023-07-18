@@ -23,15 +23,15 @@ TEST_F(KnightTest, ValidMovement)
 {
 	Board board;
 	Position startPos(6, 3);
-	Position endPos(8, 2);
+	Position endPos(4, 2);
 	EXPECT_TRUE(knight->CanMove(startPos, endPos, board));
 }
 
 TEST_F(KnightTest, ValidMovement2)
 {
 	Board board;
-	Position startPos(6, 3);
-	Position endPos(4, 2);
+	Position startPos(4, 4);
+	Position endPos(2, 3);
 	EXPECT_TRUE(knight->CanMove(startPos, endPos, board));
 }
 
