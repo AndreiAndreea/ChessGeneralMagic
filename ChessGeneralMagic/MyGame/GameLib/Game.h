@@ -33,11 +33,11 @@ public:
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
-	bool MakeMove(std::string startPosStr, std::string endPosStr) override;
+	bool MakeMove(const std::string& startPosStr, const std::string& endPosStr) override;
 
 private:
-	Position ConvertToPos(std::string pos);
-	bool IsInputValid(Position startPos, Position endPos);
+	Position ConvertToPos(const std::string& pos);
+	bool IsInputValid(const Position& startPos, const Position& endPos);
 
 private:
 	Board m_board;

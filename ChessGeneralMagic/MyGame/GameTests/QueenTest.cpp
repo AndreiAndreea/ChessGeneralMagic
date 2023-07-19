@@ -25,6 +25,7 @@ TEST_F(QueenTest, ValidMove)
 
 	Position startPos(4,6);
 	Position endPos(7,3);
+	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
 	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
 }
@@ -36,6 +37,7 @@ TEST_F(QueenTest, ValidMove2)
 
 	Position startPos(4, 6);
 	Position endPos(6, 6);
+	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
 	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
 }
@@ -47,6 +49,7 @@ TEST_F(QueenTest, ValidMove3)
 
 	Position startPos(4, 6);
 	Position endPos(3,7);
+	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
 	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
 }
@@ -58,6 +61,7 @@ TEST_F(QueenTest, InvalidMove)
 
 	Position startPos(8, 4);
 	Position endPos(6, 6);
+	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
 	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
 }
@@ -68,6 +72,7 @@ TEST_F(QueenTest, InvalidMove2)
 
 	Position startPos(8, 4);
 	Position endPos(8, 6);
+	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
 	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
 }
@@ -78,6 +83,7 @@ TEST_F(QueenTest, InvalidMove3)
 
 	Position startPos(4,3);
 	Position endPos(2,5);
+	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
 	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
 }

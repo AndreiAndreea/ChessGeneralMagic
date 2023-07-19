@@ -7,23 +7,23 @@ King::King(EPieceColor color)
 
 }
 
-bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, Board board)
+bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, Board board) const
 {
-	PieceMatrix localBoard = board.GetBoard();
+	Board localBoard(board);
 	EPieceColor kingColor = GetColor();
 
-	board.SetPiece(endPos, kingColor, EPieceType::King);
-	board.SetPieceToNullptr(startPos);
+	localBoard.SetPiece(endPos, kingColor, EPieceType::King);
+	localBoard.SetPieceToNullptr(startPos);
 	for (int i = 1; i <= 8; i++)
 	{
 		for (int j = 1; j <= 8; j++)
 		{
-			if (localBoard[i][j] && (localBoard[i][j]->GetColor() != kingColor) && (localBoard[i][j]->GetType() != EPieceType::King) && localBoard[i][j]->CanMove(Position(i, j), endPos, board))
+			if (localBoard.GetBoard()[i][j] && (localBoard.GetBoard()[i][j]->GetColor() != kingColor) && (localBoard.GetBoard()[i][j]->GetType() != EPieceType::King) && localBoard.GetBoard()[i][j]->CanMove(Position(i, j), endPos, localBoard))
 				return true;
 		}
 	}
-	board.GetBoard()[endPos.first][endPos.second] = nullptr;
-	board.SetPiece(startPos, kingColor, EPieceType::King);
+	localBoard.GetBoard()[endPos.first][endPos.second] = nullptr;
+	localBoard.SetPiece(startPos, kingColor, EPieceType::King);
 	return false;
 }
 
@@ -39,6 +39,8 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 PositionList King:: GetPossibleMoves(Position piecePos, const Board& board)
 {
 	PositionList possibleMoves;
+
+
 	for(int i=piecePos.first-1;i<=piecePos.first+1 ;i++)
 		for (int j = piecePos.second - 1; j <= piecePos.second + 1 ; j++)
 		{

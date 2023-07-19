@@ -12,6 +12,6 @@ public:
 	PositionList GetPossibleMoves(Position piecePos, const Board& board);
 
 private:
-	bool VerifyKingMovmentCheck(Position startPos, Position endPos,  Board board);
+	bool VerifyKingMovmentCheck(Position startPos, Position endPos,  Board board) const;
 };
 

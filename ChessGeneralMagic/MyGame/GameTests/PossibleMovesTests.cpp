@@ -94,10 +94,12 @@ TEST(PossibleMovesTest, ValidMovesPosibilitiesKing)
 	board.SetPiece(Position(4, 8), EPieceColor::White, EPieceType::King);
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Rook);
 	std::vector<Position> vector = {Position(4,7), Position(5,7), Position(5,8) };
+	auto vect1 = board.GetBoard()[4][8]->GetPossibleMoves(Position(4, 8), board);
 	EXPECT_EQ(board.GetBoard()[4][8]->GetPossibleMoves(Position(4, 8), board), vector);
 }
 
 TEST(PossibleMovesTest, ValidMovesPosibilitiesKing2)
+
 {
 	Board board;
 	board.SetPiece(Position(6, 8), EPieceColor::White, EPieceType::King);
@@ -107,6 +109,20 @@ TEST(PossibleMovesTest, ValidMovesPosibilitiesKing2)
 }
 
 
+
+TEST(PossibleMovesTest, ValidMovesPosibilitiesKing4)
+{
+	Board board(0);
+	board.SetPiece(Position(1, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Queen);
+	board.SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Bishop);
+	board.SetPiece(Position(2, 4), EPieceColor::Black, EPieceType::Pawn);
+	board.SetPiece(Position(2, 5), EPieceColor::Black, EPieceType::Pawn);
+	board.SetPiece(Position(4, 8), EPieceColor::White, EPieceType::Queen);	
+	std::vector<Position> vector = {};
+	auto vect1 = board.GetBoard()[1][5]->GetPossibleMoves(Position(1, 5), board);
+	EXPECT_EQ(board.GetBoard()[1][5]->GetPossibleMoves(Position(1, 5), board), vector);
+}
 
 TEST(PossibleMovesTest, ValidMovesPosibilitiesKing3)
 {

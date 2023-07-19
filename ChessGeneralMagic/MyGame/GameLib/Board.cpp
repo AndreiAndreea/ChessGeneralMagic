@@ -50,6 +50,11 @@ Board::Board(int)
 			m_board[x][y] = nullptr;
 }
 
+Board::Board(const Board& ob)
+{
+	m_board = ob.GetBoard();
+}
+
 void Board::InitializeBoard() {
 
 	// initializing the board with spots(each square)
@@ -107,7 +112,7 @@ PieceMatrix Board::GetBoard() const
 	return m_board;
 }
 
-bool Board::MakeMove(Position startPos, Position endPos)
+bool Board::MakeMove(const Position& startPos, const Position& endPos)
 {
 	auto piece = m_board[startPos.first][startPos.second];
 	if (piece->CanMove(startPos, endPos, *this))
@@ -126,7 +131,7 @@ bool Board::MakeMove(Position startPos, Position endPos)
 	return false;
 }
 
-void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
+void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
 {
 
 	switch (type)
@@ -152,7 +157,7 @@ void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
 	}
 }
 
-void Board::SetPieceToNullptr(Position pos)
+void Board::SetPieceToNullptr(const Position& pos)
 {
 	m_board[pos.first][pos.second] = nullptr;
 }
@@ -168,7 +173,7 @@ static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType
 	return false;
 }
 
-bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const
+bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const
 {
 	Position kingPos;
 
@@ -319,10 +324,12 @@ bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pi
 	{
 		if (kingPos.first + 1 <= 8)
 		{
-			if (kingPos.second - 1 >= 1 && m_board[kingPos.first + 1][kingPos.second - 1] != nullptr && m_board[kingPos.first + 1][kingPos.second - 1]->GetColor() != pieceColor && (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second))
+			if (kingPos.second - 1 >= 1 && m_board[kingPos.first + 1][kingPos.second - 1] != nullptr && m_board[kingPos.first + 1][kingPos.second - 1]->GetColor() != pieceColor 
+				&& (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second) && m_board[kingPos.first + 1][kingPos.second - 1]->GetType() == EPieceType::Pawn)
 				return true;
 
-			if (kingPos.second + 1 <= 8 && m_board[kingPos.first + 1][kingPos.second + 1] != nullptr && m_board[kingPos.first + 1][kingPos.second + 1]->GetColor() != pieceColor && (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second))
+			if (kingPos.second + 1 <= 8 && m_board[kingPos.first + 1][kingPos.second + 1] != nullptr && m_board[kingPos.first + 1][kingPos.second + 1]->GetColor() != pieceColor 
+				&& (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second) && m_board[kingPos.first + 1][kingPos.second + 1]->GetType() == EPieceType::Pawn)
 				return true;
 		}
 	}
@@ -331,10 +338,12 @@ bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pi
 	{
 		if (kingPos.first - 1 >= 1)
 		{
-			if (kingPos.second - 1 >= 1 && m_board[kingPos.first - 1][kingPos.second - 1] != nullptr && m_board[kingPos.first - 1][kingPos.second - 1]->GetColor() != pieceColor && (kingPos.first -1 != endPos.first || kingPos.second - 1 != endPos.second))
+			if (kingPos.second - 1 >= 1 && m_board[kingPos.first - 1][kingPos.second - 1] != nullptr && m_board[kingPos.first - 1][kingPos.second - 1]->GetColor() != pieceColor 
+				&& (kingPos.first -1 != endPos.first || kingPos.second - 1 != endPos.second) && m_board[kingPos.first - 1][kingPos.second - 1]->GetType() == EPieceType::Pawn)
 				return true;
 
-			if (kingPos.second + 1 <= 8 && m_board[kingPos.first - 1][kingPos.second + 1] != nullptr && m_board[kingPos.first - 1][kingPos.second + 1]->GetColor() != pieceColor && (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second))
+			if (kingPos.second + 1 <= 8 && m_board[kingPos.first - 1][kingPos.second + 1] != nullptr && m_board[kingPos.first - 1][kingPos.second + 1]->GetColor() != pieceColor 
+				&& (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second) && m_board[kingPos.first - 1][kingPos.second + 1]->GetType() == EPieceType::Pawn)
 				return true;
 		}
 	}
@@ -353,7 +362,7 @@ bool Board::IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pi
 	return false;
 }
 
-bool Board::IsKingInCheck(Position currentPos, EPieceColor color) const
+bool Board::IsKingInCheck(const Position& currentPos, EPieceColor color) const
 {
 
 	for (int i = 1; i <= 8; i++)

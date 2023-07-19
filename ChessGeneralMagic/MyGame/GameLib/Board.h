@@ -20,22 +20,25 @@ class Board
 public:
 	Board();
 	Board(int);
+	Board(const Board& ob);
 	Board( ConfigMatrix piecePos);
 
 	void InitializeBoard();
 
 	PieceMatrix GetBoard() const;
 
-	bool MakeMove(Position startPos, Position endPos);
+	bool MakeMove(const Position& startPos, const Position& endPos);
 
 	//private
-	void SetPiece(Position pos, EPieceColor color, EPieceType type);
-	void SetPieceToNullptr(Position pos);
+	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
+	void SetPieceToNullptr(const Position& pos);
 
 	//cant move piece if king is left in check
-	bool IsKingLeftInCheck(Position startPos, Position endPos, EPieceColor pieceColor) const;
+	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;
+
 	//check if king is in check after opposite player move
-	bool IsKingInCheck(Position currentPos, EPieceColor color) const;
+	bool IsKingInCheck(const Position& currentPos, EPieceColor color) const;
+
 	//checking if it is checkmate
 	bool IsCheckmate(EPieceColor color) const;
 

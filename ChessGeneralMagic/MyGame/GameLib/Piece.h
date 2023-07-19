@@ -18,7 +18,7 @@ public:
 	EPieceType GetType() const override;
 
 	bool Is(EPieceType type, EPieceColor color) const override;
-	bool IsOpposite(EPieceColor color, std::initializer_list<EPieceType> list) const;
+	bool IsOpposite(EPieceColor color, std::vector<EPieceType> list) const;
 
 protected:
 	EPieceType m_type;

@@ -44,7 +44,7 @@ bool Game::IsGameOver() const
 	return false;
 }
 
-bool Game::MakeMove(std::string startPosStr, std::string endPosStr)
+bool Game::MakeMove(const std::string& startPosStr, const std::string& endPosStr)
 {
 	Position startPos = ConvertToPos(startPosStr);
 	Position endPos = ConvertToPos(endPosStr);
@@ -66,7 +66,7 @@ EPlayer Game::GetCurrentPlayer() const
 		
 }
 
-Position Game::ConvertToPos(std::string pos)
+Position Game::ConvertToPos(const std::string& pos)
 {
 	Position convertedPos;
 	convertedPos.second = pos[0] - 'A' + 1;
@@ -74,7 +74,7 @@ Position Game::ConvertToPos(std::string pos)
 	return convertedPos;
 }
 
-bool Game::IsInputValid(Position startPos, Position endPos)
+bool Game::IsInputValid(const Position& startPos, const Position& endPos)
 {
 	if (startPos.first < 1 || startPos.first > 8 || startPos.second < 1 || startPos.second > 8)
 		return false;

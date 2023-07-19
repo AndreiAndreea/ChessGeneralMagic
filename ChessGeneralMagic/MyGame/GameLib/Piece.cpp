@@ -10,7 +10,7 @@ bool Piece::Is(EPieceType type, EPieceColor color) const
 	return m_type == type && m_color == color;
 }
 
-bool Piece::IsOpposite(EPieceColor color, std::initializer_list<EPieceType> list) const
+bool Piece::IsOpposite(EPieceColor color, std::vector<EPieceType> list) const
 {
 	if (m_color == color)
 		return false;
