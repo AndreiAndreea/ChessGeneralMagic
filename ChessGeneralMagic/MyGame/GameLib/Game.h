@@ -28,12 +28,12 @@ public:
 	void Play() override;
 	
 	EPlayer GetWinner() const override;
+	EPlayer GetCurrentPlayer() const override;
 	bool IsGameOver() const override;
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
 	bool MakeMove(std::string startPosStr, std::string endPosStr) override;
-
 
 private:
 	Position ConvertToPos(std::string pos);

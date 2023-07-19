@@ -34,6 +34,16 @@ std::string PieceToStr(IPieceInfoPtr pieceInfo)
 	return result;
 }
 
+std::string PlayerToStr(EPlayer player)
+{
+	if (player == EPlayer::White)
+		return "PlayerWhite";
+	else
+		if (player == EPlayer::Black)
+			return "PlayerBlack";
+	return "None";
+}
+
 void PrintBoard( const IGamePtr& game)
 {
 	for (int i = 1; i <= 8; i++)
@@ -55,19 +65,22 @@ int main()
 {
 	IGamePtr game = IGame::Produce();
 	PrintBoard(game);
-	/*game->MakeMove("B7","B6");
-	std::cout << "\n\n\n";
-	PrintBoard(game);*/
+	std::cout << "\n\n";
 	while (game->IsGameOver()==false)
 	{
 		std::string startPos, endPos;
-		std::cout << "Insert your move: "; std::cin >> startPos; std::cin >> endPos;
+		std::cout << "Insert your move "<<PlayerToStr(game->GetCurrentPlayer())<<": ";
+		std::cin >> startPos; std::cin >> endPos;
 		while (!game->MakeMove(startPos, endPos))
 		{
 			std::cout << "Invalid Move\n";
-			std::cout << "Insert your move: "; std::cin >> startPos; std::cin >> endPos;
+			std::cout << "Insert your move " << PlayerToStr(game->GetCurrentPlayer()) << ": ";
+			std::cin >> startPos; std::cin >> endPos;
 		}
 		PrintBoard(game);
 	}
+
+	std::cout <<"Winner is: "<< PlayerToStr(game->GetWinner())<<" !!!";
+
 	return 0;
 }

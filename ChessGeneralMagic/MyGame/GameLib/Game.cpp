@@ -58,6 +58,14 @@ bool Game::MakeMove(std::string startPosStr, std::string endPosStr)
 
 }
 
+EPlayer Game::GetCurrentPlayer() const
+{
+	if(m_turn)
+		return EPlayer::Black;
+	return EPlayer::White;
+		
+}
+
 Position Game::ConvertToPos(std::string pos)
 {
 	Position convertedPos;

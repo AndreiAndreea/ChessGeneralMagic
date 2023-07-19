@@ -35,6 +35,7 @@ public:
 
 	virtual void Play() = 0;
 	virtual EPlayer GetWinner() const = 0;
+	virtual EPlayer GetCurrentPlayer() const = 0;
 	virtual bool IsGameOver() const = 0;
 	virtual bool MakeMove(std::string startPosStr, std::string endPosStr) = 0;
 
