@@ -9,6 +9,7 @@ IGamePtr IGame::Produce()
 	return std::make_shared<Game>();
 }
 
+
 Board Game::GetBoard() const
 {
 	return m_board;
@@ -41,6 +42,11 @@ bool Game::IsGameOver() const
 	if (m_board.IsCheckmate(color))
 		return true;
 	return false;
+}
+
+ConfigMatrix Game::GetMatrix() const
+{
+	return m_board.GetBoard();
 }
 
 bool Game::MakeMove(std::string startPosStr, std::string endPosStr)

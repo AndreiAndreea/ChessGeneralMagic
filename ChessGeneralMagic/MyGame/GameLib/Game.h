@@ -29,6 +29,7 @@ public:
 	
 	EPlayer GetWinner() const override;
 	bool IsGameOver() const override;
+	ConfigMatrix GetMatrix() const override;
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
