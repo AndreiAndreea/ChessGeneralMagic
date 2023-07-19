@@ -118,12 +118,69 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 	if (piece->CanMove(startPos, endPos, *this))
 	{
 		if (piece->GetType() != EPieceType::King)
+		{
 			if (IsKingLeftInCheck(startPos, endPos, piece->GetColor()))
 			{
 				std::cout << "Regele e in sah! Nu se poate face mutarea.";
 				//throw
 				return false;
 			}
+		}
+		else if(startPos.second - endPos.second == 2)
+		{
+			SetPiece(endPos, piece->GetColor(), piece->GetType());
+			SetPieceToNullptr(startPos);
+			if (piece->GetColor() == EPieceColor::White)
+			{
+				SetPiece(Position(8, 4), EPieceColor::White, EPieceType::Rook);
+				SetPieceToNullptr(Position(8, 1));
+			}
+			else
+			{
+				SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Rook);
+				SetPieceToNullptr(Position(1, 1));
+			}
+		}
+		else if (startPos.second - endPos.second == -2)
+		{
+			SetPiece(endPos, piece->GetColor(), piece->GetType());
+			SetPieceToNullptr(startPos);
+			if (piece->GetColor() == EPieceColor::White)
+			{
+				SetPiece(Position(8, 6), EPieceColor::White, EPieceType::Rook);
+				SetPieceToNullptr(Position(8, 8));
+			}
+			else
+			{
+				SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Rook);
+				SetPieceToNullptr(Position(1, 8));
+			}
+		}
+
+		//castling
+		if (piece->GetType() == EPieceType::King)
+			if (piece->GetColor() == EPieceColor::White)
+				CastlingPossible[0] = { false, false };
+			else
+				CastlingPossible[1] = { false, false };
+		if (piece->GetType() == EPieceType::Rook)
+		{
+			if (piece->GetColor() == EPieceColor::White)
+			{
+				if (startPos.first == 8 && startPos.second == 1)
+					CastlingPossible[0][0] = false;
+				if (startPos.first == 8 && startPos.second == 8)
+					CastlingPossible[0][1] = false;
+			}
+			else
+			{
+				if (startPos.first == 1 && startPos.second == 1)
+					CastlingPossible[1][0] = false;
+				if (startPos.first == 1 && startPos.second == 8)
+					CastlingPossible[1][1] = false;
+			}
+		}
+
 		SetPiece(endPos, piece->GetColor(), piece->GetType());
 		SetPieceToNullptr(startPos);
 		return true;
@@ -431,5 +488,10 @@ bool Board::IsCheckmate(EPieceColor color) const
 		return true;
 	}
 	return false;
+}
+
+std::vector<std::vector<bool>> Board::GetCastlingVect() const
+{
+	return CastlingPossible;
 }
 

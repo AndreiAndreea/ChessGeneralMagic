@@ -21,7 +21,7 @@ public:
 	Board();
 	Board(int);
 	Board(const Board& ob);
-	Board( ConfigMatrix piecePos);
+	Board(ConfigMatrix piecePos);
 
 	void InitializeBoard();
 
@@ -42,8 +42,9 @@ public:
 	//checking if it is checkmate
 	bool IsCheckmate(EPieceColor color) const;
 
-
+	std::vector<std::vector<bool>> GetCastlingVect() const;
 
 private:
 	PieceMatrix m_board;
+	std::vector<std::vector<bool>> CastlingPossible = { {true, true}, {true, true} };
 };
