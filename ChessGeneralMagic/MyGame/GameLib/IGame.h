@@ -3,8 +3,10 @@
 #include "EPieceColor.h"
 #include "EPieceType.h"
 
+#include <vector>
 #include <memory>
 #include <string>
+#include<utility>
 
 enum class EPlayer
 {
@@ -25,7 +27,7 @@ public:
 using Position = std::pair<int, int>;
 using IPieceInfoPtr = std::shared_ptr<IPieceInfo>;
 using IGamePtr = std::shared_ptr<class IGame>;
-using ConfigMatrix = std::vector<std::pair<PiecePtr, Position>>;
+//using PieceMatrix = std::vector<std::pair<PiecePtr, Position>>;
 
 class IGame
 {
@@ -34,7 +36,7 @@ public:
 
 	virtual void Play() = 0;
 	virtual EPlayer GetWinner() const = 0;
-	virtual ConfigMatrix GetMatrix() const=0;
+	//virtual PieceMatrix GetMatrix() const=0;
 	virtual bool IsGameOver() const = 0;
 	virtual bool MakeMove(std::string startPosStr, std::string endPosStr) = 0;
 
@@ -42,4 +44,3 @@ public:
 
 	virtual ~IGame() = default;
 };
-

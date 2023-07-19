@@ -29,11 +29,13 @@ public:
 	
 	EPlayer GetWinner() const override;
 	bool IsGameOver() const override;
-	ConfigMatrix GetMatrix() const override;
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
 	bool MakeMove(std::string startPosStr, std::string endPosStr) override;
+
+
+	//PieceMatrix GetMatrix() const override;
 
 private:
 	Position ConvertToPos(std::string pos);

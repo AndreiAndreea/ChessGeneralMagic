@@ -44,11 +44,6 @@ bool Game::IsGameOver() const
 	return false;
 }
 
-ConfigMatrix Game::GetMatrix() const
-{
-	return m_board.GetBoard();
-}
-
 bool Game::MakeMove(std::string startPosStr, std::string endPosStr)
 {
 	Position startPos = ConvertToPos(startPosStr);
@@ -62,6 +57,11 @@ bool Game::MakeMove(std::string startPosStr, std::string endPosStr)
 	return false;
 
 }
+
+//PieceMatrix Game::GetMatrix() const
+//{
+//	
+//}
 
 Position Game::ConvertToPos(std::string pos)
 {
