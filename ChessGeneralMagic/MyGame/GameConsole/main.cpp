@@ -34,7 +34,7 @@ std::string PieceToStr(IPieceInfoPtr pieceInfo)
 	return result;
 }
 
-void PrintBoard( const IGame& game)
+void PrintBoard( const IGamePtr& game)
 {
 	auto board = game.GetBoard();
 	for (int i = 1; i <= 8; i++)
@@ -43,7 +43,7 @@ void PrintBoard( const IGame& game)
 		{
 			if (board.GetBoard()[i][j])
 			{
-				IPieceInfoPtr piece = std::make_shared<PieceInfo>(board.GetBoard()[i][j]->GetType(), board.GetBoard()[i][j]->GetColor());
+				IPieceInfoPtr piece = std::make_shared<class PieceInfo>(board.GetBoard()[i][j]->GetType(), board.GetBoard()[i][j]->GetColor());
 				std::cout << PieceToStr(piece) << " ";
 			}
 			else
