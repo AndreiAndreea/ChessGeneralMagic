@@ -28,9 +28,9 @@ std::string PieceToStr(IPieceInfoPtr pieceInfo)
 		break;
 	}
 	if (pieceInfo->GetColor() == EPieceColor::White)
-		result += "w";
+		result += "w ";
 	else
-		result += "b";
+		result += "b ";
 	return result;
 }
 
@@ -44,7 +44,7 @@ void PrintBoard( const IGamePtr& game)
 			if (pieceInfo)
 				std::cout << PieceToStr(pieceInfo) << " ";
 			else
-				std::cout << "0 ";
+				std::cout << "0   ";
 
 		}
 		std::cout << "\n";
@@ -55,8 +55,19 @@ int main()
 {
 	IGamePtr game = IGame::Produce();
 	PrintBoard(game);
-	game->MakeMove("B7","B6");
+	/*game->MakeMove("B7","B6");
 	std::cout << "\n\n\n";
-	PrintBoard(game);
+	PrintBoard(game);*/
+	while (game->IsGameOver()==false)
+	{
+		std::string startPos, endPos;
+		std::cout << "Insert your move: "; std::cin >> startPos; std::cin >> endPos;
+		while (!game->MakeMove(startPos, endPos))
+		{
+			std::cout << "Invalid Move\n";
+			std::cout << "Insert your move: "; std::cin >> startPos; std::cin >> endPos;
+		}
+		PrintBoard(game);
+	}
 	return 0;
 }

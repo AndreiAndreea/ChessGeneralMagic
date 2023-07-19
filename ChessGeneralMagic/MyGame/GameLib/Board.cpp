@@ -123,6 +123,7 @@ bool Board::MakeMove(Position startPos, Position endPos)
 		SetPieceToNullptr(startPos);
 		return true;
 	}
+	return false;
 }
 
 void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
@@ -405,7 +406,8 @@ bool Board::IsCheckmate(EPieceColor color) const
 				}
 			}
 		}
+		return true;
 	}
-	return true;
+	return false;
 }
 
