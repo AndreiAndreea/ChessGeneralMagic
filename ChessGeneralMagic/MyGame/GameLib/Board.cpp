@@ -37,6 +37,19 @@ Board::Board(ConfigMatrix piecePos)
 	}
 }
 
+Board::Board(int)
+{
+	m_board.resize(9);
+	for (int i = 1; i <= 8; i++)
+	{
+		m_board[i].resize(9);
+	}
+
+	for (int x = 1; x <= 8; x++)
+		for (int y = 1; y <= 8; y++)
+			m_board[x][y] = nullptr;
+}
+
 void Board::InitializeBoard() {
 
 	// initializing the board with spots(each square)
@@ -47,11 +60,9 @@ void Board::InitializeBoard() {
 		m_board[i].resize(9);
 	}
 
-	for (int x = 3; x <= 6; x++) {
-		for (int y = 1; y <= 8; y++) {
+	for (int x = 3; x <= 6; x++)
+		for (int y = 1; y <= 8; y++)
 			m_board[x][y] = nullptr;
-		}
-	}
 
 	//initializing the white pieces 
 	m_board[1][1] = std::make_shared<Rook>(EPieceColor::Black);
@@ -136,8 +147,6 @@ void Board::SetPiece(Position pos, EPieceColor color, EPieceType type)
 		break;
 	case EPieceType::Queen:
 		m_board[pos.first][pos.second] = std::make_shared<Queen>(color);
-		break;
-	default:
 		break;
 	}
 }

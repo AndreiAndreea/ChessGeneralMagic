@@ -40,29 +40,8 @@ TEST_F(PawnTest, InvalidMove1) {
 	Position endPos(2, 6);
 	bool canMove = pawn->CanMove(startPos, endPos, board);
 
-	EXPECT_TRUE(canMove);
-}
-
-//moving backwards vertically
-TEST_F(PawnTest, ValidMove) {
-	Board board;
-	Position startPos(5, 4);
-	Position endPos(6, 4);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
-
 	EXPECT_FALSE(canMove);
 }
-
-//moving backwards diagonally
-TEST_F(PawnTest, ValidMove1) {
-	Board board;
-	Position startPos(6, 4);
-	Position endPos(7, 5);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
-
-	EXPECT_FALSE(canMove);
-}
-
 
 TEST_F(PawnTest, InvalidMove2) {
 	Board board;
@@ -73,3 +52,24 @@ TEST_F(PawnTest, InvalidMove2) {
 
 	EXPECT_FALSE(canMove);
 }
+
+//moving backwards vertically
+TEST_F(PawnTest, ValidMove) {
+	Board board;
+	Position startPos(5, 4);
+	Position endPos(6, 4);
+	bool canMove = pawn->CanMove(startPos, endPos, board);
+
+	EXPECT_TRUE(canMove);
+}
+
+//moving backwards diagonally
+TEST_F(PawnTest, ValidMove1) {
+	Board board;
+	Position startPos(6, 4);
+	Position endPos(7, 5);
+	bool canMove = pawn->CanMove(startPos, endPos, board);
+
+	EXPECT_TRUE(canMove);
+}
+

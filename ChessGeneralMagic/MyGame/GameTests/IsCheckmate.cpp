@@ -4,7 +4,7 @@
 
 TEST(IsCheckmate, KingIsNotInCheck)
 {
-	Board board;
+	Board board(0);
 
 	board.SetPiece(Position(4, 6), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(3, 5), EPieceColor::White, EPieceType::Bishop);
@@ -21,7 +21,7 @@ TEST(IsCheckmate, KingIsNotInCheck)
 
 TEST(IsCheckmate, KingIsNotInCheck1)
 {
-	Board board;
+	Board board(0);
 
 	board.SetPiece(Position(4, 6), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(3, 5), EPieceColor::White, EPieceType::Bishop);

@@ -19,6 +19,7 @@ class Board
 {
 public:
 	Board();
+	Board(int);
 	Board( ConfigMatrix piecePos);
 
 	void InitializeBoard();
