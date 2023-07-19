@@ -28,13 +28,16 @@ TEST_F(KingTest, InvalidMove) {
 }
 
 
-//TEST_F(KingTest, InvalidMove1) {
-//	Board board;
-//	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,5)}, {Position(4,4), Position(6,6)},{Position(1,4), Position(1,6)} , {Position(8,1), Position(8,2)} };
-//
-//	for (auto it : possibleMoves)
-//		EXPECT_FALSE(king->CanMove(it.first, it.second, board));
-//}
+TEST_F(KingTest, InvalidMove1) {
+	Board board;
+	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,5)}, {Position(4,4), Position(6,6)},{Position(1,4), Position(1,6)} , {Position(8,1), Position(8,2)} };
+
+	for (auto it : possibleMoves)
+	{
+		board.SetPiece(it.first, EPieceColor::White, EPieceType::King);
+		EXPECT_FALSE(king->CanMove(it.first, it.second, board));
+	}
+}
 
 
 TEST_F(KingTest, ValidMoveCheck2)
@@ -111,4 +114,40 @@ TEST_F(KingTest, ValidCastlingBig) {
 	board.SetPieceToNullptr(Position(8, 7));
 
 	EXPECT_TRUE(king->CanMove(Position(8, 5), Position(8, 3), board));
+}
+
+TEST_F(KingTest, InvalidCastlingSmall) {
+	Board board;
+	board.SetPieceToNullptr(Position(8, 2));
+	board.SetPieceToNullptr(Position(8, 3));
+	board.SetPieceToNullptr(Position(8, 4));
+	board.SetPieceToNullptr(Position(8, 6));
+	board.SetPieceToNullptr(Position(8, 7));
+	board.SetPieceToNullptr(Position(7, 6));
+	board.SetPiece(Position(5, 6), EPieceColor::Black, EPieceType::Queen);
+	EXPECT_FALSE(king->CanMove(Position(8, 5), Position(8, 7), board));
+}
+
+TEST_F(KingTest, InvalidCastlingSmall1) {
+	Board board;
+	board.SetPieceToNullptr(Position(8, 2));
+	board.SetPieceToNullptr(Position(8, 3));
+	board.SetPieceToNullptr(Position(8, 4));
+	board.SetPieceToNullptr(Position(8, 6));
+	board.SetPieceToNullptr(Position(8, 7));
+	board.SetPieceToNullptr(Position(7, 5));
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::Queen);
+	EXPECT_FALSE(king->CanMove(Position(8, 5), Position(8, 7), board));
+}
+
+TEST_F(KingTest, InvalidCastlingBig) {
+	Board board;
+	board.SetPieceToNullptr(Position(8, 2));
+	board.SetPieceToNullptr(Position(8, 3));
+	board.SetPieceToNullptr(Position(8, 4));
+	board.SetPieceToNullptr(Position(8, 6));
+	board.SetPieceToNullptr(Position(8, 7));
+	board.SetPieceToNullptr(Position(7, 3));
+	board.SetPiece(Position(5, 3), EPieceColor::Black, EPieceType::Queen);
+	EXPECT_FALSE(king->CanMove(Position(8, 5), Position(8, 3), board));
 }
