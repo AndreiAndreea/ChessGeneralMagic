@@ -58,11 +58,6 @@ bool Game::MakeMove(std::string startPosStr, std::string endPosStr)
 
 }
 
-//PieceMatrix Game::GetMatrix() const
-//{
-//	
-//}
-
 Position Game::ConvertToPos(std::string pos)
 {
 	Position convertedPos;
@@ -78,12 +73,12 @@ bool Game::IsInputValid(Position startPos, Position endPos)
 	if (m_board.GetBoard()[startPos.first][startPos.second])
 		if (m_turn)
 		{
-			if (m_board.GetBoard()[startPos.first][startPos.second]->GetColor() != EPieceColor::Black)
+			if (m_board.GetBoard()[startPos.first][startPos.second]->GetColor() != EPieceColor::White)
 				return false;
 		}
 		else
 		{
-			if (m_board.GetBoard()[startPos.first][startPos.second]->GetColor() != EPieceColor::White)
+			if (m_board.GetBoard()[startPos.first][startPos.second]->GetColor() != EPieceColor::Black)
 				return false;
 		}
 

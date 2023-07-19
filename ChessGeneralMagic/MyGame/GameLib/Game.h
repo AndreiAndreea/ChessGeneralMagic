@@ -35,8 +35,6 @@ public:
 	bool MakeMove(std::string startPosStr, std::string endPosStr) override;
 
 
-	//PieceMatrix GetMatrix() const override;
-
 private:
 	Position ConvertToPos(std::string pos);
 	bool IsInputValid(Position startPos, Position endPos);

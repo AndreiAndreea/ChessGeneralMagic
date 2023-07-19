@@ -36,29 +36,27 @@ std::string PieceToStr(IPieceInfoPtr pieceInfo)
 
 void PrintBoard( const IGamePtr& game)
 {
-	//auto board = game->GetMatrix();
-	//for (int i = 1; i <= 8; i++)
-	//{
-	//	for (int j = 1; j <= 8; j++)
-	//	{
-	//		if (board.GetBoard()[i][j])
-	//		{
-	//			IPieceInfoPtr piece = std::make_shared<class PieceInfo>(board.GetBoard()[i][j]->GetType(), board.GetBoard()[i][j]->GetColor());
-	//			std::cout << PieceToStr(piece) << " ";
-	//		}
-	//		else
-	//			std::cout << "0 ";
-	//	}
-	//	std::cout << "\n";
-	//}
+	for (int i = 1; i <= 8; i++)
+	{
+		for (int j = 1; j <= 8; j++)
+		{
+			auto pieceInfo = game->GetPieceInfo(i, j);
+			if (pieceInfo)
+				std::cout << PieceToStr(pieceInfo) << " ";
+			else
+				std::cout << "0 ";
+
+		}
+		std::cout << "\n";
+	}
 }
 
 int main()
 {
 	IGamePtr game = IGame::Produce();
 	PrintBoard(game);
-	//game.MakeMove(Position(2, 2), Position(3, 2));
-	/*std::cout << "\n\n\n";
-	PrintBoard(game);*/
+	game->MakeMove("B7","B6");
+	std::cout << "\n\n\n";
+	PrintBoard(game);
 	return 0;
 }
