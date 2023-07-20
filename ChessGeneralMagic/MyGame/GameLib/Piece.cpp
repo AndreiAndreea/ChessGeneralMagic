@@ -1,5 +1,13 @@
 #include "Piece.h"
 
+#include "Rook.h"
+#include "Knight.h"
+#include "Bishop.h"
+#include "Queen.h"
+#include "King.h"
+#include "Pawn.h"
+
+
 EPieceType Piece::GetType() const
 {
 	return m_type;
@@ -27,6 +35,31 @@ Piece::Piece(EPieceType type, EPieceColor color)
 {
 	m_type = type;
 	m_color = color;
+}
+
+PiecePtr Piece::Produce(EPieceType type, EPieceColor color)
+{
+	switch (type)
+	{
+	case EPieceType::Rook:
+		return std::make_shared<Rook>(color);
+		break;
+	case EPieceType::Bishop:
+		return std::make_shared<Bishop>(color);
+		break;
+	case EPieceType::Knight:
+		return std::make_shared<Knight>(color);
+		break;
+	case EPieceType::King:
+		return std::make_shared<King>(color);
+		break;
+	case EPieceType::Queen:
+		return std::make_shared<Queen>(color);
+		break;
+	case EPieceType::Pawn:
+		return std::make_shared<Pawn>(color);
+		break;
+	}
 }
 
 EPieceColor Piece::GetColor() const

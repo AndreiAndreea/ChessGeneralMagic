@@ -7,11 +7,14 @@
 #include <cmath>
 
 class Board;
+using PiecePtr = std::shared_ptr<class Piece>;
 
 class Piece : public IPiece
 {
 public:
 	Piece(EPieceType type, EPieceColor color);
+
+	static PiecePtr Produce(EPieceType type, EPieceColor color);
 
 	// IPiece implementation
 	EPieceColor GetColor() const override;
@@ -25,5 +28,3 @@ protected:
 	EPieceColor m_color;
 	std::vector<Position> m_possibleMoves;
 };
-
-using PiecePtr = std::shared_ptr<Piece>;

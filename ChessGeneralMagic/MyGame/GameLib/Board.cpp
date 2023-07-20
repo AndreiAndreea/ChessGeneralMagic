@@ -55,55 +55,34 @@ Board::Board(const Board& ob)
 	m_board = ob.GetBoard();
 }
 
-void Board::InitializeBoard() {
-
-	// initializing the board with spots(each square)
-
+void Board::InitializeBoard()
+{
 	m_board.resize(9);
 	for (int i = 1; i <= 8; i++)
 	{
 		m_board[i].resize(9);
 	}
 
+	// initializing the empty spaces on the board with nullptr
+
 	for (int x = 3; x <= 6; x++)
 		for (int y = 1; y <= 8; y++)
 			m_board[x][y] = nullptr;
 
-	//initializing the white pieces 
-	m_board[1][1] = std::make_shared<Rook>(EPieceColor::Black);
-	m_board[1][8] = std::make_shared<Rook>(EPieceColor::Black);
-
-	m_board[1][2] = std::make_shared<Knight>(EPieceColor::Black);
-	m_board[1][7] = std::make_shared<Knight>(EPieceColor::Black);
-
-	m_board[1][3] = std::make_shared<Bishop>(EPieceColor::Black);
-	m_board[1][6] = std::make_shared<Bishop>(EPieceColor::Black);
-
-
-	m_board[1][4] = std::make_shared<Queen>(EPieceColor::Black);
-	m_board[1][5] = std::make_shared<King>(EPieceColor::Black);
-
+	std::vector<EPieceType> TYPES = {EPieceType::Rook, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King, EPieceType::Bishop, EPieceType::Knight, EPieceType::Rook };
+	
+	//initializing the black pieces 
+	
 	for (int i = 1; i <= 8; i++)
 	{
-		m_board[2][i] = std::make_shared<Pawn>(EPieceColor::Black);
+		m_board[1][i] = Piece::Produce(TYPES[i], EPieceColor::Black);
+		m_board[8][i] = Piece::Produce(TYPES[i], EPieceColor::White);
 	}
 
-	// initializing the black pieces
-	m_board[8][1] = std::make_shared<Rook>(EPieceColor::White);
-	m_board[8][8] = std::make_shared<Rook>(EPieceColor::White);
-
-	m_board[8][2] = std::make_shared<Knight>(EPieceColor::White);
-	m_board[8][7] = std::make_shared<Knight>(EPieceColor::White);
-
-	m_board[8][3] = std::make_shared<Bishop>(EPieceColor::White);
-	m_board[8][6] = std::make_shared<Bishop>(EPieceColor::White);
-
-	m_board[8][4] = std::make_shared<Queen>(EPieceColor::White);
-	m_board[8][5] = std::make_shared<King>(EPieceColor::White);
-
 	for (int i = 1; i <= 8; i++)
 	{
-		m_board[7][i] = std::make_shared<Pawn>(EPieceColor::White);
+		m_board[2][i] = Piece::Produce(EPieceType::Pawn, EPieceColor::Black);
+		m_board[7][i] = Piece::Produce(EPieceType::Pawn, EPieceColor::White);
 	}
 }
 
@@ -248,6 +227,9 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 			}
 		}
 	}
+
+	if (kingPos.first == 0 && kingPos.second == 0)
+		found = 1;
 
 	//checking Rook
 	int i = kingPos.first + 1;
