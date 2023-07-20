@@ -22,12 +22,18 @@
     <ClCompile Include="KingTest.cpp">
       <Filter>PiecesTests</Filter>
     </ClCompile>
-    <ClCompile Include="IsKingInCheckTest.cpp" />
-    <ClCompile Include="PossibleMovesTests.cpp" />
-    <ClCompile Include="PosibleMovesRook.cpp">
+    <ClCompile Include="IsCheckmate.cpp">
+      <Filter>Board Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="IsKingInCheckTest.cpp">
+      <Filter>Board Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="PossibleMovesTests.cpp">
       <Filter>PiecesTests</Filter>
     </ClCompile>
-    <ClCompile Include="IsCheckmate.cpp" />
+    <ClCompile Include="IsStaleMoveTests.cpp">
+      <Filter>Board Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -35,6 +41,9 @@
   <ItemGroup>
     <Filter Include="PiecesTests">
       <UniqueIdentifier>{172eb1d3-a1f9-451e-8a09-8dbc5c75a8cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Board Tests">
+      <UniqueIdentifier>{3d36d3d9-909f-499f-8296-e7e21717aead}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

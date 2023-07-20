@@ -66,6 +66,12 @@
     <ClInclude Include="EPieceType.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="ChessExceptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EGameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -96,6 +102,9 @@
       <Filter>Source Files\Pieces</Filter>
     </ClCompile>
     <ClCompile Include="Piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChessExceptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

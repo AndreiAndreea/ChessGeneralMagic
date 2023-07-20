@@ -1,8 +1,10 @@
 #pragma once
 
 #include "IGame.h"
+#include "EGameState.h"
 #include "Board.h"
 #include "Player.h"
+
 
 class PieceInfo : public IPieceInfo
 {
@@ -29,10 +31,11 @@ public:
 	EPlayer GetCurrentPlayer() const override;
 	
 	bool IsGameOver() const override;
+	bool IsDraw() const override;
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
-	bool MakeMove(const std::string& startPosStr, const std::string& endPosStr) override;
+	bool MakeMove(const std::string& comand) override;
 
 private:
 	static Position ConvertToPos(const std::string& pos);
@@ -40,4 +43,6 @@ private:
 private:
 	Board m_board;
 	int m_turn;
+	EGameState state;
+	bool m_proposeDraw, m_draw;
 };

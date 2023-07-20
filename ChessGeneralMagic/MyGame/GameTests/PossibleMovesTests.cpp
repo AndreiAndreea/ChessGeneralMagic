@@ -142,6 +142,34 @@ TEST(PossibleMovesTest, ValidMovesPosibilitiesKing3)
 }
 
 //possible moves for rook
+TEST(PossibleMovesTest, ValidMovesPosibilitiesRook)
+{
+	Board board;
+	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::Rook);
+	std::vector<Position> vector = { Position(6,5),Position(7,5), Position(5,4),Position(5,3),Position(5,2),Position(5,1),
+		Position(4,5),Position(3,5) ,Position(5,6),Position(5,7) ,Position(5,8) };
+	EXPECT_EQ(board.GetBoard()[5][5]->GetPossibleMoves(Position(5, 5), board), vector);
+}
+
+//rook in corner
+TEST(PossibleMovesTest, ValidMovesPosibilitiesRook1)
+{
+	Board board;
+	board.SetPiece(Position(1, 1), EPieceColor::Black, EPieceType::Rook);
+	std::vector<Position> vector = {};
+	std::vector<Position> vector1 = board.GetBoard()[1][1]->GetPossibleMoves(Position(1, 1), board);
+	EXPECT_EQ(board.GetBoard()[1][1]->GetPossibleMoves(Position(1, 1), board), vector);
+}
+
+TEST(PossibleMovesTest, ValidMovesPosibilitiesRook2)
+{
+	Board board;
+	board.SetPiece(Position(1, 1), EPieceColor::White, EPieceType::Rook);
+	std::vector<Position> vector = { Position(2,1), Position(1,2) };
+	std::vector<Position> vector1 = board.GetBoard()[1][1]->GetPossibleMoves(Position(1, 1), board);
+	EXPECT_EQ(board.GetBoard()[1][1]->GetPossibleMoves(Position(1, 1), board), vector);
+}
+
 
 //possible moves for queen
 TEST(PossibleMovesTest, ValidMovesPosibilitiesQueen)

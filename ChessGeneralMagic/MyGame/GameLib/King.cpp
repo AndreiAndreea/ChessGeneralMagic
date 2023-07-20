@@ -129,7 +129,7 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 
 	auto piece = board.GetBoard()[startPos.first][startPos.second];
 	auto color = piece->GetColor();
-	if (startPos.second - endPos.second == 2) // big castling
+	if (startPos.second - endPos.second == 2)
 		if (CanMakeBigCastling(color, board))
 			return true;
 	if (startPos.second - endPos.second == -2)
@@ -142,7 +142,6 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 PositionList King::GetPossibleMoves(Position piecePos, const Board& board)
 {
 	PositionList possibleMoves;
-
 
 	for (int i = piecePos.first - 1; i <= piecePos.first + 1; i++)
 		for (int j = piecePos.second - 1; j <= piecePos.second + 1; j++)

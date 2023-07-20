@@ -36,8 +36,9 @@ public:
 	virtual EPlayer GetCurrentPlayer() const = 0;
 
 	virtual bool IsGameOver() const = 0;
+	virtual bool IsDraw() const = 0;
 
-	virtual bool MakeMove(const std::string& startPosStr, const std::string& endPosStr) = 0;
+	virtual bool MakeMove(const std::string& comand) = 0;
 
 	virtual IPieceInfoPtr GetPieceInfo(int i, int j) const = 0;
 

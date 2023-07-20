@@ -84,15 +84,15 @@ int main()
 	std::cout << "\n";
 	while (game->IsGameOver()==false)
 	{
-		std::string startPos, endPos;
+		std::string positions;
 		std::cout << "Insert your move "<<PlayerToStr(game->GetCurrentPlayer())<<": ";
-		std::cin >> startPos; std::cin >> endPos;
+		std::getline(std::cin,  positions);
 		std::cout << "\n";
-		while (!game->MakeMove(startPos, endPos))
+		while (!game->MakeMove(positions))
 		{
 			std::cout << "Invalid Move\n";
 			std::cout << "Insert your move " << PlayerToStr(game->GetCurrentPlayer()) << ": ";
-			std::cin >> startPos; std::cin >> endPos;
+			std::getline(std::cin, positions);
 			std::cout << "\n";
 		}
 		PrintBoard(game);

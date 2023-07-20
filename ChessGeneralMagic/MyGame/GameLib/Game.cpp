@@ -1,7 +1,10 @@
 #include "Game.h"
 
-Game::Game() 
+Game::Game()
 	: m_turn(0)
+	, state(EGameState::Playing)
+	, m_proposeDraw(false)
+	, m_draw(false)
 {
 }
 
@@ -18,18 +21,17 @@ Board Game::GetBoard() const
 
 EPlayer Game::GetWinner() const
 {
-	if (IsGameOver())
-		return m_turn ? EPlayer::White : EPlayer::Black;
+	if (state == EGameState::BlackWon)
+		return EPlayer::Black;
+	if (state == EGameState::WhiteWon)
+		return EPlayer::White;
 
-	//exception or draw
 	return EPlayer::None;
 }
 
 bool Game::IsGameOver() const
 {
-	EPieceColor color = m_turn ? EPieceColor::Black : EPieceColor::White;
-	
-	return m_board.IsCheckmate(color);
+	return state == EGameState::WhiteWon || state == EGameState::BlackWon || state == EGameState::Draw;
 }
 
 static bool IsPositionValid(Position p)
@@ -37,26 +39,73 @@ static bool IsPositionValid(Position p)
 	return p.first >= 1 && p.first <= 8 && p.second >= 1 && p.second <= 8;
 }
 
-bool Game::MakeMove(const std::string& startPosStr, const std::string& endPosStr)
+bool IsComandDraw(std::string comand)
 {
-	Position startPos = ConvertToPos(startPosStr);
-	Position endPos = ConvertToPos(endPosStr);
+	return comand == "DRAW";
+}
 
-	if (!IsPositionValid(startPos) || !IsPositionValid(endPos))
-		return false;
+bool RefuseDraw(std::string comand)
+{
+	return comand == "NO DRAW";
+}
 
-	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
-
-	if (!m_board.IsPieceColor(startPos, color))
-		return false;
-
-	if (m_board.MakeMove(startPos, endPos))
+bool Game::MakeMove(const std::string& comand)
+{
+	if (state == EGameState::DrawProposed)
 	{
-		m_turn = 1 - m_turn;
-		return true;
+		if (IsComandDraw(comand))
+		{
+			state = EGameState::Draw;
+			return true;
+		}
+		else if (RefuseDraw(comand))
+		{
+			state = EGameState::Playing;
+			m_turn = 1 - m_turn;
+		}
+		else
+			return false;
 	}
 
-	return false;
+	if (state == EGameState::Playing)
+	{
+		if (IsComandDraw(comand))
+		{
+			state = EGameState::DrawProposed;
+			m_turn = 1 - m_turn;
+		}
+		else
+		{
+			std::string startPosStr, endPosStr;
+			startPosStr = comand.substr(0, 2);
+			auto found = comand.find(" ");
+			endPosStr = comand.substr(found + 1, 2);
+
+			Position startPos = ConvertToPos(startPosStr);
+			Position endPos = ConvertToPos(endPosStr);
+
+			if (!IsPositionValid(startPos) || !IsPositionValid(endPos))
+				return false;
+
+			auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
+
+			if (!m_board.IsPieceColor(startPos, color))
+				return false;
+
+			if (m_board.MakeMove(startPos, endPos))
+			{
+				m_turn = 1 - m_turn;
+				return true;
+			}
+
+			return false;
+		}
+	}
+}
+
+bool Game::IsDraw() const
+{
+	return m_draw;
 }
 
 EPlayer Game::GetCurrentPlayer() const
@@ -77,7 +126,7 @@ IPieceInfoPtr Game::GetPieceInfo(int i, int j) const
 	return {};
 }
 
-PieceInfo::PieceInfo(EPieceType type, EPieceColor color) 
+PieceInfo::PieceInfo(EPieceType type, EPieceColor color)
 	: m_type(type)
 	, m_color(color)
 {

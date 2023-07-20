@@ -42,8 +42,9 @@ public:
 	//check if king is in check after opposite player move
 	bool IsKingInCheck(const Position& currentPos, EPieceColor color) const;
 
-	//checking if it is checkmate
 	bool IsCheckmate(EPieceColor color) const;
+
+	bool IsStaleMove(EPieceColor color) const;
 
 	std::vector<std::vector<bool>> GetCastlingVect() const;
 
@@ -52,5 +53,6 @@ private:
 
 private:
 	PieceMatrix m_board;
+
 	std::vector<std::vector<bool>> CastlingPossible = { {true, true}, {true, true} };
 };
