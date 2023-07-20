@@ -63,15 +63,15 @@ void Board::InitializeBoard()
 		m_board[i].resize(9);
 	}
 
-	// initializing the empty spaces on the board with nullptr
+	// initializing the empty spaces on the board
 
 	for (int x = 3; x <= 6; x++)
 		for (int y = 1; y <= 8; y++)
 			m_board[x][y] = nullptr;
 
-	std::vector<EPieceType> TYPES = {EPieceType::Rook, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King, EPieceType::Bishop, EPieceType::Knight, EPieceType::Rook };
+	//initializing the pieces 
 	
-	//initializing the black pieces 
+	std::vector<EPieceType> TYPES = {EPieceType::Rook, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King, EPieceType::Bishop, EPieceType::Knight, EPieceType::Rook };
 	
 	for (int i = 1; i <= 8; i++)
 	{
@@ -89,82 +89,6 @@ void Board::InitializeBoard()
 PieceMatrix Board::GetBoard() const
 {
 	return m_board;
-}
-
-bool Board::MakeMove(const Position& startPos, const Position& endPos)
-{
-	auto piece = m_board[startPos.first][startPos.second];
-	if (piece->CanMove(startPos, endPos, *this))
-	{
-		if (piece->GetType() != EPieceType::King)
-		{
-			if (IsKingLeftInCheck(startPos, endPos, piece->GetColor()))
-			{
-				std::cout << "Regele e in sah! Nu se poate face mutarea.";
-				//throw
-				return false;
-			}
-		}
-		else if(startPos.second - endPos.second == 2)
-		{
-			SetPiece(endPos, piece->GetColor(), piece->GetType());
-			SetPieceToNullptr(startPos);
-			if (piece->GetColor() == EPieceColor::White)
-			{
-				SetPiece(Position(8, 4), EPieceColor::White, EPieceType::Rook);
-				SetPieceToNullptr(Position(8, 1));
-			}
-			else
-			{
-				SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Rook);
-				SetPieceToNullptr(Position(1, 1));
-			}
-		}
-		else if (startPos.second - endPos.second == -2)
-		{
-			SetPiece(endPos, piece->GetColor(), piece->GetType());
-			SetPieceToNullptr(startPos);
-			if (piece->GetColor() == EPieceColor::White)
-			{
-				SetPiece(Position(8, 6), EPieceColor::White, EPieceType::Rook);
-				SetPieceToNullptr(Position(8, 8));
-			}
-			else
-			{
-				SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Rook);
-				SetPieceToNullptr(Position(1, 8));
-			}
-		}
-
-		//castling
-		if (piece->GetType() == EPieceType::King)
-			if (piece->GetColor() == EPieceColor::White)
-				CastlingPossible[0] = { false, false };
-			else
-				CastlingPossible[1] = { false, false };
-		if (piece->GetType() == EPieceType::Rook)
-		{
-			if (piece->GetColor() == EPieceColor::White)
-			{
-				if (startPos.first == 8 && startPos.second == 1)
-					CastlingPossible[0][0] = false;
-				if (startPos.first == 8 && startPos.second == 8)
-					CastlingPossible[0][1] = false;
-			}
-			else
-			{
-				if (startPos.first == 1 && startPos.second == 1)
-					CastlingPossible[1][0] = false;
-				if (startPos.first == 1 && startPos.second == 8)
-					CastlingPossible[1][1] = false;
-			}
-		}
-
-		SetPiece(endPos, piece->GetColor(), piece->GetType());
-		SetPieceToNullptr(startPos);
-		return true;
-	}
-	return false;
 }
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
@@ -197,6 +121,108 @@ void Board::SetPieceToNullptr(const Position& pos)
 {
 	m_board[pos.first][pos.second] = nullptr;
 }
+
+void Board::MoveRookForCastling(int castlingType, EPieceColor color)
+{
+	int i = (int)color ? 1 : 8;
+	int start = castlingType < 0 ? 1 : 8;
+	int end = castlingType < 0 ? 4 : 6;
+	
+	SetPiece(Position(i, end), color, EPieceType::Rook);
+	SetPieceToNullptr(Position(i, start));
+
+}
+
+bool Board::MakeMove(const Position& startPos, const Position& endPos)
+{
+	auto piece = m_board[startPos.first][startPos.second];
+
+	if (piece->CanMove(startPos, endPos, *this))
+	{
+		if (piece->GetType() != EPieceType::King)
+		{
+			if (IsKingLeftInCheck(startPos, endPos, piece->GetColor()))
+			{
+				std::cout << "Regele e in sah! Nu se poate face mutarea.";
+				//throw
+				return false;
+			}
+		}
+
+		SetPiece(endPos, piece->GetColor(), piece->GetType());
+		SetPieceToNullptr(startPos);
+		if(abs(startPos.second - endPos.second) == 2)
+			MoveRookForCastling(startPos.second - endPos.second, piece->GetColor());
+
+		//else if(startPos.second - endPos.second == 2)
+		//{
+		//	SetPiece(endPos, piece->GetColor(), piece->GetType());
+		//	SetPieceToNullptr(startPos);
+		//	if (piece->GetColor() == EPieceColor::White)
+		//	{
+		//		SetPiece(Position(8, 4), EPieceColor::White, EPieceType::Rook);
+		//		SetPieceToNullptr(Position(8, 1));
+		//	}
+		//	else
+		//	{
+		//		SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Rook);
+		//		SetPieceToNullptr(Position(1, 1));
+		//	}
+		//}
+		//else if (startPos.second - endPos.second == -2)
+		//{
+		//	SetPiece(endPos, piece->GetColor(), piece->GetType());
+		//	SetPieceToNullptr(startPos);
+		//	if (piece->GetColor() == EPieceColor::White)
+		//	{
+		//		SetPiece(Position(8, 6), EPieceColor::White, EPieceType::Rook);
+		//		SetPieceToNullptr(Position(8, 8));
+		//	}
+		//	else
+		//	{
+		//		SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Rook);
+		//		SetPieceToNullptr(Position(1, 8));
+		//	}
+		//}
+
+		//castling
+		if (piece->GetType() == EPieceType::King)
+			if (piece->GetColor() == EPieceColor::White)
+				CastlingPossible[0] = { false, false };
+			else
+				CastlingPossible[1] = { false, false };
+		if (piece->GetType() == EPieceType::Rook)
+		{
+			if (piece->GetColor() == EPieceColor::White)
+			{
+				if (startPos.first == 8 && startPos.second == 1)
+					CastlingPossible[0][0] = false;
+				if (startPos.first == 8 && startPos.second == 8)
+					CastlingPossible[0][1] = false;
+			}
+			else
+			{
+				if (startPos.first == 1 && startPos.second == 1)
+					CastlingPossible[1][0] = false;
+				if (startPos.first == 1 && startPos.second == 8)
+					CastlingPossible[1][1] = false;
+			}
+		}
+
+		//SetPiece(endPos, piece->GetColor(), piece->GetType());
+		//SetPieceToNullptr(startPos);
+		return true;
+	}
+	return false;
+}
+
+bool Board::IsPieceColor(Position pos, EPieceColor color) const
+{
+	auto piece = m_board[pos.first][pos.second];
+
+	return piece && piece->GetColor() == color;
+}
+
 
 static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType> types)
 {

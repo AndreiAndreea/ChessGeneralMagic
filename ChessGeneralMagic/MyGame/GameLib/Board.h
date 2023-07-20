@@ -29,9 +29,12 @@ public:
 
 	bool MakeMove(const Position& startPos, const Position& endPos);
 
-	//private
+	bool IsPieceColor(Position pos, EPieceColor color) const;
+
 	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(const Position& pos);
+
+	//IPieceInfoPtr GetPieceInfo() const;
 
 	//cant move piece if king is left in check
 	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;
@@ -43,6 +46,9 @@ public:
 	bool IsCheckmate(EPieceColor color) const;
 
 	std::vector<std::vector<bool>> GetCastlingVect() const;
+
+private:
+	void MoveRookForCastling(int castlingType, EPieceColor color);
 
 private:
 	PieceMatrix m_board;

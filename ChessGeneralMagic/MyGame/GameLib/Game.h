@@ -25,10 +25,9 @@ public:
 	Board GetBoard() const;
 	
 	// IGame methods
-	void Play() override;
-	
 	EPlayer GetWinner() const override;
 	EPlayer GetCurrentPlayer() const override;
+	
 	bool IsGameOver() const override;
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
@@ -36,11 +35,9 @@ public:
 	bool MakeMove(const std::string& startPosStr, const std::string& endPosStr) override;
 
 private:
-	Position ConvertToPos(const std::string& pos);
-	bool IsInputValid(const Position& startPos, const Position& endPos);
+	static Position ConvertToPos(const std::string& pos);
 
 private:
 	Board m_board;
 	int m_turn;
-	//Player m_whitePlayer, m_blackPlayer;
 };
