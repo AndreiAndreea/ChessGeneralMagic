@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EGameState.h"
 #include "Piece.h"
 #include "Rook.h"
 #include "Bishop.h"
@@ -27,14 +28,13 @@ public:
 
 	PieceMatrix GetBoard() const;
 
+	EGameState DetermineGameState(bool turn, EGameState currentState);
 	bool MakeMove(const Position& startPos, const Position& endPos);
 
 	bool IsPieceColor(Position pos, EPieceColor color) const;
 
 	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(const Position& pos);
-
-	//IPieceInfoPtr GetPieceInfo() const;
 
 	//cant move piece if king is left in check
 	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;

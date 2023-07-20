@@ -2,9 +2,7 @@
 
 Game::Game()
 	: m_turn(0)
-	, state(EGameState::Playing)
-	, m_proposeDraw(false)
-	, m_draw(false)
+	, m_state(EGameState::Playing)
 {
 }
 
@@ -21,9 +19,9 @@ Board Game::GetBoard() const
 
 EPlayer Game::GetWinner() const
 {
-	if (state == EGameState::BlackWon)
+	if (m_state == EGameState::BlackWon)
 		return EPlayer::Black;
-	if (state == EGameState::WhiteWon)
+	if (m_state == EGameState::WhiteWon)
 		return EPlayer::White;
 
 	return EPlayer::None;
@@ -31,7 +29,7 @@ EPlayer Game::GetWinner() const
 
 bool Game::IsGameOver() const
 {
-	return state == EGameState::WhiteWon || state == EGameState::BlackWon || state == EGameState::Draw;
+	return m_state == EGameState::WhiteWon || m_state == EGameState::BlackWon || m_state == EGameState::Draw;
 }
 
 static bool IsPositionValid(Position p)
@@ -49,30 +47,40 @@ bool RefuseDraw(std::string comand)
 	return comand == "NO DRAW";
 }
 
+void Game::DetermineGameState()
+{
+	m_state = m_board.DetermineGameState(m_turn, m_state);
+}
+
 bool Game::MakeMove(const std::string& comand)
 {
-	if (state == EGameState::DrawProposed)
+	auto ceva = m_state;
+
+	DetermineGameState();
+
+	if (m_state == EGameState::DrawProposed)
 	{
 		if (IsComandDraw(comand))
 		{
-			state = EGameState::Draw;
+			m_state = EGameState::Draw;
 			return true;
 		}
 		else if (RefuseDraw(comand))
 		{
-			state = EGameState::Playing;
+			m_state = EGameState::Playing;
 			m_turn = 1 - m_turn;
 		}
 		else
 			return false;
 	}
 
-	if (state == EGameState::Playing)
+	if (m_state == EGameState::Playing)
 	{
 		if (IsComandDraw(comand))
 		{
-			state = EGameState::DrawProposed;
+			m_state = EGameState::DrawProposed;
 			m_turn = 1 - m_turn;
+			return true;
 		}
 		else
 		{
@@ -105,7 +113,7 @@ bool Game::MakeMove(const std::string& comand)
 
 bool Game::IsDraw() const
 {
-	return m_draw;
+	return m_state == EGameState::Draw;
 }
 
 EPlayer Game::GetCurrentPlayer() const

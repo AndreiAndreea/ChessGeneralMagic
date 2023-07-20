@@ -1,9 +1,9 @@
 #pragma once
 
 #include "IGame.h"
-#include "EGameState.h"
 #include "Board.h"
 #include "Player.h"
+#include "EGameState.h"
 
 
 class PieceInfo : public IPieceInfo
@@ -35,6 +35,7 @@ public:
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
+	void DetermineGameState();
 	bool MakeMove(const std::string& comand) override;
 
 private:
@@ -43,6 +44,5 @@ private:
 private:
 	Board m_board;
 	int m_turn;
-	EGameState state;
-	bool m_proposeDraw, m_draw;
+	EGameState m_state;
 };
