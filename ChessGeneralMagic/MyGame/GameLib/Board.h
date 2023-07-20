@@ -27,14 +27,16 @@ public:
 	void InitializeBoard();
 
 	PieceMatrix GetBoard() const;
+	std::vector<std::vector<std::pair<Position, Position>>> GetMovesVect() ;
 
-	EGameState DetermineGameState(bool turn, EGameState currentState);
 	bool MakeMove(const Position& startPos, const Position& endPos);
 
 	bool IsPieceColor(Position pos, EPieceColor color) const;
 
 	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(const Position& pos);
+
+	void AddToMoves(Position startPos, Position endPos, EPieceColor color);
 
 	//cant move piece if king is left in check
 	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;
@@ -53,6 +55,6 @@ private:
 
 private:
 	PieceMatrix m_board;
-
+	std::vector<std::vector<std::pair<Position, Position>>> moves = { {}, {} };
 	std::vector<std::vector<bool>> CastlingPossible = { {true, true}, {true, true} };
 };

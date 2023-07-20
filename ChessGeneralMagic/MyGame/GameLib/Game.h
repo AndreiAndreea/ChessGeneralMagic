@@ -35,10 +35,13 @@ public:
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
-	void DetermineGameState();
 	bool MakeMove(const std::string& comand) override;
 
 private:
+	bool CanUpgradePawn(Position pos) const;
+	bool IsState(EGameState state) const;
+	void UpdateState(EGameState state);
+
 	static Position ConvertToPos(const std::string& pos);
 
 private:

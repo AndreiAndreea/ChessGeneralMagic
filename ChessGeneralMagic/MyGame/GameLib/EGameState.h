@@ -6,5 +6,6 @@ enum class EGameState
 	DrawProposed,
 	WhiteWon,
 	BlackWon,
-	Draw
+	Draw,
+	WaitingFotInput
 };

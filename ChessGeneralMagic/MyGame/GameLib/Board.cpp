@@ -94,6 +94,11 @@ PieceMatrix Board::GetBoard() const
 	return m_board;
 }
 
+std::vector<std::vector<std::pair<Position, Position>>> Board::GetMovesVect() 
+{
+	return moves;
+}
+
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
 {
 
@@ -125,6 +130,11 @@ void Board::SetPieceToNullptr(const Position& pos)
 	m_board[pos.first][pos.second] = nullptr;
 }
 
+void Board::AddToMoves(Position startPos, Position endPos, EPieceColor color)
+{
+	moves[(int)color].push_back(std::make_pair(startPos, endPos));
+}
+
 void Board::MoveRookForCastling(int castlingType, EPieceColor color)
 {
 	int i = (int)color ? 1 : 8;
@@ -133,22 +143,6 @@ void Board::MoveRookForCastling(int castlingType, EPieceColor color)
 	
 	SetPiece(Position(i, end), color, EPieceType::Rook);
 	SetPieceToNullptr(Position(i, start));
-}
-
-
-EGameState Board::DetermineGameState(bool turn, EGameState currentState)
-{
-	auto color = turn ? EPieceColor::Black : EPieceColor::White;
-	if(IsStaleMove(color))
-		return EGameState::Draw;
-	if (IsCheckmate(color))
-		if (color == EPieceColor::White)
-			return EGameState::WhiteWon;
-		else
-			return EGameState::BlackWon;
-	
-	return currentState;
-
 }
 
 bool Board::MakeMove(const Position& startPos, const Position& endPos)
@@ -171,6 +165,7 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 
 		SetPiece(endPos, color, type);
 		SetPieceToNullptr(startPos);
+		moves[(int)color].push_back(std::make_pair(startPos, endPos));
 
 		// CASTLING
 
@@ -189,13 +184,6 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 				CastlingPossible[(int)color][0] = false;
 			if (startPos.second == 8)
 				CastlingPossible[(int)color][1] = false;
-		}
-
-		// UPGRADE PAWN
-
-		if (type == EPieceType::Pawn && endPos.first == 8)
-		{
-
 		}
 
 		return true;

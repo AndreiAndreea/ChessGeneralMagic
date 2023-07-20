@@ -47,67 +47,104 @@ bool RefuseDraw(std::string comand)
 	return comand == "NO DRAW";
 }
 
-void Game::DetermineGameState()
+bool Game::CanUpgradePawn(Position pos) const
 {
-	m_state = m_board.DetermineGameState(m_turn, m_state);
+	auto piece = m_board.GetBoard()[pos.first][pos.second];
+	return piece->GetType() == EPieceType::Pawn && piece->GetColor() == EPieceColor::White && pos.first == 1 || piece->GetColor() == EPieceColor::Black && pos.first == 8;
+}
+
+EPieceType ConvertToType(std::string comand)
+{
+	if (comand == "ROOK")
+		return EPieceType::Rook;
+	if (comand == "KNIGHT")
+		return EPieceType::Knight;
+	if (comand == "BISHOP")
+		return EPieceType::Bishop;
+	if (comand == "QUEEN")
+		return EPieceType::Queen;
+	return EPieceType::None;
 }
 
 bool Game::MakeMove(const std::string& comand)
 {
-	auto ceva = m_state;
+	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
 
-	DetermineGameState();
-
-	if (m_state == EGameState::DrawProposed)
+	if (IsState(EGameState::DrawProposed))
 	{
 		if (IsComandDraw(comand))
 		{
-			m_state = EGameState::Draw;
+			UpdateState(EGameState::Draw);
 			return true;
 		}
-		else if (RefuseDraw(comand))
+			
+		if (RefuseDraw(comand))
 		{
-			m_state = EGameState::Playing;
+			UpdateState(EGameState::Playing);
 			m_turn = 1 - m_turn;
+			return true;
 		}
-		else
-			return false;
+		
+		return false;
 	}
 
-	if (m_state == EGameState::Playing)
+	if (IsState(EGameState::WaitingFotInput))
+	{
+		auto type = ConvertToType(comand);
+		if (type != EPieceType::None)
+		{
+			auto movesVect = m_board.GetMovesVect();
+			m_board.SetPiece(movesVect[(int)color][movesVect[(int)color].size()-1].second, color, type);
+			return true;
+		}
+		return false;
+	}
+
+	if (IsState(EGameState::Playing))
 	{
 		if (IsComandDraw(comand))
 		{
-			m_state = EGameState::DrawProposed;
+			UpdateState(EGameState::DrawProposed);
 			m_turn = 1 - m_turn;
 			return true;
 		}
-		else
-		{
-			std::string startPosStr, endPosStr;
-			startPosStr = comand.substr(0, 2);
-			auto found = comand.find(" ");
-			endPosStr = comand.substr(found + 1, 2);
 
-			Position startPos = ConvertToPos(startPosStr);
-			Position endPos = ConvertToPos(endPosStr);
+		std::string startPosStr, endPosStr;
+		startPosStr = comand.substr(0, 2);
+		auto found = comand.find(" ");
+		endPosStr = comand.substr(found + 1, 2);
 
-			if (!IsPositionValid(startPos) || !IsPositionValid(endPos))
-				return false;
+		Position startPos = ConvertToPos(startPosStr);
+		Position endPos = ConvertToPos(endPosStr);
 
-			auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
-
-			if (!m_board.IsPieceColor(startPos, color))
-				return false;
-
-			if (m_board.MakeMove(startPos, endPos))
-			{
-				m_turn = 1 - m_turn;
-				return true;
-			}
-
+		if (!IsPositionValid(startPos) || !IsPositionValid(endPos))
 			return false;
+
+		auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
+
+		if (!m_board.IsPieceColor(startPos, color))
+			return false;
+
+		if (m_board.MakeMove(startPos, endPos))
+		{
+			if (CanUpgradePawn(endPos))
+			{
+				m_board.AddToMoves(startPos, endPos, color);
+				UpdateState(EGameState::WaitingFotInput);
+			}
+			else
+				m_turn = 1 - m_turn;
+			
+			if (m_board.IsStaleMove(color))
+				UpdateState(EGameState::Draw);
+
+			if (m_board.IsCheckmate(color))
+				UpdateState(color == EPieceColor::White ? EGameState::WhiteWon : EGameState::BlackWon);
+
+			return true;
 		}
+
+		return false;
 	}
 }
 
@@ -119,6 +156,16 @@ bool Game::IsDraw() const
 EPlayer Game::GetCurrentPlayer() const
 {
 	return m_turn ? EPlayer::Black : EPlayer::White;
+}
+
+bool Game::IsState(EGameState state) const
+{
+	return m_state == state;
+}
+
+void Game::UpdateState(EGameState state)
+{
+	m_state = state;
 }
 
 Position Game::ConvertToPos(const std::string& pos)

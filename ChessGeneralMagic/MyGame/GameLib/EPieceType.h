@@ -7,5 +7,6 @@ enum class EPieceType
 	Knight,
 	King,
 	Queen,
-	Pawn
+	Pawn,
+	None
 };
