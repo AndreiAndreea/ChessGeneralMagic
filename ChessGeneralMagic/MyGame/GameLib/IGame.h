@@ -2,6 +2,7 @@
 
 #include "EPieceColor.h"
 #include "EPieceType.h"
+#include "OutOfBoundException.h"
 
 #include <memory>
 #include <string>
@@ -35,10 +36,18 @@ public:
 	virtual EPlayer GetWinner() const = 0;
 	virtual EPlayer GetCurrentPlayer() const = 0;
 
-	virtual bool IsGameOver() const = 0;
-	virtual bool IsDraw() const = 0;
 
-	virtual bool MakeMove(const std::string& comand) = 0;
+	virtual bool IsStatePlaying() const = 0;
+	virtual bool IsStateWaitingForPawnUpgrade() const = 0;
+	virtual bool IsStateDrawProposed() const = 0;
+	virtual bool IsStateDraw() const = 0;
+	virtual bool IsGameOver() const = 0;
+
+	virtual bool PlayerComand(const std::string& comand) = 0;
+
+	virtual bool DrawReaponse(const std::string& respons) = 0;
+	virtual bool UpgradePawnTo(const std::string& type) = 0;
+	virtual bool MakeMove(Position startPos, Position endPos) = 0;
 
 	virtual IPieceInfoPtr GetPieceInfo(int i, int j) const = 0;
 

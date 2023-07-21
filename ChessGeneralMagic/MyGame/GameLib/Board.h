@@ -48,6 +48,8 @@ public:
 
 	bool IsStaleMove(EPieceColor color) const;
 
+	bool IsThreefoldRepetitionDraw(EPieceColor color) const;
+
 	std::vector<std::vector<bool>> GetCastlingVect() const;
 
 private:
@@ -55,6 +57,6 @@ private:
 
 private:
 	PieceMatrix m_board;
-	std::vector<std::vector<std::pair<Position, Position>>> moves = { {}, {} };
+	std::vector<std::vector<std::pair<Position, Position>>> m_movesMade = { {}, {} };
 	std::vector<std::vector<bool>> CastlingPossible = { {true, true}, {true, true} };
 };

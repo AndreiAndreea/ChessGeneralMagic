@@ -77,22 +77,32 @@ void PrintBoard(const IGamePtr& game) {
 	}
 }
 
+bool IsComandDraw(std::string comand)
+{
+	return comand == "DRAW";
+}
+
 int main()
 {
 	IGamePtr game = IGame::Produce();
 	PrintBoard(game);
 	std::cout << "\n";
-	while (game->IsGameOver()==false)
+	while (!game->IsGameOver())
 	{
-		std::string positions;
+		std::string comand;
 		std::cout << "Insert your move "<<PlayerToStr(game->GetCurrentPlayer())<<": ";
-		std::getline(std::cin,  positions);
+		std::getline(std::cin,  comand);
 		std::cout << "\n";
-		while (!game->MakeMove(positions))
+
+		if(IsComandDraw(comand))
+			if(game->IsStateDrawProposed())
+
+
+		while (!game->MakeMove(TODO,comand))
 		{
 			std::cout << "Invalid Move\n";
 			std::cout << "Insert your move " << PlayerToStr(game->GetCurrentPlayer()) << ": ";
-			std::getline(std::cin, positions);
+			std::getline(std::cin, comand);
 			std::cout << "\n";
 		}
 		PrintBoard(game);

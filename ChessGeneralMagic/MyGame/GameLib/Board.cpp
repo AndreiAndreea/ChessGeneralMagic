@@ -96,7 +96,7 @@ PieceMatrix Board::GetBoard() const
 
 std::vector<std::vector<std::pair<Position, Position>>> Board::GetMovesVect() 
 {
-	return moves;
+	return m_movesMade;
 }
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
@@ -132,7 +132,7 @@ void Board::SetPieceToNullptr(const Position& pos)
 
 void Board::AddToMoves(Position startPos, Position endPos, EPieceColor color)
 {
-	moves[(int)color].push_back(std::make_pair(startPos, endPos));
+	m_movesMade[(int)color].push_back(std::make_pair(startPos, endPos));
 }
 
 void Board::MoveRookForCastling(int castlingType, EPieceColor color)
@@ -165,7 +165,7 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 
 		SetPiece(endPos, color, type);
 		SetPieceToNullptr(startPos);
-		moves[(int)color].push_back(std::make_pair(startPos, endPos));
+		m_movesMade[(int)color].push_back(std::make_pair(startPos, endPos));
 
 		// CASTLING
 
@@ -486,6 +486,13 @@ bool Board::IsStaleMove(EPieceColor color) const
 	}
 
 	return true;
+}
+
+bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
+{
+	int vectSize = m_movesMade[(int)color].size();
+
+	return m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second && m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
 }
 
 std::vector<std::vector<bool>> Board::GetCastlingVect() const

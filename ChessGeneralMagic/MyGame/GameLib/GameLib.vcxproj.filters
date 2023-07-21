@@ -22,6 +22,24 @@
     <Filter Include="Source Files\Pieces">
       <UniqueIdentifier>{f0b26606-aadb-4481-af3b-afc0de886405}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Exceptions">
+      <UniqueIdentifier>{d3434abf-4c82-4f4a-a93b-c402144f102a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions">
+      <UniqueIdentifier>{a5bbb5c6-0e8a-4253-b140-32948f257812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions\MethodExceptions">
+      <UniqueIdentifier>{63cc75db-b5d0-4ff1-b54d-f9b9bccd9bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exceptions\MethodExceptions">
+      <UniqueIdentifier>{5af21f8f-01ef-48b7-aa77-d4b957f93285}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions\PieceMoveExceptions">
+      <UniqueIdentifier>{639cd54a-8d31-4f89-81c2-8803064aaa7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exceptions\PieceMoveExceptions">
+      <UniqueIdentifier>{20384196-b11a-41cc-9d70-c547108f6563}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -66,10 +84,37 @@
     <ClInclude Include="EPieceType.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="ChessExceptions.h">
+    <ClInclude Include="EGameState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EGameState.h">
+    <ClInclude Include="ChessExceptions.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="OutOfBoundException.h">
+      <Filter>Header Files\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="NotStateDrawProposedException.h">
+      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="MethodException.h">
+      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="NotStateWaitingForPawnUpdate.h">
+      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="NotStatePlayingException.h">
+      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceMovementExceptions.h">
+      <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="KingLeftInCheckException.h">
+      <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidMovingPatternException.h">
+      <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidStartPositionExcepton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -105,6 +150,33 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChessExceptions.cpp">
+      <Filter>Source Files\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="OutOfBoundException.cpp">
+      <Filter>Source Files\Exceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodException.cpp">
+      <Filter>Source Files\Exceptions\MethodExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="NotStateDrawProposedException.cpp">
+      <Filter>Source Files\Exceptions\MethodExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="NotStatePlayingException.cpp">
+      <Filter>Source Files\Exceptions\MethodExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="NotStateWaitingForPawnUpdate.cpp">
+      <Filter>Source Files\Exceptions\MethodExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="KingLeftInCheckException.cpp">
+      <Filter>Source Files\Exceptions\PieceMoveExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceMovementExceptions.cpp">
+      <Filter>Source Files\Exceptions\PieceMoveExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidMovingPatternException.cpp">
+      <Filter>Source Files\Exceptions\PieceMoveExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidStartPositionExcepton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
