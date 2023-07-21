@@ -6,6 +6,7 @@
 #include "EGameState.h"
 
 
+
 class PieceInfo : public IPieceInfo
 {
 public:
@@ -30,8 +31,9 @@ public:
 	EPlayer GetWinner() const override;
 	EPlayer GetCurrentPlayer() const override;
 
-	bool PlayerComand(const std::string& comand) override;
+	void PlayerComand(const std::string& comand) override;
 	
+	bool IsStatePlaying() const override;
 	bool IsStateDrawProposed() const override;
 	bool IsStateWaitingForPawnUpgrade() const override;
 	bool IsStateDraw() const override;
@@ -39,10 +41,9 @@ public:
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
-	bool DrawReaponse(const std::string& respons) override;
-	bool UpgradePawnTo(const std::string& type) override;
-	bool MakeMove(Position startPos, Position endPos) override;
-
+	void DrawReaponse(const std::string& respons) override;
+	void UpgradePawnTo(const std::string& type) override;
+	void MakeMove(Position startPos, Position endPos) override;
 
 private:
 	bool CanUpgradePawn(Position pos) const;

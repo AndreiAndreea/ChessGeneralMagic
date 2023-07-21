@@ -151,8 +151,10 @@
     <ClInclude Include="EPieceType.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IGame.h" />
+    <ClInclude Include="InvalidDrawResponseException.h" />
     <ClInclude Include="InvalidMovingPatternException.h" />
     <ClInclude Include="InvalidStartPositionExcepton.h" />
+    <ClInclude Include="InvalidUpgradeType.h" />
     <ClInclude Include="IPiece.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="KingLeftInCheckException.h" />
@@ -174,8 +176,10 @@
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="ChessExceptions.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="InvalidDrawResponseException.cpp" />
     <ClCompile Include="InvalidMovingPatternException.cpp" />
     <ClCompile Include="InvalidStartPositionExcepton.cpp" />
+    <ClCompile Include="InvalidUpgradeType.cpp" />
     <ClCompile Include="King.cpp" />
     <ClCompile Include="KingLeftInCheckException.cpp" />
     <ClCompile Include="Knight.cpp" />

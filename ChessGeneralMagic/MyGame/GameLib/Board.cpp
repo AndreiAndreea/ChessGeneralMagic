@@ -1,6 +1,7 @@
 
 #include "Board.h"
-
+#include "KingLeftInCheckException.h"
+#include "InvalidMovingPatternException.h"
 
 #include <stdexcept>
 #include<iostream>
@@ -157,9 +158,7 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 		{
 			if (IsKingLeftInCheck(startPos, endPos, color))
 			{
-				std::cout << "Regele e in sah! Nu se poate face mutarea.";
-				//throw
-				return false;
+				throw KingLeftInCheckException();
 			}
 		}
 
@@ -188,7 +187,7 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 
 		return true;
 	}
-	return false;
+	throw InvalidMovingPatternException();
 }
 
 bool Board::IsPieceColor(Position pos, EPieceColor color) const
@@ -491,8 +490,10 @@ bool Board::IsStaleMove(EPieceColor color) const
 bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
 {
 	int vectSize = m_movesMade[(int)color].size();
-
-	return m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second && m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
+	if (vectSize >= 5)
+		return  m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second && m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
+	else
+		return false;
 }
 
 std::vector<std::vector<bool>> Board::GetCastlingVect() const

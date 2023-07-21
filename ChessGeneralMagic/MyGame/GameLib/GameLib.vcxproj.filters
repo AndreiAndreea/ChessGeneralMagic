@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Exceptions\PieceMoveExceptions">
       <UniqueIdentifier>{20384196-b11a-41cc-9d70-c547108f6563}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Exceptions\InvalidInputExceptions">
+      <UniqueIdentifier>{06929400-cf5c-42bd-9fef-226891cca2ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Exceptions\InvalidInputExceptions">
+      <UniqueIdentifier>{08f19af7-1c92-4593-ad69-8fc872dfe654}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -90,9 +96,6 @@
     <ClInclude Include="ChessExceptions.h">
       <Filter>Header Files\Exceptions</Filter>
     </ClInclude>
-    <ClInclude Include="OutOfBoundException.h">
-      <Filter>Header Files\Exceptions</Filter>
-    </ClInclude>
     <ClInclude Include="NotStateDrawProposedException.h">
       <Filter>Header Files\Exceptions\MethodExceptions</Filter>
     </ClInclude>
@@ -114,8 +117,17 @@
     <ClInclude Include="InvalidMovingPatternException.h">
       <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
     </ClInclude>
+    <ClInclude Include="OutOfBoundException.h">
+      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClInclude>
     <ClInclude Include="InvalidStartPositionExcepton.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidDrawResponseException.h">
+      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="InvalidUpgradeType.h">
+      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -152,9 +164,6 @@
     <ClCompile Include="ChessExceptions.cpp">
       <Filter>Source Files\Exceptions</Filter>
     </ClCompile>
-    <ClCompile Include="OutOfBoundException.cpp">
-      <Filter>Source Files\Exceptions</Filter>
-    </ClCompile>
     <ClCompile Include="MethodException.cpp">
       <Filter>Source Files\Exceptions\MethodExceptions</Filter>
     </ClCompile>
@@ -176,8 +185,17 @@
     <ClCompile Include="InvalidMovingPatternException.cpp">
       <Filter>Source Files\Exceptions\PieceMoveExceptions</Filter>
     </ClCompile>
+    <ClCompile Include="OutOfBoundException.cpp">
+      <Filter>Source Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClCompile>
     <ClCompile Include="InvalidStartPositionExcepton.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidDrawResponseException.cpp">
+      <Filter>Source Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="InvalidUpgradeType.cpp">
+      <Filter>Source Files\Exceptions\InvalidInputExceptions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

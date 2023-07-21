@@ -3,6 +3,8 @@
 
 #include "IGame.h"
 
+
+
 std::string PieceToStr(IPieceInfoPtr pieceInfo)
 {
 	std::string result;
@@ -57,7 +59,7 @@ void PrintBoard(const IGamePtr& game) {
 
 	for (int i = 1; i <= 8; i++)
 	{
-		for (int j = 1; j <= 8; j++) 
+		for (int j = 1; j <= 8; j++)
 		{
 			auto pieceInfo = game->GetPieceInfo(i, j);
 
@@ -77,7 +79,7 @@ void PrintBoard(const IGamePtr& game) {
 	}
 }
 
-bool IsComandDraw(std::string comand)
+bool IsComandDrawConsole(std::string comand)
 {
 	return comand == "DRAW";
 }
@@ -90,26 +92,33 @@ int main()
 	while (!game->IsGameOver())
 	{
 		std::string comand;
-		std::cout << "Insert your move "<<PlayerToStr(game->GetCurrentPlayer())<<": ";
-		std::getline(std::cin,  comand);
+		std::cout << "Insert your move " << PlayerToStr(game->GetCurrentPlayer()) << ": ";
+		std::getline(std::cin, comand);
 		std::cout << "\n";
 
-		if(IsComandDraw(comand))
-			if(game->IsStateDrawProposed())
-
-
-		while (!game->MakeMove(TODO,comand))
+		try
 		{
-			std::cout << "Invalid Move\n";
-			std::cout << "Insert your move " << PlayerToStr(game->GetCurrentPlayer()) << ": ";
-			std::getline(std::cin, comand);
+			if (game->IsStatePlaying())
+			{
+				game->PlayerComand(comand);
+			}
+			else if (game->IsStateDrawProposed())
+			{
+				game->DrawReaponse(comand);
+			}
+			else if (game->IsStateWaitingForPawnUpgrade())
+			{
+				game->UpgradePawnTo(comand);
+			}
+			PrintBoard(game);
 			std::cout << "\n";
 		}
-		PrintBoard(game);
-		std::cout << "\n";
+		catch (ChessExceptions e)
+		{
+			std::cout << e.what();
+		}
 	}
-
-	std::cout <<"Winner is: "<< PlayerToStr(game->GetWinner())<<" !!!";
+	std::cout << "Winner is: " << PlayerToStr(game->GetWinner()) << " !!!";
 
 	return 0;
 }
