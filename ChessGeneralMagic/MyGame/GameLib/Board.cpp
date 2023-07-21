@@ -10,33 +10,40 @@ Board::Board() {
 	InitializeBoard();
 }
 
-Board::Board(ConfigMatrix piecePos)
+Board::Board(ConfigMatrix board)
 {
-	//InitializeBoard();
-	for (auto it : piecePos)
+	for (int i = 0; i < 8; i++)
 	{
-		switch (it.first->GetType())
+		for (int j = 0; j < 8; j++)
 		{
-		case EPieceType::Rook:
-			m_board[it.second.first][it.second.second] = std::make_shared<Rook>(it.first->GetColor());
-			break;
-		case EPieceType::Bishop:
-			m_board[it.second.first][it.second.second] = std::make_shared<Bishop>(it.first->GetColor());
-			break;
-		case EPieceType::Pawn:
-			m_board[it.second.first][it.second.second] = std::make_shared<Pawn>(it.first->GetColor());
-			break;
-		case EPieceType::King:
-			m_board[it.second.first][it.second.second] = std::make_shared<King>(it.first->GetColor());
-			break;
-		case EPieceType::Knight:
-			m_board[it.second.first][it.second.second] = std::make_shared<Knight>(it.first->GetColor());
-			break;
-		case EPieceType::Queen:
-			m_board[it.second.first][it.second.second] = std::make_shared<Queen>(it.first->GetColor());
-			break;
-		default:
-			break;
+			EPieceColor color;
+			EPieceType type;
+
+			if (board[i][j][1])
+			{
+				if (board[i][j][0] == 'P')
+					type = EPieceType::Pawn;
+				else if (board[i][j][0] == 'R')
+					type = EPieceType::Rook;
+				else if (board[i][j][0] == 'N')
+					type = EPieceType::Knight;
+				else if (board[i][j][0] == 'B')
+					type = EPieceType::Bishop;
+				else if (board[i][j][0] == 'Q')
+					type = EPieceType::Queen;
+				else if (board[i][j][0] == 'K')
+					type = EPieceType::King;
+
+				if (board[i][j][1] == 'b')
+					color = EPieceColor::Black;
+				else
+					color = EPieceColor::White;
+
+				m_board[i][j] = Piece::Produce(type, color);
+
+			}
+			else
+				m_board[i][j] = nullptr;
 		}
 	}
 }

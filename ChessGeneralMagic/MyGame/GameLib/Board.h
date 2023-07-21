@@ -14,7 +14,7 @@
 
 //using Position = std::pair<int, int>;
 using PieceMatrix = std::vector<std::vector<PiecePtr>>;
-using ConfigMatrix = std::vector<std::pair<PiecePtr, Position>>;
+using ConfigMatrix = std::vector<std::vector<std::string>>;
 
 class Board
 {
@@ -22,7 +22,7 @@ public:
 	Board();
 	Board(int);
 	Board(const Board& ob);
-	Board(ConfigMatrix piecePos);
+	Board(ConfigMatrix board);
 
 	void InitializeBoard();
 
