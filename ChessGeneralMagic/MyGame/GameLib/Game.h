@@ -29,13 +29,20 @@ public:
 	// IGame methods
 	EPlayer GetWinner() const override;
 	EPlayer GetCurrentPlayer() const override;
+
+	bool PlayerComand(const std::string& comand) override;
 	
+	bool IsStateDrawProposed() const override;
+	bool IsStateWaitingForPawnUpgrade() const override;
+	bool IsStateDraw() const override;
 	bool IsGameOver() const override;
-	bool IsDraw() const override;
 
 	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
 	
-	bool MakeMove(const std::string& comand) override;
+	bool DrawReaponse(const std::string& respons) override;
+	bool UpgradePawnTo(const std::string& type) override;
+	bool MakeMove(Position startPos, Position endPos) override;
+
 
 private:
 	bool CanUpgradePawn(Position pos) const;
