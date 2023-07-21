@@ -102,10 +102,17 @@ PieceMatrix Board::GetBoard() const
 	return m_board;
 }
 
-std::vector<std::vector<std::pair<Position, Position>>> Board::GetMovesVect() 
+ConfigMovesVesct Board::GetMovesVect() const
 {
 	return m_movesMade;
 }
+
+PositionList Board::GetPossibleMoves(int i, int j) const
+{
+	return m_board[i][j]->GetPossibleMoves(Position(i, j), *this);
+}
+
+
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
 {
@@ -479,7 +486,7 @@ bool Board::IsCheckmate(EPieceColor color) const
 	return false;
 }
 
-bool Board::IsStaleMove(EPieceColor color) const
+bool Board::IsStaleMate(EPieceColor color) const
 {
 	for (int i = 1; i <= 8; i++)
 	{

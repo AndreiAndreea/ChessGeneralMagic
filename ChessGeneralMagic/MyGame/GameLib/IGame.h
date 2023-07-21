@@ -15,6 +15,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 #include <utility>
 
 enum class EPlayer
@@ -44,7 +45,7 @@ public:
 
 	virtual EPlayer GetWinner() const = 0;
 	virtual EPlayer GetCurrentPlayer() const = 0;
-
+	virtual std::vector<Position> GetPossibleMoves(int i, int j) = 0;
 
 	virtual bool IsStatePlaying() const = 0;
 	virtual bool IsStateWaitingForPawnUpgrade() const = 0;

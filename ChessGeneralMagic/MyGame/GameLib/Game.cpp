@@ -86,7 +86,7 @@ void Game::MakeMove(Position startPos, Position endPos)
 	else
 		m_turn = 1 - m_turn;
 
-	if (m_board.IsStaleMove(color) || m_board.IsThreefoldRepetitionDraw(color))
+	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw(color))
 		UpdateState(EGameState::Draw);
 
 	if (m_board.IsCheckmate(color))
@@ -94,6 +94,11 @@ void Game::MakeMove(Position startPos, Position endPos)
 
 }
 
+
+std::vector<Position> Game::GetPossibleMoves(int i, int j)
+{
+	return m_board.GetPossibleMoves(i, j);
+}
 
 bool Game::IsStatePlaying() const
 {

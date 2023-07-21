@@ -134,7 +134,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
         m_grid[position.first][position.second]->setSelected(true);
 
         //TODO Show possible moves here
-        //HighlightPossibleMoves(game.GetPossibleMoves(...))
+        HighlightPossibleMoves(game->GetPossibleMoves(position.first, position.second));
     }
 }
 

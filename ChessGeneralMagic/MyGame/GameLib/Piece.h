@@ -26,5 +26,5 @@ public:
 protected:
 	EPieceType m_type;
 	EPieceColor m_color;
-	std::vector<Position> m_possibleMoves;
+	PositionList m_possibleMoves;
 };

@@ -5,8 +5,6 @@
 #include "Player.h"
 #include "EGameState.h"
 
-
-
 class PieceInfo : public IPieceInfo
 {
 public:
@@ -30,6 +28,7 @@ public:
 	// IGame methods
 	EPlayer GetWinner() const override;
 	EPlayer GetCurrentPlayer() const override;
+	std::vector<Position> GetPossibleMoves(int i, int j) override;
 
 	void PlayerComand(const std::string& comand) override;
 	
