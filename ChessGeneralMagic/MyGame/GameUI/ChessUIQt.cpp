@@ -8,6 +8,8 @@ ChessUIQt::ChessUIQt(QWidget *parent)
     : QMainWindow(parent)
 {
    
+    game = IGame::Produce();
+
     //Widget containing everything
     QWidget* mainWidget = new QWidget();
     QGridLayout* mainGridLayout = new QGridLayout();
