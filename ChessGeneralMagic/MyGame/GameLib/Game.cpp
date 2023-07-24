@@ -89,11 +89,19 @@ void Game::MakeMove(Position startPos, Position endPos)
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw(color))
 		UpdateState(EGameState::Draw);
 
-	if (m_board.IsCheckmate(color))
-		UpdateState(color == EPieceColor::White ? EGameState::WhiteWon : EGameState::BlackWon);
+	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
+	if (m_board.IsCheckmate(colorUpdated))
+		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
 
 }
 
+
+void Game::ResetGame()
+{
+	m_turn = 0;
+	UpdateState(EGameState::Playing);
+	m_board.InitializeBoard();
+}
 
 std::vector<Position> Game::GetPossibleMoves(int i, int j)
 {

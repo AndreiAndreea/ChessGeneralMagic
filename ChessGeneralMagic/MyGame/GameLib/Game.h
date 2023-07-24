@@ -44,6 +44,8 @@ public:
 	void UpgradePawnTo(const std::string& type) override;
 	void MakeMove(Position startPos, Position endPos) override;
 
+	void ResetGame() override;
+
 private:
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;

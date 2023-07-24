@@ -154,6 +154,25 @@ PieceType ConvertTypeEnum(EPieceType type)
     }
 }
 
+QString ConvertEplayerWinner(EPlayer player)
+{
+    switch (player)
+    {
+    case EPlayer::White:
+        return "The winner is: Player white";
+        break;
+    case EPlayer::Black:
+		return "The winner is: Player black";
+        break;
+    case EPlayer::None:
+		return "The winner is: None";
+        break;
+    default:
+        break;
+
+    }
+}
+
 void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 {
     //At second click
@@ -213,6 +232,18 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 				}
 			UpdateBoard(updatedBoard);
         }
+
+		if (game->IsGameOver())
+		{
+			QMessageBox msgBox;
+			QString str;
+			str = ConvertEplayerWinner(game->GetWinner());
+			msgBox.setText(str);
+			msgBox.exec();
+
+            //reset board and turn. new game
+            OnRestartButtonClicked();
+		}
     }
     //At first click
     else {
@@ -240,7 +271,27 @@ void ChessUIQt::OnLoadButtonClicked()
 
 void ChessUIQt::OnRestartButtonClicked()
 {
-    //TODO ...
+    game->ResetGame();
+
+	std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
+
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (game->GetPieceInfo(i, j))
+			{
+				PieceColor color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
+				auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
+				updatedBoard[i][j] = std::make_pair(type, color);
+			}
+			else
+			{
+				updatedBoard[i][j] = std::make_pair(PieceType::none, PieceColor::none);
+			}
+
+		}
+    m_MessageLabel->setText("Waiting for white player");
+	UpdateBoard(updatedBoard);
 }
 
 void ChessUIQt::OnDrawButtonClicked()

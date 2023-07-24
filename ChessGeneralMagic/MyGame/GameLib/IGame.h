@@ -59,6 +59,8 @@ public:
 	virtual void UpgradePawnTo(const std::string& type) = 0;
 	virtual void MakeMove(Position startPos, Position endPos) = 0;
 
+	virtual void ResetGame() = 0;
+
 	virtual IPieceInfoPtr GetPieceInfo(int i, int j) const = 0;
 
 	virtual ~IGame() = default;

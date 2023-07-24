@@ -37,12 +37,12 @@ std::string PieceToStr(IPieceInfoPtr pieceInfo)
 	return result;
 }
 
-std::string PlayerToStr(EPlayer player)
+std::string PlayerToStr(EPieceColor player)
 {
-	if (player == EPlayer::White)
+	if (player == EPieceColor::White)
 		return "PlayerWhite";
 	else
-		if (player == EPlayer::Black)
+		if (player == EPieceColor::Black)
 			return "PlayerBlack";
 	return "None";
 }
@@ -118,7 +118,7 @@ int main()
 			std::cout << e.what();
 		}
 	}
-	std::cout << "Winner is: " << PlayerToStr(game->GetWinner()) << " !!!";
+	//std::cout << "Winner is: " << PlayerToStr(game->GetWinner()) << " !!!";
 
 	return 0;
 }
