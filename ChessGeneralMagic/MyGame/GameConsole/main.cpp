@@ -57,9 +57,9 @@ void PrintBoard(const IGamePtr& game) {
 
 	const int cellWidth = 5; // Width of each cell (including spaces)
 
-	for (int i = 1; i <= 8; i++)
+	for (int i = 0; i < 8; i++)
 	{
-		for (int j = 1; j <= 8; j++)
+		for (int j = 0; j < 8; j++)
 		{
 			auto pieceInfo = game->GetPieceInfo(i, j);
 

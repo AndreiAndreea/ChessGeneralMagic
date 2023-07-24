@@ -44,7 +44,7 @@ public:
 	static IGamePtr Produce();
 
 	virtual EPlayer GetWinner() const = 0;
-	virtual EPlayer GetCurrentPlayer() const = 0;
+	virtual EPieceColor GetCurrentPlayer() const = 0;
 	virtual std::vector<Position> GetPossibleMoves(int i, int j) = 0;
 
 	virtual bool IsStatePlaying() const = 0;

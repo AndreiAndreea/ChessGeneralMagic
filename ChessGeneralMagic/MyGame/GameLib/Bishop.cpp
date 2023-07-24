@@ -23,7 +23,7 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 	int currentRow = piecePos.first - 1;
 	int currentCol = piecePos.second + 1;
 
-	while (currentCol <= 8 && currentRow >= 1)
+	while (currentCol < 8 && currentRow >= 0)
 	{
 	
 		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
@@ -43,7 +43,7 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 	currentRow = piecePos.first + 1;
 	currentCol = piecePos.second + 1;
 
-	while (currentCol <= 8 && currentRow <= 8)
+	while (currentCol < 8 && currentRow < 8)
 	{
 		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
 			break;
@@ -62,7 +62,7 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 	currentRow = piecePos.first + 1;
 	currentCol = piecePos.second - 1;
 
-	while (currentCol >= 1 && currentRow <= 8)
+	while (currentCol >= 0 && currentRow < 8)
 	{
 		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
 			break;
@@ -82,7 +82,7 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
 	currentRow = piecePos.first - 1;
 	currentCol = piecePos.second - 1;
 
-	while (currentCol >= 1 && currentRow >= 1)
+	while (currentCol >= 0 && currentRow >= 0)
 	{
 		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
 			break;

@@ -4,5 +4,5 @@ enum class PieceType {
 };
 
 enum class PieceColor {
-	none, black, white
+	 white, black, none
 };

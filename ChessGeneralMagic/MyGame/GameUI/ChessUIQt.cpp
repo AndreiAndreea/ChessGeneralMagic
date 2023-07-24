@@ -117,24 +117,101 @@ void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
     mainGridLayout->addWidget(board, 1, 1, 1, 1);
 }
 
+PieceColor ConvertColorEnum(EPieceColor color)
+{
+    if ((int)color)
+        return PieceColor::black;
+    if (!(int)color)
+        return PieceColor::white;
+    return PieceColor::none;
+}
+
+PieceType ConvertTypeEnum(EPieceType type)
+{
+    switch (type)
+    {
+    case EPieceType::Rook:
+        return PieceType::rook;
+        break;
+    case EPieceType::Bishop:
+        return PieceType::bishop;
+        break;
+    case EPieceType::Knight:
+        return PieceType::knight;
+        break;
+    case EPieceType::King:
+        return PieceType::king;
+        break;
+    case EPieceType::Queen:
+        return PieceType::queen;
+        break;
+    case EPieceType::Pawn:
+        return PieceType::pawn;
+        break;
+    case EPieceType::None:
+        return PieceType::none;
+        break;
+    }
+}
+
 void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 {
     //At second click
     if (m_selectedCell.has_value()) {
         //TODO COMPLETE ME...
-        // game.MakeMove(...);
+        try
+        {
+            game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position);
+
+            if (game->IsStateWaitingForPawnUpgrade())
+            {
+                ShowPromoteOptions();
+            }
+
+            m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+
+        }
+        catch(ChessExceptions e)
+        {
+			QMessageBox msgBox;
+			msgBox.setText(e.what());
+			msgBox.exec();
+        }
 
         //Unselect prev. pressed button
         m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
         m_selectedCell.reset();
+
+
+        std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
+        for (int i = 0; i< 8; i++)
+            for (int j = 0; j < 8; j++)
+            {
+                if (game->GetPieceInfo(i, j))
+                {
+					PieceColor color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
+					auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
+					updatedBoard[i][j] = std::make_pair(type, color);
+                }
+                else
+                {
+                    updatedBoard[i][j] = std::make_pair(PieceType::none, PieceColor::none);
+                }
+
+            }
+
+        UpdateBoard(updatedBoard);
     }
     //At first click
     else {
-        m_selectedCell = position;
-        m_grid[position.first][position.second]->setSelected(true);
+        if (ConvertColorEnum(game->GetCurrentPlayer()) == m_grid[position.first][position.second]->GetPieceColor())
+        {
+            m_selectedCell = position;
+            m_grid[position.first][position.second]->setSelected(true);
 
-        //TODO Show possible moves here
-        HighlightPossibleMoves(game->GetPossibleMoves(position.first, position.second));
+            //TODO Show possible moves here
+            HighlightPossibleMoves(game->GetPossibleMoves(position.first, position.second));
+        }
     }
 }
 
@@ -194,7 +271,6 @@ void ChessUIQt::UpdateBoard(const std::array<std::array<std::pair<PieceType, Pie
             m_grid[i][j]->setHighlighted(false);
         }
     }
-
 }
 
 void ChessUIQt::HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
@@ -208,6 +284,18 @@ void ChessUIQt::StartGame()
 {
     //TODO MODIFY ME OR DELETE ME
     UpdateBoard(Helper::getDefaultBoard());
+}
+
+std::string ConvetItemToStr(QString item)
+{
+    if (item == "Rook")
+        return "ROOK";
+	if (item == "Bishop")
+		return "BISHOP";
+	if (item == "Queen")
+		return "QUEEN";
+	if (item == "Knight")
+		return "KNIGHT";
 }
 
 void ChessUIQt::ShowPromoteOptions()
@@ -229,7 +317,7 @@ void ChessUIQt::ShowPromoteOptions()
     if (ok && !item.isEmpty())
     {
         //TODO
-        //game.promotePawn(parseQStringToPieceType(item))
+        game->UpgradePawnTo(ConvetItemToStr(item));
 
         //TODO DELETE ME...
         QMessageBox notification;

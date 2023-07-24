@@ -2,6 +2,6 @@
 
 enum class EPieceColor
 {
-	Black,
-	White
+	White,
+	Black
 };

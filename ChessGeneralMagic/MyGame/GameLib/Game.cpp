@@ -34,7 +34,7 @@ bool Game::IsGameOver() const
 
 static bool IsPositionValid(Position p)
 {
-	return p.first >= 1 && p.first <= 8 && p.second >= 1 && p.second <= 8;
+	return p.first >= 0 && p.first < 8 && p.second >= 0 && p.second < 8;
 }
 
 bool IsComandDraw(std::string comand)
@@ -50,7 +50,7 @@ bool RefuseDraw(std::string comand)
 bool Game::CanUpgradePawn(Position pos) const
 {
 	auto piece = m_board.GetBoard()[pos.first][pos.second];
-	return piece->GetType() == EPieceType::Pawn && piece->GetColor() == EPieceColor::White && pos.first == 1 || piece->GetColor() == EPieceColor::Black && pos.first == 8;
+	return piece->GetType() == EPieceType::Pawn && piece->GetColor() == EPieceColor::White && pos.first == 0 || piece->GetColor() == EPieceColor::Black && pos.first == 7;
 }
 
 EPieceType ConvertToType(std::string comand)
@@ -186,9 +186,9 @@ bool Game::IsStateDraw() const
 	return m_state == EGameState::Draw;
 }
 
-EPlayer Game::GetCurrentPlayer() const
+EPieceColor Game::GetCurrentPlayer() const
 {
-	return m_turn ? EPlayer::Black : EPlayer::White;
+	return m_turn ? EPieceColor::Black : EPieceColor::White;
 }
 
 bool Game::IsState(EGameState state) const
@@ -203,7 +203,7 @@ void Game::UpdateState(EGameState state)
 
 Position Game::ConvertToPos(const std::string& pos)
 {
-	return Position(9 - (pos[1] - '0'), pos[0] - 'A' + 1);
+	return Position(8 - (pos[1] - '0'), pos[0] - 'A');
 }
 
 

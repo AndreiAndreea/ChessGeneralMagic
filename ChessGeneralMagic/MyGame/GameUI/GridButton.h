@@ -19,6 +19,8 @@ public:
 	void setHighlighted(bool highlighted);
 	void setSelected(bool selected);
 
+	PieceColor GetPieceColor();
+
 signals:
 	void Clicked(const std::pair<int, int>& position);
 

@@ -65,7 +65,7 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 	auto localBoard = board.GetBoard();
 
 	int i = piecePos.first + 1;
-	while (i <= 8)
+	while (i < 8)
 	{
 		if (localBoard[i][piecePos.second] != nullptr)
 		{
@@ -79,7 +79,7 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 	}
 
 	i = piecePos.second - 1;
-	while (i >= 1)
+	while (i >= 0)
 	{
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
@@ -93,7 +93,7 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 	}
 
 	i = piecePos.first - 1;
-	while (i >= 1)
+	while (i >= 0)
 	{
 
 		if (localBoard[i][piecePos.second] != nullptr)
@@ -108,7 +108,7 @@ PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
 	}
 
 	i = piecePos.second + 1;
-	while (i <= 8)
+	while (i < 8)
 	{
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
