@@ -37,12 +37,12 @@ static bool IsPositionValid(Position p)
 	return p.first >= 0 && p.first < 8 && p.second >= 0 && p.second < 8;
 }
 
-bool IsComandDraw(std::string comand)
+bool IsComandDraw(const std::string& comand)
 {
 	return comand == "DRAW";
 }
 
-bool RefuseDraw(std::string comand)
+bool RefuseDraw(const std::string& comand)
 {
 	return comand == "NO DRAW";
 }
@@ -141,44 +141,40 @@ void Game::PlayerComand(const std::string& comand)
 
 void Game::DrawReaponse(const std::string& respons)
 {
-	if (IsState(EGameState::DrawProposed))
+	if(!IsState(EGameState::DrawProposed))
+		throw NotStateDrawProposedException();
+
+	if (IsComandDraw(respons))
 	{
-		if (IsComandDraw(respons))
-		{
-			UpdateState(EGameState::Draw);
-		}
-		else if (RefuseDraw(respons))
-		{
-			UpdateState(EGameState::Playing);
-			m_turn = 1 - m_turn;
-		}
-		else
-			throw InvalidDrawResponseException();
+		UpdateState(EGameState::Draw);
+	}
+	else if (RefuseDraw(respons))
+	{
+		UpdateState(EGameState::Playing);
+		m_turn = 1 - m_turn;
 	}
 	else
-		throw NotStateDrawProposedException();
+		throw InvalidDrawResponseException();
 }
 
 void Game::UpgradePawnTo(const std::string& typeUpgrade)
 {
 
-	if (IsState(EGameState::WaitingForPawnUpgrade))
-	{
-		auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
-		EPieceType type = ConvertToType(typeUpgrade);
+	if (!IsState(EGameState::WaitingForPawnUpgrade))
+		throw NotStateWaitingForPawnUpdate();
 
-		if (type != EPieceType::None)
-		{
-			auto movesVect = m_board.GetMovesVect();
-			m_board.SetPiece(movesVect[(int)color][movesVect[(int)color].size() - 1].second, color, type);
-			m_turn = 1 - m_turn;
-			UpdateState(EGameState::Playing);
-		}
-		else
-			throw InvalidUpgradeType();
+	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
+	EPieceType type = ConvertToType(typeUpgrade);
+
+	if (type != EPieceType::None)
+	{
+		auto movesVect = m_board.GetMovesVect();
+		m_board.SetPiece(movesVect[(int)color][movesVect[(int)color].size() - 1].second, color, type);
+		m_turn = 1 - m_turn;
+		UpdateState(EGameState::Playing);
 	}
 	else
-		throw NotStateWaitingForPawnUpdate();
+		throw InvalidUpgradeType();
 }
 
 bool Game::IsStateWaitingForPawnUpgrade() const
@@ -219,6 +215,8 @@ Position Game::ConvertToPos(const std::string& pos)
 
 IPieceInfoPtr Game::GetPieceInfo(int i, int j) const
 {
+	//return m_board->GetPieceInfo(i, j);
+
 	if (auto piece = m_board.GetBoard()[i][j])
 		return std::make_shared<PieceInfo>(piece->GetType(), piece->GetColor());
 	return {};

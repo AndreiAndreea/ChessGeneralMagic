@@ -2,19 +2,13 @@
 
 #include "EGameState.h"
 #include "Piece.h"
-#include "Rook.h"
-#include "Bishop.h"
-#include "Knight.h"
-#include "Pawn.h"
-#include "King.h"
-#include "Queen.h"
 
 #include<memory>
 #include<vector>
 
 //using Position = std::pair<int, int>;
 using PieceMatrix = std::vector<std::vector<PiecePtr>>;
-using ConfigMatrix = std::vector<std::vector<std::string>>;
+using ConfigMatrix = std::vector<std::vector<char>>;
 using ConfigMovesVesct = std::vector<std::vector<std::pair<Position, Position>>>;
 
 class Board

@@ -1,13 +1,25 @@
 
 #include "Board.h"
+
 #include "KingLeftInCheckException.h"
 #include "InvalidMovingPatternException.h"
 
 #include <stdexcept>
 #include<iostream>
+#include <cstring>
 
 Board::Board() {
 	InitializeBoard();
+}
+
+static EPieceType GetType(char c)
+{
+	static const EPieceType TYPES[] = {EPieceType::Pawn, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King};
+	c = toupper(c);
+	char str[] = "PRNBQK";
+	char* p = strchr(str, c);
+	
+	return TYPES[p - str];
 }
 
 Board::Board(ConfigMatrix board)
@@ -19,25 +31,11 @@ Board::Board(ConfigMatrix board)
 			EPieceColor color;
 			EPieceType type;
 
-			if (board[i][j][1])
+			if (board[i][j] != ' ')
 			{
-				if (board[i][j][0] == 'P')
-					type = EPieceType::Pawn;
-				else if (board[i][j][0] == 'R')
-					type = EPieceType::Rook;
-				else if (board[i][j][0] == 'N')
-					type = EPieceType::Knight;
-				else if (board[i][j][0] == 'B')
-					type = EPieceType::Bishop;
-				else if (board[i][j][0] == 'Q')
-					type = EPieceType::Queen;
-				else if (board[i][j][0] == 'K')
-					type = EPieceType::King;
+				type = GetType(board[i][j]);
 
-				if (board[i][j][1] == 'b')
-					color = EPieceColor::Black;
-				else
-					color = EPieceColor::White;
+				color = board[i][j] > 91 ? EPieceColor::White : EPieceColor::Black;
 
 				m_board[i][j] = Piece::Produce(type, color);
 
@@ -118,28 +116,7 @@ PositionList Board::GetPossibleMoves(int i, int j) const
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
 {
-
-	switch (type)
-	{
-	case EPieceType::Rook:
-		m_board[pos.first][pos.second] = std::make_shared<Rook>(color);
-		break;
-	case EPieceType::Bishop:
-		m_board[pos.first][pos.second] = std::make_shared<Bishop>(color);
-		break;
-	case EPieceType::Pawn:
-		m_board[pos.first][pos.second] = std::make_shared<Pawn>(color);
-		break;
-	case EPieceType::King:
-		m_board[pos.first][pos.second] = std::make_shared<King>(color);
-		break;
-	case EPieceType::Knight:
-		m_board[pos.first][pos.second] = std::make_shared<Knight>(color);
-		break;
-	case EPieceType::Queen:
-		m_board[pos.first][pos.second] = std::make_shared<Queen>(color);
-		break;
-	}
+	m_board[pos.first][pos.second] = Piece::Produce(type, color);
 }
 
 void Board::SetPieceToNullptr(const Position& pos)
@@ -216,13 +193,7 @@ bool Board::IsPieceColor(Position pos, EPieceColor color) const
 
 static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType> types)
 {
-	if (!piece)
-		return false;
-
-	if (piece->IsOpposite(color, { EPieceType::Bishop, EPieceType::Queen }))
-		return true;
-
-	return false;
+	return piece && piece->IsOpposite(color, { EPieceType::Bishop, EPieceType::Queen });
 }
 
 bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const
@@ -507,9 +478,10 @@ bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
 {
 	int vectSize = m_movesMade[(int)color].size();
 	if (vectSize >= 5)
-		return  m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second && m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
-	else
-		return false;
+		return  m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second 
+		&& m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
+
+	return false;
 }
 
 std::vector<std::vector<bool>> Board::GetCastlingVect() const

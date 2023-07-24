@@ -1,4 +1,8 @@
 #include "Queen.h"
+
+#include "Bishop.h"
+#include "Rook.h"
+
 #include "Board.h"
 
 Queen::Queen(EPieceColor color) 

@@ -22,15 +22,17 @@ protected:
 
 TEST_F(KingTest, InvalidMove) {
 	Board board;
-	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::King);
+	board.SetPiece(Position(3, 3), EPieceColor::White, EPieceType::King);
 
-	EXPECT_FALSE(king->CanMove(Position(4, 4), Position(3, 4), board));
+	EXPECT_FALSE(king->CanMove(Position(3, 3), Position(2, 3), board));
 }
 
 
-TEST_F(KingTest, InvalidMove1) {
+TEST_F(KingTest, InvalidMove1) 
+{
 	Board board;
-	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,5)}, {Position(4,4), Position(6,6)},{Position(1,4), Position(1,6)} , {Position(8,1), Position(8,2)} };
+	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(3,3), Position(1,4)}, {Position(3,3), Position(5,5)},
+		{Position(0,3), Position(0,5)} , {Position(7,0), Position(7,1)} };
 
 	for (auto it : possibleMoves)
 	{

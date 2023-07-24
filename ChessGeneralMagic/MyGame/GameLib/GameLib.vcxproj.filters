@@ -25,17 +25,8 @@
     <Filter Include="Source Files\Exceptions">
       <UniqueIdentifier>{d3434abf-4c82-4f4a-a93b-c402144f102a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Exceptions">
-      <UniqueIdentifier>{a5bbb5c6-0e8a-4253-b140-32948f257812}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Exceptions\MethodExceptions">
-      <UniqueIdentifier>{63cc75db-b5d0-4ff1-b54d-f9b9bccd9bc2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Exceptions\MethodExceptions">
       <UniqueIdentifier>{5af21f8f-01ef-48b7-aa77-d4b957f93285}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Exceptions\PieceMoveExceptions">
-      <UniqueIdentifier>{639cd54a-8d31-4f89-81c2-8803064aaa7b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Exceptions\PieceMoveExceptions">
       <UniqueIdentifier>{20384196-b11a-41cc-9d70-c547108f6563}</UniqueIdentifier>
@@ -43,7 +34,16 @@
     <Filter Include="Source Files\Exceptions\InvalidInputExceptions">
       <UniqueIdentifier>{06929400-cf5c-42bd-9fef-226891cca2ca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Exceptions\InvalidInputExceptions">
+    <Filter Include="Header Files\API\Exceptions">
+      <UniqueIdentifier>{a5bbb5c6-0e8a-4253-b140-32948f257812}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\API\Exceptions\MethodExceptions">
+      <UniqueIdentifier>{63cc75db-b5d0-4ff1-b54d-f9b9bccd9bc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\API\Exceptions\PieceMoveExceptions">
+      <UniqueIdentifier>{639cd54a-8d31-4f89-81c2-8803064aaa7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\API\Exceptions\InvalidInputExceptions">
       <UniqueIdentifier>{08f19af7-1c92-4593-ad69-8fc872dfe654}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -94,40 +94,40 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ChessExceptions.h">
-      <Filter>Header Files\Exceptions</Filter>
+      <Filter>Header Files\API\Exceptions</Filter>
     </ClInclude>
     <ClInclude Include="NotStateDrawProposedException.h">
-      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\MethodExceptions</Filter>
     </ClInclude>
     <ClInclude Include="MethodException.h">
-      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\MethodExceptions</Filter>
     </ClInclude>
     <ClInclude Include="NotStateWaitingForPawnUpdate.h">
-      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\MethodExceptions</Filter>
     </ClInclude>
     <ClInclude Include="NotStatePlayingException.h">
-      <Filter>Header Files\Exceptions\MethodExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\MethodExceptions</Filter>
     </ClInclude>
     <ClInclude Include="PieceMovementExceptions.h">
-      <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\PieceMoveExceptions</Filter>
     </ClInclude>
     <ClInclude Include="KingLeftInCheckException.h">
-      <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\PieceMoveExceptions</Filter>
     </ClInclude>
     <ClInclude Include="InvalidMovingPatternException.h">
-      <Filter>Header Files\Exceptions\PieceMoveExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\PieceMoveExceptions</Filter>
     </ClInclude>
     <ClInclude Include="OutOfBoundException.h">
-      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\InvalidInputExceptions</Filter>
     </ClInclude>
     <ClInclude Include="InvalidStartPositionExcepton.h">
-      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\InvalidInputExceptions</Filter>
     </ClInclude>
     <ClInclude Include="InvalidDrawResponseException.h">
-      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\InvalidInputExceptions</Filter>
     </ClInclude>
     <ClInclude Include="InvalidUpgradeType.h">
-      <Filter>Header Files\Exceptions\InvalidInputExceptions</Filter>
+      <Filter>Header Files\API\Exceptions\InvalidInputExceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

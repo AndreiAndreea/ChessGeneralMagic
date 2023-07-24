@@ -7,9 +7,9 @@ TEST(BoardTest, ValidMove)
 {
 	Board board(0);
 
-	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
-	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
-	board.SetPiece(Position(3, 3), EPieceColor::Black, EPieceType::Bishop);
+	board.SetPiece(Position(4,4), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(1,1), EPieceColor::White, EPieceType::Queen);
+	board.SetPiece(Position(2,2), EPieceColor::Black, EPieceType::Bishop);
 
 	auto ceva = board.IsKingLeftInCheck(Position(3, 3), Position(4, 4), EPieceColor::Black);
 	EXPECT_FALSE(ceva);
@@ -20,7 +20,7 @@ TEST(BoardTest, AttackQueen)
 {
 	Board board(0);
 
-	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(4,4), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
 	board.SetPiece(Position(3, 3), EPieceColor::Black, EPieceType::Bishop);
 
@@ -106,24 +106,24 @@ TEST(BoardTest, QueenRookAttack)
 {
 	Board board(0);
 
-	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
-	board.SetPiece(Position(2, 8), EPieceColor::White, EPieceType::Queen);
-	board.SetPiece(Position(5, 2), EPieceColor::White, EPieceType::Rook);
-	board.SetPiece(Position(3, 7), EPieceColor::Black, EPieceType::Bishop);
+	board.SetPiece(Position(4, 4), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(1, 7), EPieceColor::White, EPieceType::Queen);
+	board.SetPiece(Position(4, 1), EPieceColor::White, EPieceType::Rook);
+	board.SetPiece(Position(2, 6), EPieceColor::Black, EPieceType::Bishop);
 
-	EXPECT_TRUE(board.IsKingLeftInCheck(Position(3, 7), Position(2, 8), EPieceColor::Black));
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(2, 6), Position(1, 7), EPieceColor::Black));
 }
 
 TEST(BoardTest, QueenRookAttack1)
 {
 	Board board(0);
 
-	board.SetPiece(Position(1, 5), EPieceColor::Black, EPieceType::King);
-	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Queen);
-	board.SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Bishop);
-	board.SetPiece(Position(2, 4), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(2, 5), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(4, 8), EPieceColor::White, EPieceType::Queen);
+	board.SetPiece(Position(0, 4), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(0, 3), EPieceColor::Black, EPieceType::Queen);
+	board.SetPiece(Position(0, 5), EPieceColor::Black, EPieceType::Bishop);
+	board.SetPiece(Position(1, 3), EPieceColor::Black, EPieceType::Pawn);
+	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Pawn);
+	board.SetPiece(Position(3, 7), EPieceColor::White, EPieceType::Queen);
 
 
 	EXPECT_TRUE(board.IsCheckmate(EPieceColor::Black));
@@ -151,16 +151,16 @@ TEST(BoardTest, BoardDeveloped1)
 {
 	Board board(0);
 
-	board.SetPiece(Position(1, 5), EPieceColor::Black, EPieceType::King);
-	board.SetPiece(Position(2, 5), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Queen);
-	board.SetPiece(Position(1, 7), EPieceColor::Black, EPieceType::Knight);
-	board.SetPiece(Position(2, 4), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Bishop);
-	board.SetPiece(Position(3, 7), EPieceColor::White, EPieceType::Pawn);
-	board.SetPiece(Position(4, 8), EPieceColor::White, EPieceType::Queen);
+	board.SetPiece(Position(0, 4), EPieceColor::Black, EPieceType::King);
+	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Pawn);
+	board.SetPiece(Position(0, 3), EPieceColor::Black, EPieceType::Queen);
+	board.SetPiece(Position(0, 6), EPieceColor::Black, EPieceType::Knight);
+	board.SetPiece(Position(1, 3), EPieceColor::Black, EPieceType::Pawn);
+	board.SetPiece(Position(0, 5), EPieceColor::Black, EPieceType::Bishop);
+	board.SetPiece(Position(2, 6), EPieceColor::White, EPieceType::Pawn);
+	board.SetPiece(Position(3, 7), EPieceColor::White, EPieceType::Queen);
 
-	EXPECT_FALSE(board.IsKingLeftInCheck(Position(1, 7), Position(3, 6), EPieceColor::Black));
+	EXPECT_FALSE(board.IsKingLeftInCheck(Position(0, 6), Position(2, 5), EPieceColor::Black));
 }
 
 TEST(BoardTest, BoardDeveloped2)
