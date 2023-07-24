@@ -24,6 +24,12 @@ static EPieceType GetType(char c)
 
 Board::Board(ConfigMatrix board)
 {
+	m_board.resize(8);
+	for (int i = 0; i < 8; i++)
+	{
+		m_board[i].resize(8);
+	}
+
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
@@ -31,7 +37,7 @@ Board::Board(ConfigMatrix board)
 			EPieceColor color;
 			EPieceType type;
 
-			if (board[i][j] != ' ')
+			if (board[i][j] != '-')
 			{
 				type = GetType(board[i][j]);
 

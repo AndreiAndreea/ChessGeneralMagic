@@ -64,7 +64,7 @@ bool King::CanMakeBigCastling(EPieceColor color, const Board& board) const
 			//check if king is in check on the way to the rook
 			for (int i = 4; i > 0; i--)
 			{
-				if (board.IsKingInCheck(Position(0, i), EPieceColor::White))
+				if (board.IsKingInCheck(Position(0, i), EPieceColor::Black))
 					return false;
 			}
 			return true;
@@ -110,7 +110,7 @@ bool King::CanMakeSmallCastling(EPieceColor color, const Board& board) const
 			//check if king is in check on the way to the rook
 			for (int i = 4; i < 7; i++)
 			{
-				if (board.IsKingInCheck(Position(0, i), EPieceColor::White))
+				if (board.IsKingInCheck(Position(0, i), EPieceColor::Black))
 					return false;
 			}
 			return true;
@@ -153,7 +153,6 @@ PositionList King::GetPossibleMoves(Position piecePos, const Board& board)
 				if (board.GetBoard()[i][j] == nullptr && !VerifyKingMovmentCheck(piecePos, Position(i, j), board))
 					possibleMoves.push_back(Position(i, j));
 			}
-
 		}
 
 	auto piece = board.GetBoard()[piecePos.first][piecePos.second];
