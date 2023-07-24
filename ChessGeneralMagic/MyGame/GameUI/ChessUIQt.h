@@ -29,6 +29,7 @@ public:
     void UpdateBoard(const std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8>& newBoard);
     //Modify if necessary with your possible moves representation
     void HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves);
+    void UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves);
     //Modify or delete
     void StartGame();
     void ShowPromoteOptions();

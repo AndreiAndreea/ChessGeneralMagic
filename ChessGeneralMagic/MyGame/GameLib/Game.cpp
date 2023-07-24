@@ -163,6 +163,8 @@ void Game::UpgradePawnTo(const std::string& typeUpgrade)
 		{
 			auto movesVect = m_board.GetMovesVect();
 			m_board.SetPiece(movesVect[(int)color][movesVect[(int)color].size() - 1].second, color, type);
+			m_turn = 1 - m_turn;
+			UpdateState(EGameState::Playing);
 		}
 		else
 			throw InvalidUpgradeType();
