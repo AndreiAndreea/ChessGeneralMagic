@@ -20,10 +20,9 @@ protected:
 
 };
 
-
 TEST_F(BishopTest, ValidMove) {
 	Board board;
-	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(2,2), Position(5,5)}, {Position(4,3), Position(6,5)} };
+	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(2,2), Position(5,5)}, {Position(4,3), Position(5,4)} };
 
 	for (auto it : possibleMoves)
 		EXPECT_TRUE(bishop->CanMove(it.first, it.second, board));

@@ -302,8 +302,10 @@ void ChessUIQt::OnDrawButtonClicked()
     reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
 
     if (reply == QMessageBox::Yes) {
-        //TODO ...
-        //game.Draw(...);
+		QMessageBox msgBox;
+		msgBox.setText("Draw Accepted. Winner is: None.");
+		msgBox.exec();
+        OnRestartButtonClicked();
     }
 }
 
