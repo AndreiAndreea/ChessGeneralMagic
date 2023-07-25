@@ -86,7 +86,7 @@ void Game::MakeMove(Position startPos, Position endPos)
 	else
 		m_turn = 1 - m_turn;
 
-	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw(color))
+	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw(color) || m_board.IsInsufficientMaterial())
 		UpdateState(EGameState::Draw);
 
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;

@@ -132,6 +132,9 @@
     <ClInclude Include="PositionList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IGameListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">

@@ -14,11 +14,11 @@ Board::Board() {
 
 static EPieceType GetType(char c)
 {
-	static const EPieceType TYPES[] = {EPieceType::Pawn, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King};
+	static const EPieceType TYPES[] = { EPieceType::Pawn, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King };
 	c = toupper(c);
 	char str[] = "PRNBQK";
 	char* p = strchr(str, c);
-	
+
 	return TYPES[p - str];
 }
 
@@ -85,9 +85,9 @@ void Board::InitializeBoard()
 			m_board[x][y] = nullptr;
 
 	//initializing the pieces 
-	
-	std::vector<EPieceType> TYPES = {EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King, EPieceType::Bishop, EPieceType::Knight, EPieceType::Rook };
-	
+
+	std::vector<EPieceType> TYPES = { EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King, EPieceType::Bishop, EPieceType::Knight, EPieceType::Rook };
+
 	for (int i = 0; i < 8; i++)
 	{
 		m_board[0][i] = Piece::Produce(TYPES[i], EPieceColor::Black);
@@ -113,8 +113,8 @@ ConfigMovesVesct Board::GetMovesVect() const
 
 PositionList Board::GetPossibleMoves(int i, int j) const
 {
-	if(m_board[i][j])
-		return m_board[i][j]->GetPossibleMoves(Position(i, j), false,*this);
+	if (m_board[i][j])
+		return m_board[i][j]->GetPossibleMoves(Position(i, j), false, *this);
 	return {};
 }
 
@@ -138,7 +138,7 @@ void Board::MoveRookForCastling(int castlingType, EPieceColor color)
 	int i = (int)color ? 0 : 7;
 	int start = castlingType < 0 ? 7 : 0;
 	int end = castlingType < 0 ? 5 : 3;
-	
+
 	SetPiece(Position(i, end), color, EPieceType::Rook);
 	SetPieceToNullptr(Position(i, start));
 }
@@ -149,7 +149,7 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 	auto color = piece->GetColor();
 	auto type = piece->GetType();
 
-	if (piece->CanMove(startPos, endPos, false,*this))
+	if (piece->CanMove(startPos, endPos, false, *this))
 	{
 		if (type != EPieceType::King)
 		{
@@ -230,7 +230,7 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 			break;
 		auto piece = m_board[i][kingPos.second];
 		if (!(i == startPos.first && kingPos.second == startPos.second))
-			if ( piece)
+			if (piece)
 			{
 				if (piece->GetColor() != pieceColor && (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Queen))
 					return true;
@@ -298,8 +298,8 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		auto piece = m_board[currentRow][currentCol];
 		if (!(currentRow == startPos.first && currentCol == startPos.second))
 			//if (IsOpposite(piece, pieceColor, { EPieceType::Bishop, EPieceType::Queen }))
-			if (m_board[currentRow][currentCol] != nullptr )
-				if (m_board[currentRow][currentCol]->GetColor() != pieceColor &&( m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
+			if (m_board[currentRow][currentCol] != nullptr)
+				if (m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
 					return true;
 				else
 					break;
@@ -316,7 +316,7 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		if (currentCol == endPos.second && currentRow == endPos.first)
 			break;
 		if (!(currentCol == startPos.second && currentRow == startPos.first))
-			if (m_board[currentRow][currentCol] != nullptr  )
+			if (m_board[currentRow][currentCol] != nullptr)
 				if (m_board[currentRow][currentCol]->GetColor() != pieceColor && (m_board[currentRow][currentCol]->GetType() == EPieceType::Bishop || m_board[currentRow][currentCol]->GetType() == EPieceType::Queen))
 					return true;
 				else
@@ -367,11 +367,11 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	{
 		if (kingPos.first + 1 < 8)
 		{
-			if (kingPos.second - 1 >= 0 && m_board[kingPos.first + 1][kingPos.second - 1] != nullptr && m_board[kingPos.first + 1][kingPos.second - 1]->GetColor() != pieceColor 
+			if (kingPos.second - 1 >= 0 && m_board[kingPos.first + 1][kingPos.second - 1] != nullptr && m_board[kingPos.first + 1][kingPos.second - 1]->GetColor() != pieceColor
 				&& (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second) && m_board[kingPos.first + 1][kingPos.second - 1]->GetType() == EPieceType::Pawn)
 				return true;
 
-			if (kingPos.second + 1 < 8 && m_board[kingPos.first + 1][kingPos.second + 1] != nullptr && m_board[kingPos.first + 1][kingPos.second + 1]->GetColor() != pieceColor 
+			if (kingPos.second + 1 < 8 && m_board[kingPos.first + 1][kingPos.second + 1] != nullptr && m_board[kingPos.first + 1][kingPos.second + 1]->GetColor() != pieceColor
 				&& (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second) && m_board[kingPos.first + 1][kingPos.second + 1]->GetType() == EPieceType::Pawn)
 				return true;
 		}
@@ -381,26 +381,26 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	{
 		if (kingPos.first - 1 >= 0)
 		{
-			if (kingPos.second - 1 >= 0 && m_board[kingPos.first - 1][kingPos.second - 1] != nullptr && m_board[kingPos.first - 1][kingPos.second - 1]->GetColor() != pieceColor 
-				&& (kingPos.first -1 != endPos.first || kingPos.second - 1 != endPos.second) && m_board[kingPos.first - 1][kingPos.second - 1]->GetType() == EPieceType::Pawn)
+			if (kingPos.second - 1 >= 0 && m_board[kingPos.first - 1][kingPos.second - 1] != nullptr && m_board[kingPos.first - 1][kingPos.second - 1]->GetColor() != pieceColor
+				&& (kingPos.first - 1 != endPos.first || kingPos.second - 1 != endPos.second) && m_board[kingPos.first - 1][kingPos.second - 1]->GetType() == EPieceType::Pawn)
 				return true;
 
-			if (kingPos.second + 1 < 8 && m_board[kingPos.first - 1][kingPos.second + 1] != nullptr && m_board[kingPos.first - 1][kingPos.second + 1]->GetColor() != pieceColor 
+			if (kingPos.second + 1 < 8 && m_board[kingPos.first - 1][kingPos.second + 1] != nullptr && m_board[kingPos.first - 1][kingPos.second + 1]->GetColor() != pieceColor
 				&& (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second) && m_board[kingPos.first - 1][kingPos.second + 1]->GetType() == EPieceType::Pawn)
 				return true;
 		}
 	}
 
 	//check knight threat
-	for(int i=kingPos.first-2;i<=kingPos.first+2;i++)
+	for (int i = kingPos.first - 2; i <= kingPos.first + 2; i++)
 		for (int j = kingPos.second - 2; j <= kingPos.second + 2; j++)
 		{
-			if( i < 8 && i >= 0 && j < 8 && j >= 0)
-			if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
-				if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() != pieceColor && m_board[i][j]->GetType() == EPieceType::Knight && (i!=endPos.first || j!=endPos.second))
-					return true;
+			if (i < 8 && i >= 0 && j < 8 && j >= 0)
+				if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
+					if (m_board[i][j] != nullptr && m_board[i][j]->GetColor() != pieceColor && m_board[i][j]->GetType() == EPieceType::Knight && (i != endPos.first || j != endPos.second))
+						return true;
 		}
-	
+
 
 	return false;
 }
@@ -413,7 +413,7 @@ bool Board::IsKingInCheck(const Position& currentPos, EPieceColor color) const
 		for (int j = 0; j < 8; j++)
 		{
 			if (m_board[i][j] && (m_board[i][j]->GetColor() != color) && m_board[i][j]->CanMove(Position(i, j), currentPos, true, *this))
-					return true;
+				return true;
 		}
 	}
 	return false;
@@ -480,27 +480,80 @@ bool Board::IsStaleMate(EPieceColor color) const
 	return true;
 }
 
-//bool Board::CheckKingThreat(Position startPos, Position endPos) const
-//{
-//	for (int i = startPos.first - 1; i <= startPos.first + 1; i++)
-//	{
-//		for (int j = startPos.second - 1; j <= startPos.second + 1; j++)
-//		{
-//			if (i >= 0 && i < 8 && j < 8 && j >= 0)
-//			{
-//				if (endPos.first == i && endPos.second == j && !VerifyKingMovmentCheck(startPos, Position(i, j), m_board))
-//					return true;
-//			}
-//		}
-//	}
-//	return false;
-//}
+static bool VerifyInsufficientMaterialVect(std::vector<bool> vect)
+{
+	for (int i = 0; i < vect.size(); i++)
+	{
+		if (vect[i] == false)
+			return false;
+		return true;
+	}
+}
+
+bool Board::IsInsufficientMaterial() const
+{
+	std::vector<bool> twoKings = { false, false };
+	std::vector<bool> twoKingsOneKnight = { false, false, false };
+	std::vector<bool> twoKingsOneBishop = { false, false, false };
+	std::vector<bool> twoKingsTwoBishops = { false, false, false, false };
+	bool colorBishop;
+
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j])
+			{
+				auto type = m_board[i][j]->GetType();
+				auto color = m_board[i][j]->GetColor();
+				if (type == EPieceType::Queen || type == EPieceType::Rook)
+					return false;
+				if (type == EPieceType::King)
+				{
+					twoKings[(int)color] = true;
+					twoKingsOneKnight[(int)color] = true;
+					twoKingsOneBishop[(int)color] = true;
+					twoKingsTwoBishops[(int)color] = true;
+				}
+				if (type == EPieceType::Knight)
+				{
+					if (twoKingsOneKnight[2] || twoKingsOneBishop[2])
+						return false;
+					else
+						twoKingsOneKnight[2] = true;
+				}
+				if (type == EPieceType::Bishop)
+				{
+					// to be continued
+					if (twoKingsOneKnight[2])
+						return false;
+					if (twoKingsOneBishop[2])
+						if (colorBishop != ((i + j) % 2))
+							return false;
+						else
+							twoKingsTwoBishops[3] = true;
+					else
+					{
+						twoKingsOneBishop[2] = true;
+						twoKingsTwoBishops[2] = true;
+						colorBishop = (i + j) % 2;
+					}
+				}
+			}
+
+		}
+	}
+
+	return VerifyInsufficientMaterialVect(twoKings) || VerifyInsufficientMaterialVect(twoKingsOneKnight)
+		|| VerifyInsufficientMaterialVect(twoKingsOneBishop) || VerifyInsufficientMaterialVect(twoKingsTwoBishops);
+
+}
 
 bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
 {
 	int vectSize = m_movesMade[(int)color].size();
 	if (vectSize >= 5)
-		return  m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second 
+		return  m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second
 		&& m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
 
 	return false;
@@ -510,4 +563,3 @@ ConfigCastlingPossible Board::GetCastlingVect() const
 {
 	return CastlingPossible;
 }
-

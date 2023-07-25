@@ -40,6 +40,7 @@ public:
 	bool IsKingInCheck(const Position& currentPos, EPieceColor color) const;
 	bool IsCheckmate(EPieceColor color) const;
 	bool IsStaleMate(EPieceColor color) const;
+	bool IsInsufficientMaterial() const;
 	bool CheckKingThreat(Position startPos, Position endPos) const;
 
 

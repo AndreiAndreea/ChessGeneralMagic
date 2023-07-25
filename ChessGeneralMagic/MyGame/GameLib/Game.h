@@ -1,9 +1,13 @@
 #pragma once
 
 #include "IGame.h"
+#include "IGameListener.h"
 #include "Board.h"
 #include "EGameState.h"
 #include "PositionList.h"
+
+using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
+using IGameListenerPtr = std::shared_ptr<IGameListener>;
 
 class PieceInfo : public IPieceInfo
 {
@@ -47,6 +51,8 @@ public:
 
 	void ResetGame() override;
 
+	//void NotifyAll();
+
 private:
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;
@@ -58,4 +64,5 @@ private:
 	Board m_board;
 	int m_turn;
 	EGameState m_state;
+	std::vector<IGameListenerWeakPtr> m_observers;
 };

@@ -152,6 +152,7 @@
   <ItemGroup>
     <ClCompile Include="BishopTest.cpp" />
     <ClCompile Include="IsCheckmate.cpp" />
+    <ClCompile Include="IsInsufficientMaterialTests.cpp" />
     <ClCompile Include="IsKingInCheckTest.cpp" />
     <ClCompile Include="IsStaleMoveTests.cpp" />
     <ClCompile Include="KingTest.cpp" />
