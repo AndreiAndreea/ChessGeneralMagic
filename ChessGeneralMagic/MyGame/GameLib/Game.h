@@ -2,8 +2,8 @@
 
 #include "IGame.h"
 #include "Board.h"
-#include "Player.h"
 #include "EGameState.h"
+#include "PositionList.h"
 
 class PieceInfo : public IPieceInfo
 {
@@ -18,6 +18,7 @@ private:
 	EPieceColor m_color;
 };
 
+
 class Game : public IGame
 {
 public:
@@ -28,7 +29,7 @@ public:
 	// IGame methods
 	EPlayer GetWinner() const override;
 	EPieceColor GetCurrentPlayer() const override;
-	std::vector<Position> GetPossibleMoves(int i, int j) override;
+	PositionList GetPossibleMoves(int i, int j) override;
 
 	void PlayerComand(const std::string& comand) override;
 	

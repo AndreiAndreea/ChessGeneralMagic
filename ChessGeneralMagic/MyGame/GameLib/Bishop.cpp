@@ -7,9 +7,9 @@ Bishop::Bishop(EPieceColor color)
 
 }
 
-bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
+bool Bishop::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
-	auto possibleMoves = GetPossibleMoves(startPos, board);
+	auto possibleMoves = GetPossibleMoves(startPos, isKingAttacking, board);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
@@ -17,7 +17,7 @@ bool Bishop::CanMove(Position startPos, Position endPos, const Board& board)
 }
 
 //create a vector with all of the possible moves of a piece
-PositionList Bishop::GetPossibleMoves(Position piecePos, const Board& board)
+PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
 	int currentRow = piecePos.first - 1;

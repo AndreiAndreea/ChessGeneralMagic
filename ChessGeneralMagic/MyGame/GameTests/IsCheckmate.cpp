@@ -35,3 +35,20 @@ TEST(IsCheckmate, KingIsNotInCheck1)
 	EXPECT_FALSE(ceva);
 }
 
+TEST(IsCheckmate, InvalidMove1) {
+
+	ConfigMatrix m = { {
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', 'r', '-', '-', '-', '-', '-', '-'},
+	{'b', '-', '-', '-', 'k', '-', '-', 'r'}
+	} };
+
+	Board board(m);
+	EXPECT_FALSE(board.IsCheckmate(EPieceColor::White));
+}
+

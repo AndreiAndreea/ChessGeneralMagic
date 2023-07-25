@@ -4,12 +4,12 @@
 #include "Piece.h"
 
 #include<memory>
-#include<vector>
 
 //using Position = std::pair<int, int>;
 using PieceMatrix = std::vector<std::vector<PiecePtr>>;
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ConfigMovesVesct = std::vector<std::vector<std::pair<Position, Position>>>;
+using ConfigCastlingPossible = std::vector<std::vector<bool>>;
 
 class Board
 {
@@ -40,10 +40,12 @@ public:
 	bool IsKingInCheck(const Position& currentPos, EPieceColor color) const;
 	bool IsCheckmate(EPieceColor color) const;
 	bool IsStaleMate(EPieceColor color) const;
+	bool CheckKingThreat(Position startPos, Position endPos) const;
+
 
 	bool IsThreefoldRepetitionDraw(EPieceColor color) const;
 
-	std::vector<std::vector<bool>> GetCastlingVect() const;
+	ConfigCastlingPossible GetCastlingVect() const;
 
 private:
 	void MoveRookForCastling(int castlingType, EPieceColor color);
@@ -51,5 +53,5 @@ private:
 private:
 	PieceMatrix m_board;
 	ConfigMovesVesct m_movesMade = { {}, {} };
-	std::vector<std::vector<bool>> CastlingPossible = { {true, true}, {true, true} };
+	ConfigCastlingPossible CastlingPossible = { {true, true}, {true, true} };
 };

@@ -26,7 +26,7 @@ TEST_F(KnightTest, ValidMovement)
 	Position endPos(4, 2);
 	board.SetPiece(startPos, EPieceColor::White, EPieceType::Knight);
 
-	EXPECT_TRUE(knight->CanMove(startPos, endPos, board));
+	EXPECT_TRUE(knight->CanMove(startPos, endPos, false, board));
 }
 
 TEST_F(KnightTest, ValidMovement2)
@@ -36,7 +36,7 @@ TEST_F(KnightTest, ValidMovement2)
 	Position endPos(2, 3);
 	board.SetPiece(startPos, EPieceColor::White, EPieceType::Knight);
 
-	EXPECT_TRUE(knight->CanMove(startPos, endPos, board));
+	EXPECT_TRUE(knight->CanMove(startPos, endPos, false, board));
 }
 
 TEST_F(KnightTest, InvalidMovement)
@@ -46,6 +46,6 @@ TEST_F(KnightTest, InvalidMovement)
 	Position endPos(4, 1);
 	board.SetPiece(startPos, EPieceColor::White, EPieceType::Knight);
 
-	EXPECT_FALSE(knight->CanMove(startPos, endPos, board));
+	EXPECT_FALSE(knight->CanMove(startPos, endPos, false, board));
 }
 

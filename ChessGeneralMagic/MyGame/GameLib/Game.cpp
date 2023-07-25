@@ -50,7 +50,7 @@ bool RefuseDraw(const std::string& comand)
 bool Game::CanUpgradePawn(Position pos) const
 {
 	auto piece = m_board.GetBoard()[pos.first][pos.second];
-	return piece->GetType() == EPieceType::Pawn && piece->GetColor() == EPieceColor::White && pos.first == 0 || piece->GetColor() == EPieceColor::Black && pos.first == 7;
+	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.first == 0) || (piece->GetColor() == EPieceColor::Black && pos.first == 7));
 }
 
 EPieceType ConvertToType(std::string comand)
@@ -159,7 +159,7 @@ void Game::DrawReaponse(const std::string& respons)
 
 void Game::UpgradePawnTo(const std::string& typeUpgrade)
 {
-
+	auto ceva = m_state;
 	if (!IsState(EGameState::WaitingForPawnUpgrade))
 		throw NotStateWaitingForPawnUpdate();
 

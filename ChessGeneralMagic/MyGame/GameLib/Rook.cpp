@@ -7,7 +7,7 @@ Rook::Rook(EPieceColor color)
 
 }
 
-bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
+bool Rook::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
 	/*PositionList possibleMoves;
 	possibleMoves = GetPossibleMoves(startPos, board);
@@ -58,7 +58,7 @@ bool Rook::CanMove(Position startPos, Position endPos, const Board& board)
 	return true;
 }
 
-PositionList Rook::GetPossibleMoves(Position piecePos, const Board& board)
+PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
 	EPieceColor pieceColor = GetColor();

@@ -3,6 +3,7 @@
 #include "Queen.h"
 #include "Board.h"
 
+
 class QueenTest : public testing::Test {
 	void SetUp() override
 	{
@@ -29,7 +30,7 @@ TEST_F(QueenTest, ValidMove1)
 	Position endPos(2,5);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
+	EXPECT_TRUE(queen->CanMove(startPos, endPos, false, board));
 }
 //vertical downwards
 TEST_F(QueenTest, ValidMove2)
@@ -40,7 +41,7 @@ TEST_F(QueenTest, ValidMove2)
 	Position endPos(6, 6);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
+	EXPECT_TRUE(queen->CanMove(startPos, endPos, false, board));
 }
 
 //diagonal right upwards
@@ -52,7 +53,7 @@ TEST_F(QueenTest, ValidMove3)
 	Position endPos(3,7);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_TRUE(queen->CanMove(startPos, endPos, board));
+	EXPECT_TRUE(queen->CanMove(startPos, endPos, false, board));
 }
 
 
@@ -64,7 +65,7 @@ TEST_F(QueenTest, InvalidMove)
 	Position endPos(5, 5);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
+	EXPECT_FALSE(queen->CanMove(startPos, endPos, false, board));
 }
 
 TEST_F(QueenTest, InvalidMove2)
@@ -75,7 +76,7 @@ TEST_F(QueenTest, InvalidMove2)
 	Position endPos(7, 5);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
+	EXPECT_FALSE(queen->CanMove(startPos, endPos, false, board));
 }
 
 TEST_F(QueenTest, InvalidMove3)
@@ -86,5 +87,5 @@ TEST_F(QueenTest, InvalidMove3)
 	Position endPos(7,3);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_FALSE(queen->CanMove(startPos, endPos, board));
+	EXPECT_FALSE(queen->CanMove(startPos, endPos, false, board));
 }

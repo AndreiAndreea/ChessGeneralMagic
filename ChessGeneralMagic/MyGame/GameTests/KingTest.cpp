@@ -24,7 +24,7 @@ TEST_F(KingTest, InvalidMove) {
 	Board board;
 	board.SetPiece(Position(3, 4), EPieceColor::White, EPieceType::King);
 
-	EXPECT_FALSE(king->CanMove(Position(3, 4), Position(2, 4), board));
+	EXPECT_FALSE(king->CanMove(Position(3, 4), Position(2, 4), false, board));
 }
 
 
@@ -35,7 +35,7 @@ TEST_F(KingTest, InvalidMove1) {
 	for (auto it : possibleMoves)
 	{
 		board.SetPiece(it.first, EPieceColor::White, EPieceType::King);
-		EXPECT_FALSE(king->CanMove(it.first, it.second, board));
+		EXPECT_FALSE(king->CanMove(it.first, it.second, false, board));
 	}
 }
 
@@ -46,7 +46,7 @@ TEST_F(KingTest, ValidMoveCheck2)
 	board.SetPiece(Position(3, 2), EPieceColor::White, EPieceType::King);
 	board.SetPiece(Position(4, 3), EPieceColor::Black, EPieceType::Queen);
 
-	EXPECT_TRUE(king->CanMove(Position(3, 2), Position(4, 3), board));
+	EXPECT_TRUE(king->CanMove(Position(3, 2), Position(4, 3), false, board));
 }
 
 TEST_F(KingTest, InValidMoveCheck) {
@@ -55,7 +55,7 @@ TEST_F(KingTest, InValidMoveCheck) {
 	board.SetPiece(Position(3, 4), EPieceColor::Black, EPieceType::Bishop);
 	board.SetPiece(Position(4, 4), EPieceColor::Black, EPieceType::Rook);
 
-	EXPECT_FALSE(king->CanMove(Position(5, 5), Position(5, 4), board));
+	EXPECT_FALSE(king->CanMove(Position(5, 5), Position(5, 4), false, board));
 }
 
 TEST_F(KingTest, InValidMoveCheck2) {
@@ -64,7 +64,7 @@ TEST_F(KingTest, InValidMoveCheck2) {
 	board.SetPiece(Position(2, 7), EPieceColor::White, EPieceType::Bishop);
 	board.SetPiece(Position(3, 4), EPieceColor::Black, EPieceType::Rook);
 
-	EXPECT_FALSE(king->CanMove(Position(4, 6), Position(3, 6), board));
+	EXPECT_FALSE(king->CanMove(Position(4, 6), Position(3, 6), false, board));
 }
 
 TEST_F(KingTest, InValidMoveCheck3) {
@@ -74,7 +74,7 @@ TEST_F(KingTest, InValidMoveCheck3) {
 	board.SetPiece(Position(3, 4), EPieceColor::Black, EPieceType::Rook);
 	board.SetPieceToNullptr(Position(6, 5));
 
-	EXPECT_FALSE(king->CanMove(Position(5, 4), Position(5, 5), board));
+	EXPECT_FALSE(king->CanMove(Position(5, 4), Position(5, 5), false, board));
 }
 
 TEST_F(KingTest, InValidMoveCheck4) {
@@ -83,7 +83,7 @@ TEST_F(KingTest, InValidMoveCheck4) {
 	board.SetPiece(Position(4, 3), EPieceColor::Black, EPieceType::Queen);
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::Knight);
 
-	EXPECT_FALSE(king->CanMove(Position(3, 2), Position(4, 3), board));
+	EXPECT_FALSE(king->CanMove(Position(3, 2), Position(4, 3), false, board));
 }
 
 TEST_F(KingTest, ValidMoveCheck3) {
@@ -92,7 +92,7 @@ TEST_F(KingTest, ValidMoveCheck3) {
 	board.SetPiece(Position(3, 4), EPieceColor::Black, EPieceType::Bishop);
 	board.SetPiece(Position(6, 6), EPieceColor::Black, EPieceType::Rook);
 
-	EXPECT_TRUE(king->CanMove(Position(5, 5), Position(5, 4), board));
+	EXPECT_TRUE(king->CanMove(Position(5, 5), Position(5, 4), false, board));
 }
 
 TEST_F(KingTest, ValidCastlingSmall) {
@@ -103,7 +103,7 @@ TEST_F(KingTest, ValidCastlingSmall) {
 	board.SetPieceToNullptr(Position(7, 5));
 	board.SetPieceToNullptr(Position(7, 6));
 
-	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 6), board));
+	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
 }
 
 TEST_F(KingTest, ValidCastlingBig) {
@@ -114,7 +114,7 @@ TEST_F(KingTest, ValidCastlingBig) {
 	board.SetPieceToNullptr(Position(7, 5));
 	board.SetPieceToNullptr(Position(7, 6));
 
-	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 2), board));
+	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 2), false, board));
 }
 
 TEST_F(KingTest, InvalidCastlingSmall) {
@@ -126,7 +126,7 @@ TEST_F(KingTest, InvalidCastlingSmall) {
 	board.SetPieceToNullptr(Position(7, 6));
 	board.SetPieceToNullptr(Position(6, 5));
 	board.SetPiece(Position(4, 5), EPieceColor::Black, EPieceType::Queen);
-	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), board));
+	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
 }
 
 TEST_F(KingTest, InvalidCastlingSmall1) {
@@ -138,7 +138,7 @@ TEST_F(KingTest, InvalidCastlingSmall1) {
 	board.SetPieceToNullptr(Position(7, 6));
 	board.SetPieceToNullptr(Position(6, 4));
 	board.SetPiece(Position(4, 4), EPieceColor::Black, EPieceType::Queen);
-	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), board));
+	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
 }
 
 TEST_F(KingTest, InvalidCastlingBig) {
@@ -150,7 +150,7 @@ TEST_F(KingTest, InvalidCastlingBig) {
 	board.SetPieceToNullptr(Position(7, 6));
 	board.SetPieceToNullptr(Position(6, 2));
 	board.SetPiece(Position(4, 2), EPieceColor::Black, EPieceType::Queen);
-	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 2), board));
+	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 2), false, board));
 }
 
 
@@ -168,5 +168,107 @@ TEST_F(KingTest, Castle1)
 	} };
 
 	Board board(m);
-	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 6), board));
+	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
+}
+
+TEST_F(KingTest, Castle2)
+{
+	ConfigMatrix m = { {
+	{'R', '-', '-', '-', 'K', '-', '-', 'R'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', 'k', '-', '-', '-'}
+	} };
+
+	Board board(m);
+	EXPECT_TRUE(king->CanMove(Position(0, 4), Position(0,6), false, board));
+}
+
+TEST_F(KingTest, Castle3)
+{
+	ConfigMatrix m = { {
+	{'-', '-', '-', '-', 'K', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'r', '-', '-', '-', 'k', '-', '-', 'r'}
+	} };
+
+	Board board(m);
+	EXPECT_TRUE(king->CanMove(Position(7,4), Position(7, 2), false, board));
+}
+
+TEST_F(KingTest, Castle4)
+{
+	ConfigMatrix m = { {
+	{'R', '-', '-', '-', 'K', '-', '-', 'R'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'r', '-', '-', '-', 'k', '-', '-', 'r'}
+	} };
+
+	Board board(m);
+	EXPECT_TRUE(king->CanMove(Position(0, 4), Position(0,2), false, board));
+}
+
+TEST_F(KingTest, Castle5)
+{
+	ConfigMatrix m = { {
+	{'-', '-', '-', '-', 'K', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'r', '-', '-', '-', 'k', 'b', '-', 'r'}
+	} };
+
+	Board board(m);
+	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
+}
+
+TEST_F(KingTest, Castle6)
+{
+	ConfigMatrix m = { {
+	{'-', '-', '-', '-', 'K', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', 'Q', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'r', '-', '-', '-', 'k', '-', '-', 'r'}
+	} };
+
+	Board board(m);
+	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
+}
+
+TEST_F(KingTest, Castle7)
+{
+	ConfigMatrix m = { {
+	{'-', '-', '-', '-', 'K', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', 'K', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', 'k', '-', '-', '-'}
+	} };
+
+	Board board(m);
+	EXPECT_FALSE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
 }

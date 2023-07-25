@@ -28,7 +28,7 @@ TEST_F(PawnTest, InvalidMove) {
 	Position startPos(7, 2);
 	Position endPos(5, 2);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Pawn);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
+	bool canMove = pawn->CanMove(startPos, endPos, false, board);
 
 	EXPECT_FALSE(canMove);
 }
@@ -40,7 +40,7 @@ TEST_F(PawnTest, InvalidMove1) {
 	Position startPos(3, 5);
 	Position endPos(2, 6);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Pawn);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
+	bool canMove = pawn->CanMove(startPos, endPos, false, board);
 
 	EXPECT_FALSE(canMove);
 }
@@ -51,7 +51,7 @@ TEST_F(PawnTest, InvalidMove2) {
 	Position startPos(3, 4);
 	Position endPos(5, 4);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Pawn);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
+	bool canMove = pawn->CanMove(startPos, endPos, false, board);
 
 	EXPECT_FALSE(canMove);
 }
@@ -62,7 +62,7 @@ TEST_F(PawnTest, ValidMove) {
 	Position startPos(4, 3);
 	Position endPos(5, 3);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Pawn);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
+	bool canMove = pawn->CanMove(startPos, endPos, false, board);
 
 	EXPECT_TRUE(canMove);
 }
@@ -73,7 +73,7 @@ TEST_F(PawnTest, ValidMove1) {
 	Position startPos(6, 4);
 	Position endPos(7, 5);
 	board.SetPiece(startPos, EPieceColor::Black, EPieceType::Pawn);
-	bool canMove = pawn->CanMove(startPos, endPos, board);
+	bool canMove = pawn->CanMove(startPos, endPos, false, board);
 
 	EXPECT_TRUE(canMove);
 }

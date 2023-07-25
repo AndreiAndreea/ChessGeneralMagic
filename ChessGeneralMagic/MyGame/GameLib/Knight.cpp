@@ -7,16 +7,16 @@ Knight::Knight(EPieceColor color)
 
 }
 
-bool Knight::CanMove(Position startPos, Position endPos, const Board& board)
+bool Knight::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
-	auto possibleMoves = GetPossibleMoves(startPos, board);
+	auto possibleMoves = GetPossibleMoves(startPos, isKingAttacking, board);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
 	return false;
 }
 
-PositionList Knight::GetPossibleMoves(Position piecePos, const Board& board)
+PositionList Knight::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
 

@@ -18,7 +18,7 @@ bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, const Boar
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (localBoard.GetBoard()[i][j] && (localBoard.GetBoard()[i][j]->GetColor() != kingColor) && (localBoard.GetBoard()[i][j]->GetType() != EPieceType::King) && localBoard.GetBoard()[i][j]->CanMove(Position(i, j), endPos, localBoard))
+			if (localBoard.GetBoard()[i][j] && (localBoard.GetBoard()[i][j]->GetColor() != kingColor) && (localBoard.GetBoard()[i][j]->GetType() != EPieceType::King) && localBoard.GetBoard()[i][j]->CanMove(Position(i, j), endPos, true, localBoard))
 				return true;
 		}
 	}
@@ -62,7 +62,7 @@ bool King::CanMakeBigCastling(EPieceColor color, const Board& board) const
 			}
 
 			//check if king is in check on the way to the rook
-			for (int i = 4; i > 0; i--)
+			for (int i = 4; i > 1; i--)
 			{
 				if (board.IsKingInCheck(Position(0, i), EPieceColor::Black))
 					return false;
@@ -119,9 +119,9 @@ bool King::CanMakeSmallCastling(EPieceColor color, const Board& board) const
 	}
 }
 
-bool King::CanMove(Position startPos, Position endPos, const Board& board)
+bool King::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
-	auto possibleMoves = GetPossibleMoves(startPos, board);
+	auto possibleMoves = GetPossibleMoves(startPos, isKingAttacking, board);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
@@ -139,11 +139,12 @@ bool King::CanMove(Position startPos, Position endPos, const Board& board)
 	return false;
 }
 
-PositionList King::GetPossibleMoves(Position piecePos, const Board& board)
+PositionList King::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
 
 	for (int i = piecePos.first - 1; i <= piecePos.first + 1; i++)
+	{
 		for (int j = piecePos.second - 1; j <= piecePos.second + 1; j++)
 		{
 			if (i >= 0 && i < 8 && j < 8 && j >= 0)
@@ -154,13 +155,17 @@ PositionList King::GetPossibleMoves(Position piecePos, const Board& board)
 					possibleMoves.push_back(Position(i, j));
 			}
 		}
+	}
 
-	auto piece = board.GetBoard()[piecePos.first][piecePos.second];
-	auto color = piece->GetColor();
-	if (CanMakeBigCastling(color, board))
-		possibleMoves.push_back(Position(piecePos.first ,piecePos.second -2));
-	if (CanMakeSmallCastling(color, board))
-		possibleMoves.push_back(Position(piecePos.first, piecePos.second + 2));
+	if (!isKingAttacking)
+	{
+		auto piece = board.GetBoard()[piecePos.first][piecePos.second];
+		auto color = piece->GetColor();
+		if (CanMakeBigCastling(color, board))
+			possibleMoves.push_back(Position(piecePos.first ,piecePos.second -2));
+		if (CanMakeSmallCastling(color, board))
+			possibleMoves.push_back(Position(piecePos.first, piecePos.second + 2));
+	}
 
 	return possibleMoves;
 }

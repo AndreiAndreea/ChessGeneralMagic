@@ -114,11 +114,9 @@ ConfigMovesVesct Board::GetMovesVect() const
 PositionList Board::GetPossibleMoves(int i, int j) const
 {
 	if(m_board[i][j])
-		return m_board[i][j]->GetPossibleMoves(Position(i, j), *this);
+		return m_board[i][j]->GetPossibleMoves(Position(i, j), false,*this);
 	return {};
 }
-
-
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
 {
@@ -151,7 +149,7 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 	auto color = piece->GetColor();
 	auto type = piece->GetType();
 
-	if (piece->CanMove(startPos, endPos, *this))
+	if (piece->CanMove(startPos, endPos, false,*this))
 	{
 		if (type != EPieceType::King)
 		{
@@ -414,12 +412,14 @@ bool Board::IsKingInCheck(const Position& currentPos, EPieceColor color) const
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (m_board[i][j] && (m_board[i][j]->GetColor() != color) && m_board[i][j]->CanMove(Position(i, j), currentPos, *this))
-				return true;
+			if (m_board[i][j] && (m_board[i][j]->GetColor() != color) && m_board[i][j]->CanMove(Position(i, j), currentPos, true, *this))
+					return true;
 		}
 	}
 	return false;
 }
+
+// m_board[i][j]->GetType() != EPieceType::King && (m_board[i][j]->GetColor() != color)
 
 bool Board::IsCheckmate(EPieceColor color) const
 {
@@ -449,7 +449,7 @@ bool Board::IsCheckmate(EPieceColor color) const
 			{
 				if (m_board[i][j] && m_board[i][j]->GetColor() == color)
 				{
-					for (auto it : m_board[i][j]->GetPossibleMoves(Position(i, j), *this))
+					for (auto it : m_board[i][j]->GetPossibleMoves(Position(i, j), false, *this))
 					{
 						//if the king is not left in check, there is a possible move to be made to save the king
 						if (m_board[i][j]->GetType() != EPieceType::King && !IsKingLeftInCheck(Position(i, j), it, color))
@@ -472,13 +472,29 @@ bool Board::IsStaleMate(EPieceColor color) const
 		for (int j = 0; j < 8; j++)
 		{
 			if (m_board[i][j] && m_board[i][j]->GetColor() == color)
-				if (!m_board[i][j]->GetPossibleMoves(Position(i, j), *this).empty())
+				if (!m_board[i][j]->GetPossibleMoves(Position(i, j), false, *this).empty())
 					return false;
 		}
 	}
 
 	return true;
 }
+
+//bool Board::CheckKingThreat(Position startPos, Position endPos) const
+//{
+//	for (int i = startPos.first - 1; i <= startPos.first + 1; i++)
+//	{
+//		for (int j = startPos.second - 1; j <= startPos.second + 1; j++)
+//		{
+//			if (i >= 0 && i < 8 && j < 8 && j >= 0)
+//			{
+//				if (endPos.first == i && endPos.second == j && !VerifyKingMovmentCheck(startPos, Position(i, j), m_board))
+//					return true;
+//			}
+//		}
+//	}
+//	return false;
+//}
 
 bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
 {
@@ -490,7 +506,7 @@ bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
 	return false;
 }
 
-std::vector<std::vector<bool>> Board::GetCastlingVect() const
+ConfigCastlingPossible Board::GetCastlingVect() const
 {
 	return CastlingPossible;
 }

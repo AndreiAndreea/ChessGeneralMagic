@@ -8,17 +8,17 @@ Pawn::Pawn(EPieceColor color)
 
 }
 
-bool Pawn::CanMove(Position startPos, Position endPos, const Board& board)
+bool Pawn::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
-	possibleMoves = GetPossibleMoves(startPos, board);
+	possibleMoves = GetPossibleMoves(startPos, isKingAttacking, board);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
 	return false;
 }
 
-PositionList Pawn::GetPossibleMoves(Position piecePos, const Board& board)
+PositionList Pawn::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
 
