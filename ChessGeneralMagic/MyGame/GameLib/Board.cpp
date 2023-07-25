@@ -546,7 +546,6 @@ bool Board::IsInsufficientMaterial() const
 
 	return VerifyInsufficientMaterialVect(twoKings) || VerifyInsufficientMaterialVect(twoKingsOneKnight)
 		|| VerifyInsufficientMaterialVect(twoKingsOneBishop) || VerifyInsufficientMaterialVect(twoKingsTwoBishops);
-
 }
 
 bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const

@@ -41,8 +41,6 @@ public:
 	bool IsCheckmate(EPieceColor color) const;
 	bool IsStaleMate(EPieceColor color) const;
 	bool IsInsufficientMaterial() const;
-	bool CheckKingThreat(Position startPos, Position endPos) const;
-
 
 	bool IsThreefoldRepetitionDraw(EPieceColor color) const;
 
