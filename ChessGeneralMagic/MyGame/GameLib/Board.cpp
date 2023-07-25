@@ -10,6 +10,7 @@
 
 Board::Board() {
 	InitializeBoard();
+	m_bitBoards.push_back(GenerateBitset());
 }
 
 static EPieceType GetType(char c)
@@ -50,6 +51,8 @@ Board::Board(ConfigMatrix board)
 				m_board[i][j] = nullptr;
 		}
 	}
+	m_bitBoards.push_back(GenerateBitset());
+
 }
 
 Board::Board(int)
@@ -63,6 +66,8 @@ Board::Board(int)
 	for (int x = 0; x < 8; x++)
 		for (int y = 0; y < 8; y++)
 			m_board[x][y] = nullptr;
+	m_bitBoards.push_back(GenerateBitset());
+
 }
 
 Board::Board(const Board& ob)
@@ -141,6 +146,40 @@ void Board::MoveRookForCastling(int castlingType, EPieceColor color)
 
 	SetPiece(Position(i, end), color, EPieceType::Rook);
 	SetPieceToNullptr(Position(i, start));
+}
+
+std::bitset<256> Board::GenerateBitset()
+{
+	int k = 0;
+	std::bitset<256> currentBitBoard;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_board[i][j])
+			{
+				auto color = (int)m_board[i][j]->GetColor();
+				auto type = (int)m_board[i][j]->GetType();
+
+				std::bitset<3> binary(type);
+				auto stringType = binary.to_string();
+
+				currentBitBoard[4 * k] = color;
+				currentBitBoard[4 * k + 1] = stringType[2] - '0';
+				currentBitBoard[4 * k + 2] = stringType[1] - '0';
+				currentBitBoard[4 * k + 3] = stringType[0] - '0';
+
+			}
+			else
+			{
+				currentBitBoard[4 * k] = 1;
+				currentBitBoard[4 * k + 1] = 1;
+				currentBitBoard[4 * k + 2] = 1;
+				currentBitBoard[4 * k + 3] = 1;
+			}
+		}
+	}
+	return currentBitBoard;
 }
 
 bool Board::MakeMove(const Position& startPos, const Position& endPos)
@@ -548,13 +587,18 @@ bool Board::IsInsufficientMaterial() const
 		|| VerifyInsufficientMaterialVect(twoKingsOneBishop) || VerifyInsufficientMaterialVect(twoKingsTwoBishops);
 }
 
-bool Board::IsThreefoldRepetitionDraw(EPieceColor color) const
+bool Board::IsThreefoldRepetitionDraw()
 {
-	int vectSize = m_movesMade[(int)color].size();
-	if (vectSize >= 5)
-		return  m_movesMade[(int)color][vectSize - 1].second == m_movesMade[(int)color][vectSize - 3].second
-		&& m_movesMade[(int)color][vectSize - 3].second == m_movesMade[(int)color][vectSize - 5].second;
-
+	std::bitset<256> currentBitBoard = GenerateBitset();
+	m_bitBoards.push_back(currentBitBoard);
+	int contor = 0;
+	for (auto it : m_bitBoards)
+	{
+		if (it == currentBitBoard)
+			contor++;
+	}
+	if (contor == 3)
+		return true;
 	return false;
 }
 

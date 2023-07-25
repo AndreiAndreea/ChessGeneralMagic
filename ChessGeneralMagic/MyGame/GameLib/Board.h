@@ -4,6 +4,7 @@
 #include "Piece.h"
 
 #include<memory>
+#include <bitset>
 
 //using Position = std::pair<int, int>;
 using PieceMatrix = std::vector<std::vector<PiecePtr>>;
@@ -24,7 +25,7 @@ public:
 	PieceMatrix GetBoard() const;
 	ConfigMovesVesct GetMovesVect() const;
 	PositionList GetPossibleMoves(int i, int j) const;
-	
+
 
 	bool MakeMove(const Position& startPos, const Position& endPos);
 
@@ -42,15 +43,18 @@ public:
 	bool IsStaleMate(EPieceColor color) const;
 	bool IsInsufficientMaterial() const;
 
-	bool IsThreefoldRepetitionDraw(EPieceColor color) const;
+	bool IsThreefoldRepetitionDraw();
 
 	ConfigCastlingPossible GetCastlingVect() const;
 
 private:
 	void MoveRookForCastling(int castlingType, EPieceColor color);
+	std::bitset<256> GenerateBitset();
 
 private:
 	PieceMatrix m_board;
 	ConfigMovesVesct m_movesMade = { {}, {} };
 	ConfigCastlingPossible CastlingPossible = { {true, true}, {true, true} };
+
+	std::vector<std::bitset<256>> m_bitBoards;
 };

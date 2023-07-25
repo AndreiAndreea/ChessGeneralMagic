@@ -2,11 +2,11 @@
 
 enum class EPieceType
 {
-	Rook,
-	Bishop,
-	Knight,
-	King,
-	Queen,
 	Pawn,
+	Rook,
+	Knight,
+	Bishop,
+	Queen,
+	King,
 	None
 };
