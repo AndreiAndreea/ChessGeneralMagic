@@ -177,6 +177,7 @@ std::bitset<256> Board::GenerateBitset()
 				currentBitBoard[4 * k + 2] = 1;
 				currentBitBoard[4 * k + 3] = 1;
 			}
+			k++;
 		}
 	}
 	return currentBitBoard;
@@ -592,14 +593,19 @@ bool Board::IsThreefoldRepetitionDraw()
 	std::bitset<256> currentBitBoard = GenerateBitset();
 	m_bitBoards.push_back(currentBitBoard);
 	int contor = 0;
-	for (auto it : m_bitBoards)
+	for (int it = 0; it < m_bitBoards.size(); it++)
 	{
-		if (it == currentBitBoard)
+		if (m_bitBoards[it] == currentBitBoard)
 			contor++;
 	}
 	if (contor == 3)
 		return true;
 	return false;
+}
+
+void Board::SetBitBoardsToEmpty()
+{
+	m_bitBoards.clear();
 }
 
 ConfigCastlingPossible Board::GetCastlingVect() const

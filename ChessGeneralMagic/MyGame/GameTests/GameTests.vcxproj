@@ -155,6 +155,7 @@
     <ClCompile Include="IsInsufficientMaterialTests.cpp" />
     <ClCompile Include="IsKingInCheckTest.cpp" />
     <ClCompile Include="IsStaleMoveTests.cpp" />
+    <ClCompile Include="IsThreefoldRepetitionTest.cpp" />
     <ClCompile Include="KingTest.cpp" />
     <ClCompile Include="KnightTest.cpp" />
     <ClCompile Include="main.cpp" />

@@ -44,6 +44,7 @@ public:
 	bool IsInsufficientMaterial() const;
 
 	bool IsThreefoldRepetitionDraw();
+	void SetBitBoardsToEmpty();
 
 	ConfigCastlingPossible GetCastlingVect() const;
 

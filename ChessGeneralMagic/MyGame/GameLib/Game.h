@@ -51,7 +51,9 @@ public:
 
 	void ResetGame() override;
 
-	//void NotifyAll();
+	void NotifyAll();
+	void AddListener(IGameListenerPtr listener);
+	void RemoveListener(IGameListenerPtr listener);
 
 private:
 	bool CanUpgradePawn(Position pos) const;

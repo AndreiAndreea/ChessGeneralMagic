@@ -37,6 +37,9 @@
     <ClCompile Include="IsInsufficientMaterialTests.cpp">
       <Filter>Board Tests</Filter>
     </ClCompile>
+    <ClCompile Include="IsThreefoldRepetitionTest.cpp">
+      <Filter>Board Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

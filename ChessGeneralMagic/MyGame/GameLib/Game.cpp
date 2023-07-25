@@ -103,6 +103,18 @@ void Game::ResetGame()
 	m_board.InitializeBoard();
 }
 
+void Game::AddListener(IGameListenerPtr listener)
+{
+	m_observers.push_back(listener);
+}
+
+void Game::RemoveListener(IGameListenerPtr listener)
+{
+	/*auto func = [&](bool) {
+	};
+	m_observers.erase(std::remove_if(m_observers.begin(), m_observers.end(), func));*/
+}
+
 std::vector<Position> Game::GetPossibleMoves(int i, int j)
 {
 	return m_board.GetPossibleMoves(i, j);
