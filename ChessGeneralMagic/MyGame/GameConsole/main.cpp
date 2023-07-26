@@ -2,7 +2,7 @@
 #include <iomanip>
 
 #include "IGame.h"
-
+#include "ChessExceptions.h"
 
 
 std::string PieceToStr(IPieceInfoPtr pieceInfo)
@@ -98,15 +98,15 @@ int main()
 
 		try
 		{
-			if (game->IsStatePlaying())
+			if (game->IsPlaying())
 			{
-				game->PlayerComand(comand);
+				game->PlayerDrawComand(comand);
 			}
-			else if (game->IsStateDrawProposed())
+			else if (game->IsDrawProposed())
 			{
-				game->DrawReaponse(comand);
+				game->PlayerDrawComand(comand);
 			}
-			else if (game->IsStateWaitingForPawnUpgrade())
+			else if (game->IsWaitingForPawnUpgrade())
 			{
 				game->UpgradePawnTo(comand);
 			}

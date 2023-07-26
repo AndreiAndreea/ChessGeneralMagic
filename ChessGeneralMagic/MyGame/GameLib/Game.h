@@ -3,7 +3,6 @@
 #include "IGame.h"
 #include "Board.h"
 #include "EGameState.h"
-#include "PositionList.h"
 
 
 class PieceInfo : public IPieceInfo
@@ -19,6 +18,7 @@ private:
 	EPieceColor m_color;
 };
 
+using ObserversList = std::vector<IGameListenerWeakPtr>;
 
 class Game : public IGame
 {
@@ -30,21 +30,19 @@ public:
 	// IGame methods
 	EPlayer GetWinner() const override;
 	EPieceColor GetCurrentPlayer() const override;
-	PositionList GetPossibleMoves(int i, int j) override;
+	PositionList GetPossibleMoves(Position pos) override;
 
-	void PlayerComand(const std::string& comand) override;
-	
-	bool IsStatePlaying() const override;
-	bool IsStateDrawProposed() const override;
-	bool IsStateWaitingForPawnUpgrade() const override;
-	bool IsStateDraw() const override;
+	bool IsPlaying() const override;
+	bool IsDrawProposed() const override;
+	bool IsWaitingForPawnUpgrade() const override;
+	bool IsDraw() const override;
 	bool IsGameOver() const override;
 
-	IPieceInfoPtr GetPieceInfo(int i, int j) const override;
+	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	
-	void DrawReaponse(const std::string& respons) override;
-	void UpgradePawnTo(const std::string& type) override;
+	void PlayerDrawComand(EDrawComand respons) override;
 	void MakeMove(Position startPos, Position endPos) override;
+	void UpgradePawnTo(EPieceType type) override;
 
 	void ResetGame() override;
 
@@ -57,7 +55,6 @@ public:
 	void NotifyOnPawnUpgrade();
 	void NotifyOnGameOver();
 
-
 private:
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;
@@ -69,5 +66,5 @@ private:
 	Board m_board;
 	int m_turn;
 	EGameState m_state;
-	std::vector<IGameListenerWeakPtr> m_observers;
+	ObserversList m_observers;
 };

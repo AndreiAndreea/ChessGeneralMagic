@@ -24,7 +24,7 @@ public:
 
 	PieceMatrix GetBoard() const;
 	ConfigMovesVesct GetMovesVect() const;
-	PositionList GetPossibleMoves(int i, int j) const;
+	PositionList GetPossibleMoves(Position pos) const;
 
 
 	bool MakeMove(const Position& startPos, const Position& endPos);

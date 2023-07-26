@@ -135,6 +135,9 @@
     <ClInclude Include="PositionList.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="EDrawComand.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">

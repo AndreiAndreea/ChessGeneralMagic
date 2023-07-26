@@ -2,7 +2,9 @@
 
 #include "EPieceColor.h"
 #include "EPieceType.h"
+#include "EDrawComand.h"
 #include "IGameListener.h"
+#include "PositionList.h"
 
 #include <memory>
 #include <string>
@@ -25,7 +27,6 @@ public:
 	virtual ~IPieceInfo() = default;
 };
 
-using Position = std::pair<int, int>;
 using IPieceInfoPtr = std::shared_ptr<IPieceInfo>;
 using IGamePtr = std::shared_ptr<class IGame>;
 using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
@@ -38,23 +39,21 @@ public:
 
 	virtual EPlayer GetWinner() const = 0;
 	virtual EPieceColor GetCurrentPlayer() const = 0;
-	virtual std::vector<Position> GetPossibleMoves(int i, int j) = 0;
+	virtual PositionList GetPossibleMoves(Position pos) = 0;
 
-	virtual bool IsStatePlaying() const = 0;
-	virtual bool IsStateWaitingForPawnUpgrade() const = 0;
-	virtual bool IsStateDrawProposed() const = 0;
-	virtual bool IsStateDraw() const = 0;
+	virtual bool IsPlaying() const = 0;
+	virtual bool IsWaitingForPawnUpgrade() const = 0;
+	virtual bool IsDrawProposed() const = 0;
+	virtual bool IsDraw() const = 0;
 	virtual bool IsGameOver() const = 0;
 
-	virtual void PlayerComand(const std::string& comand) = 0;
-
-	virtual void DrawReaponse(const std::string& respons) = 0;
-	virtual void UpgradePawnTo(const std::string& type) = 0;
+	virtual void PlayerDrawComand(EDrawComand respons) = 0;
 	virtual void MakeMove(Position startPos, Position endPos) = 0;
+	virtual void UpgradePawnTo(EPieceType type) = 0;
 
 	virtual void ResetGame() = 0;
 
-	virtual IPieceInfoPtr GetPieceInfo(int i, int j) const = 0;
+	virtual IPieceInfoPtr GetPieceInfo(Position pos) const = 0;
 
 	// subject methods
 	virtual void AddListener(IGameListenerPtr listener) = 0;

@@ -185,7 +185,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             //deselect cells
 			m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 			m_selectedCell.reset();
-            auto possibleMoves = game->GetPossibleMoves(position.first, position.second);
+            auto possibleMoves = game->GetPossibleMoves(position);
             UnhighlightPossibleMoves(possibleMoves);
             
         }
@@ -200,7 +200,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 				//	ShowPromoteOptions();
 				//}
 
-				m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+				/*m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");*/
 
 			}
 			catch (ChessExceptions e)
@@ -211,9 +211,8 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 			}
 
 			//Unselect prev. pressed button
-			/*m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 			m_selectedCell.reset();
-			std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
+			/*std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
 
 
 			for (int i = 0; i < 8; i++)
@@ -254,7 +253,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
             m_grid[position.first][position.second]->setSelected(true);
 
             //TODO Show possible moves here
-            HighlightPossibleMoves(game->GetPossibleMoves(position.first, position.second));
+            HighlightPossibleMoves(game->GetPossibleMoves(position));
         }
     }
 }
@@ -279,10 +278,10 @@ void ChessUIQt::OnRestartButtonClicked()
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (game->GetPieceInfo(i, j))
+			if (game->GetPieceInfo(Position(i,j)))
 			{
-				PieceColor color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
-				auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
+				PieceColor color = ConvertColorEnum(game->GetPieceInfo(Position(i,j))->GetColor());
+				auto type = ConvertTypeEnum(game->GetPieceInfo(Position(i, j))->GetType());
 				updatedBoard[i][j] = std::make_pair(type, color);
 			}
 			else
@@ -359,16 +358,16 @@ void ChessUIQt::StartGame()
     UpdateBoard(Helper::getDefaultBoard());
 }
 
-std::string ConvetItemToStr(QString item)
+EPieceType ConvetItemToEPieceType(QString item)
 {
     if (item == "Rook")
-        return "ROOK";
+        return EPieceType::Rook;
 	if (item == "Bishop")
-		return "BISHOP";
+		return EPieceType::Bishop;
 	if (item == "Queen")
-		return "QUEEN";
+		return EPieceType::Queen;
 	if (item == "Knight")
-		return "KNIGHT";
+		return EPieceType::Knight;
 }
 
 void ChessUIQt::ShowPromoteOptions()
@@ -390,7 +389,7 @@ void ChessUIQt::ShowPromoteOptions()
     if (ok && !item.isEmpty())
     {
         //TODO
-        game->UpgradePawnTo(ConvetItemToStr(item));
+        game->UpgradePawnTo(ConvetItemToEPieceType(item));
 
         //TODO DELETE ME...
         QMessageBox notification;
@@ -408,16 +407,15 @@ void ChessUIQt::OnMoveMade()
 {
 	m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 	m_selectedCell.reset();
-	std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
-
+    std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
 
 	for (int i = 0; i < 8; i++)
 		for (int j = 0; j < 8; j++)
 		{
-			if (game->GetPieceInfo(i, j))
+			if (game->GetPieceInfo(Position(i,j)))
 			{
-				auto color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
-				auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
+				auto color = ConvertColorEnum(game->GetPieceInfo(Position(i, j))->GetColor());
+				auto type = ConvertTypeEnum(game->GetPieceInfo(Position(i, j))->GetType());
 				updatedBoard[i][j] = std::make_pair(type, color);
 			}
 			else
@@ -426,6 +424,7 @@ void ChessUIQt::OnMoveMade()
 			}
 
 		}
+    m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 	UpdateBoard(updatedBoard);
 }
 

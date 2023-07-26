@@ -113,10 +113,10 @@ ConfigMovesVesct Board::GetMovesVect() const
 	return m_movesMade;
 }
 
-PositionList Board::GetPossibleMoves(int i, int j) const
+PositionList Board::GetPossibleMoves(Position pos) const
 {
-	if (m_board[i][j])
-		return m_board[i][j]->GetPossibleMoves(Position(i, j), false, *this);
+	if (m_board[pos.first][pos.second])
+		return m_board[pos.first][pos.second]->GetPossibleMoves(pos, false, *this);
 	return {};
 }
 
