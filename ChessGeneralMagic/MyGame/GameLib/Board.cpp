@@ -10,7 +10,6 @@
 
 Board::Board() {
 	InitializeBoard();
-	m_bitBoards.push_back(GenerateBitset());
 }
 
 static EPieceType GetType(char c)
@@ -51,7 +50,6 @@ Board::Board(ConfigMatrix board)
 				m_board[i][j] = nullptr;
 		}
 	}
-	m_bitBoards.push_back(GenerateBitset());
 
 }
 
@@ -66,7 +64,6 @@ Board::Board(int)
 	for (int x = 0; x < 8; x++)
 		for (int y = 0; y < 8; y++)
 			m_board[x][y] = nullptr;
-	m_bitBoards.push_back(GenerateBitset());
 
 }
 

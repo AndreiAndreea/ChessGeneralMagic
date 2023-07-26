@@ -2,16 +2,7 @@
 
 #include "EPieceColor.h"
 #include "EPieceType.h"
-
-#include "OutOfBoundException.h"
-#include "InvalidMovingPatternException.h"
-#include "InvalidStartPositionExcepton.h"
-#include "KingLeftInCheckException.h"
-#include "NotStateDrawProposedException.h"
-#include "NotStatePlayingException.h"
-#include "NotStateWaitingForPawnUpdate.h"
-#include "InvalidUpgradeType.h"
-#include "InvalidDrawResponseException.h"
+#include "IGameListener.h"
 
 #include <memory>
 #include <string>
@@ -37,6 +28,8 @@ public:
 using Position = std::pair<int, int>;
 using IPieceInfoPtr = std::shared_ptr<IPieceInfo>;
 using IGamePtr = std::shared_ptr<class IGame>;
+using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
+using IGameListenerPtr = std::shared_ptr<IGameListener>;
 
 class IGame
 {
@@ -62,6 +55,10 @@ public:
 	virtual void ResetGame() = 0;
 
 	virtual IPieceInfoPtr GetPieceInfo(int i, int j) const = 0;
+
+	// subject methods
+	virtual void AddListener(IGameListenerPtr listener) = 0;
+	virtual void RemoveListener(IGameListener* listener) = 0;
 
 	virtual ~IGame() = default;
 };

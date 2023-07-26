@@ -1,13 +1,10 @@
 #pragma once
 
 #include "IGame.h"
-#include "IGameListener.h"
 #include "Board.h"
 #include "EGameState.h"
 #include "PositionList.h"
 
-using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
-using IGameListenerPtr = std::shared_ptr<IGameListener>;
 
 class PieceInfo : public IPieceInfo
 {
@@ -51,9 +48,15 @@ public:
 
 	void ResetGame() override;
 
-	void NotifyAll();
-	void AddListener(IGameListenerPtr listener);
-	void RemoveListener(IGameListenerPtr listener);
+	// subject methods
+
+	void AddListener(IGameListenerPtr listener) override;
+	void RemoveListener(IGameListener* listener) override;
+
+	void NotifyOnMoveMade();
+	void NotifyOnPawnUpgrade();
+	void NotifyOnGameOver();
+
 
 private:
 	bool CanUpgradePawn(Position pos) const;

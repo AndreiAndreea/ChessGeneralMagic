@@ -3,12 +3,12 @@
 #include <QInputDialog>
 #include <QMessageBox>
 
+#include "ChessExceptions.h"
 
 ChessUIQt::ChessUIQt(QWidget *parent)
     : QMainWindow(parent)
+    , game (nullptr)
 {
-   
-    game = IGame::Produce();
 
     //Widget containing everything
     QWidget* mainWidget = new QWidget();
@@ -22,6 +22,7 @@ ChessUIQt::ChessUIQt(QWidget *parent)
 
     mainWidget->setLayout(mainGridLayout);
     this->setCentralWidget(mainWidget);
+
 }
 
 ChessUIQt::~ChessUIQt()
@@ -154,7 +155,7 @@ PieceType ConvertTypeEnum(EPieceType type)
     }
 }
 
-QString ConvertEplayerWinner(EPlayer player)
+ static QString ConvertEplayerWinner(EPlayer player)
 {
     switch (player)
     {
@@ -194,10 +195,10 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 			{
 				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position);
 
-				if (game->IsStateWaitingForPawnUpgrade())
-				{
-					ShowPromoteOptions();
-				}
+				//if (game->IsStateWaitingForPawnUpgrade())
+				//{
+				//	ShowPromoteOptions();
+				//}
 
 				m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 
@@ -210,7 +211,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 			}
 
 			//Unselect prev. pressed button
-			m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+			/*m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 			m_selectedCell.reset();
 			std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
 
@@ -220,7 +221,7 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 				{
 					if (game->GetPieceInfo(i, j))
 					{
-						PieceColor color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
+						auto color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
 						auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
 						updatedBoard[i][j] = std::make_pair(type, color);
 					}
@@ -230,20 +231,20 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 					}
 
 				}
-			UpdateBoard(updatedBoard);
+			UpdateBoard(updatedBoard);*/
         }
 
-		if (game->IsGameOver())
-		{
-			QMessageBox msgBox;
-			QString str;
-			str = ConvertEplayerWinner(game->GetWinner());
-			msgBox.setText(str);
-			msgBox.exec();
+		//if (game->IsGameOver())
+		//{
+		//	QMessageBox msgBox;
+		//	QString str;
+		//	str = ConvertEplayerWinner(game->GetWinner());
+		//	msgBox.setText(str);
+		//	msgBox.exec();
 
-            //reset board and turn. new game
-            OnRestartButtonClicked();
-		}
+        //  //reset board and turn. new game
+        //  OnRestartButtonClicked();
+		//}
     }
     //At first click
     else {
@@ -396,5 +397,52 @@ void ChessUIQt::ShowPromoteOptions()
         notification.setText("You selected " + item);
         notification.exec();
     }
+}
+
+void ChessUIQt::SetGame(IGamePtr game)
+{
+    this->game = game;
+}
+
+void ChessUIQt::OnMoveMade()
+{
+	m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+	m_selectedCell.reset();
+	std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
+
+
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++)
+		{
+			if (game->GetPieceInfo(i, j))
+			{
+				auto color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
+				auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
+				updatedBoard[i][j] = std::make_pair(type, color);
+			}
+			else
+			{
+				updatedBoard[i][j] = std::make_pair(PieceType::none, PieceColor::none);
+			}
+
+		}
+	UpdateBoard(updatedBoard);
+}
+
+void ChessUIQt::OnPawnUpgrade() 
+{
+		ShowPromoteOptions();
+}
+
+void ChessUIQt::OnGameOver() 
+{
+	QMessageBox msgBox;
+	QString str;
+	str = ConvertEplayerWinner(game->GetWinner());
+	msgBox.setText(str);
+	msgBox.exec();
+
+	//reset board and turn. new game
+	OnRestartButtonClicked();
 }
 

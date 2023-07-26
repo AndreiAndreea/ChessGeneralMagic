@@ -8,8 +8,11 @@
 #include <QListWidget>
 
 #include "IGame.h"
+#include "IGameListener.h"
 
-class ChessUIQt : public QMainWindow
+#include <memory>
+
+class ChessUIQt : public QMainWindow, public IGameListener, public std::enable_shared_from_this<ChessUIQt>
 {
     Q_OBJECT
 
@@ -33,6 +36,13 @@ public:
     //Modify or delete
     void StartGame();
     void ShowPromoteOptions();
+
+    void SetGame(IGamePtr game);
+
+    // listener methods
+    void OnMoveMade() override;
+    void OnPawnUpgrade() override;
+    void OnGameOver() override;
 
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);

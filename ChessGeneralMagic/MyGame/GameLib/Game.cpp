@@ -1,5 +1,14 @@
 #include "Game.h"
 
+#include "ChessExceptions.h"
+#include "OutOfBoundException.h"
+#include "InvalidDrawResponseException.h"
+#include "InvalidUpgradeType.h"
+#include "InvalidStartPositionExcepton.h"
+#include "NotStateDrawProposedException.h"
+#include "NotStateWaitingForPawnUpdate.h"
+#include "NotStatePlayingException.h"
+
 Game::Game()
 	: m_turn(0)
 	, m_state(EGameState::Playing)
@@ -37,12 +46,12 @@ static bool IsPositionValid(Position p)
 	return p.first >= 0 && p.first < 8 && p.second >= 0 && p.second < 8;
 }
 
-bool IsComandDraw(const std::string& comand)
+static bool IsComandDraw(const std::string& comand)
 {
 	return comand == "DRAW";
 }
 
-bool RefuseDraw(const std::string& comand)
+static bool RefuseDraw(const std::string& comand)
 {
 	return comand == "NO DRAW";
 }
@@ -77,21 +86,29 @@ void Game::MakeMove(Position startPos, Position endPos)
 		throw InvalidStartPositionExcepton();
 
 	m_board.MakeMove(startPos, endPos);
+	NotifyOnMoveMade();
 
 	if (CanUpgradePawn(endPos))
 	{
 		m_board.AddToMoves(startPos, endPos, color);
 		UpdateState(EGameState::WaitingForPawnUpgrade);
+		NotifyOnPawnUpgrade();
 	}
 	else
 		m_turn = 1 - m_turn;
 
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw() || m_board.IsInsufficientMaterial())
+	{
 		UpdateState(EGameState::Draw);
+		NotifyOnGameOver();
+	}
 
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
 	if (m_board.IsCheckmate(colorUpdated))
+	{
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
+		NotifyOnGameOver();
+	}
 
 }
 
@@ -101,6 +118,49 @@ void Game::ResetGame()
 	m_turn = 0;
 	UpdateState(EGameState::Playing);
 	m_board.InitializeBoard();
+	m_board.SetBitBoardsToEmpty();
+}
+
+void Game::NotifyOnMoveMade()
+{
+	for (auto it : m_observers)
+	{
+		if (auto sp = it.lock())
+			sp->OnMoveMade();
+		else
+		{
+			auto itPtr = it.lock().get();
+			RemoveListener(itPtr);
+		}
+	}
+}
+
+void Game::NotifyOnPawnUpgrade()
+{
+	for (auto it : m_observers)
+	{
+		if (auto sp = it.lock())
+			sp->OnPawnUpgrade();
+		else
+		{
+			auto itPtr = it.lock().get();
+			RemoveListener(itPtr);
+		}
+	}
+}
+
+void Game::NotifyOnGameOver()
+{
+	for (auto it : m_observers)
+	{
+		if (auto sp = it.lock())
+			sp->OnGameOver();
+		else
+		{
+			auto itPtr = it.lock().get();
+			RemoveListener(itPtr);
+		}
+	}
 }
 
 void Game::AddListener(IGameListenerPtr listener)
@@ -108,11 +168,30 @@ void Game::AddListener(IGameListenerPtr listener)
 	m_observers.push_back(listener);
 }
 
-void Game::RemoveListener(IGameListenerPtr listener)
+void Game::RemoveListener(IGameListener* listener)
 {
-	/*auto func = [&](bool) {
+	auto func = [listener](IGameListenerWeakPtr& weak)
+	{
+		auto sp = weak.lock();
+
+		return !sp || sp.get() == listener;
+			
 	};
-	m_observers.erase(std::remove_if(m_observers.begin(), m_observers.end(), func));*/
+
+	m_observers.erase(std::remove_if(m_observers.begin(), m_observers.end(), func));
+
+	/*for (auto it = m_observers.begin(); it != m_observers.end();)
+	{
+		if (auto sp = it->lock())
+		{
+			if (sp.get() == listener)
+				it = m_observers.erase(it);
+			else
+				++it;
+		}
+		else
+			it = m_observers.erase(it);
+	}*/
 }
 
 std::vector<Position> Game::GetPossibleMoves(int i, int j)

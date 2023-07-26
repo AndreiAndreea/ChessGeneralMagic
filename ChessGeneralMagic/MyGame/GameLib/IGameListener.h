@@ -3,7 +3,7 @@
 class IGameListener
 {
 public:
-	virtual void OnMoveMade() const = 0;
-	virtual void OnPawnUpgrade()const = 0;
-	virtual void OnGameOver() const = 0;
+	virtual void OnMoveMade() = 0;
+	virtual void OnPawnUpgrade() = 0;
+	virtual void OnGameOver() = 0;
 };
