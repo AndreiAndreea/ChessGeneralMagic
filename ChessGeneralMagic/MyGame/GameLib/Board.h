@@ -42,8 +42,10 @@ public:
 	bool IsCheckmate(EPieceColor color) const;
 	bool IsStaleMate(EPieceColor color) const;
 	bool IsInsufficientMaterial() const;
-
 	bool IsThreefoldRepetitionDraw();
+	
+	bool IsUpgradeablePawn(Position pos) const;
+
 	void SetBitBoardsToEmpty();
 
 	ConfigCastlingPossible GetCastlingVect() const;

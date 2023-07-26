@@ -50,7 +50,8 @@ Board::Board(ConfigMatrix board)
 				m_board[i][j] = nullptr;
 		}
 	}
-
+	m_bitBoards.clear();
+	m_bitBoards.push_back(GenerateBitset());
 }
 
 Board::Board(int)
@@ -598,6 +599,13 @@ bool Board::IsThreefoldRepetitionDraw()
 	if (contor == 3)
 		return true;
 	return false;
+}
+
+bool Board::IsUpgradeablePawn(Position pos) const
+{
+	auto piece = m_board[pos.first][pos.second];
+	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.first == 0) 
+		|| (piece->GetColor() == EPieceColor::Black && pos.first == 7));
 }
 
 void Board::SetBitBoardsToEmpty()

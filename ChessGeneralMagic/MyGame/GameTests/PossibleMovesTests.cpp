@@ -169,6 +169,25 @@ TEST(PossibleMovesTest, ValidMovesPosibilitiesRook2)
 	EXPECT_EQ(board.GetBoard()[1][1]->GetPossibleMoves(Position(1, 1), false, board), vector);
 }
 
+TEST(PossibleMovesTest, ValidMovesPosibilitiesRook3)
+{
+	ConfigMatrix m = {
+	    /*0    1    2    3    4    5    6    7*/
+  /*0*/	{'-', 'K', '-', '-', '-', '-', '-', '-'},
+  /*1*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+  /*2*/	{'-', '-', 'b', '-', '-', '-', '-', '-'},
+  /*3*/	{'-', '-', '-', '-', 'n', '-', 'r', '-'},
+  /*4*/	{'-', '-', '-', 'k', '-', '-', '-', '-'},
+  /*5*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+  /*6*/	{'-', '-', 'B', '-', '-', '-', '-', '-'},
+  /*7*/	{'-', '-', '-', '-', '-', '-', '-', '-'}
+	};
+
+	Board board(m);
+	std::vector<Position> vector = {Position(4,6),Position(5,6), Position(6,6), Position(7,6), Position(3, 5), Position(2,6), Position(1,6), Position(0,6), Position(3,7) };
+	std::vector<Position> vector1 = board.GetBoard()[3][6]->GetPossibleMoves(Position(3, 6), false, board);
+	EXPECT_EQ(board.GetBoard()[3][6]->GetPossibleMoves(Position(3, 6), false, board), vector);
+}
 
 ////possible moves for queen
 TEST(PossibleMovesTest, ValidMovesPosibilitiesQueen)

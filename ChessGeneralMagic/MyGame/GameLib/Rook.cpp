@@ -84,11 +84,11 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.second, i));
+				possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.second, i));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i--;
 	}
 
@@ -113,11 +113,11 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.second, i));
+				possibleMoves.push_back(Position(piecePos.first, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.second, i));
+			possibleMoves.push_back(Position(piecePos.first, i));
 		i++;
 	}
 

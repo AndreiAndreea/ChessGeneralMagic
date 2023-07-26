@@ -18,12 +18,14 @@ private:
 	EPieceColor m_color;
 };
 
+using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
 
 class Game : public IGame
 {
 public:
 	Game();
+	Game(int turn, EGameState state, ConfigMatrix m);
 
 	Board GetBoard() const;
 	

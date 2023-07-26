@@ -15,6 +15,13 @@ Game::Game()
 {
 }
 
+Game::Game(int turn, EGameState state, ConfigMatrix m)
+	:m_state(state)
+	, m_turn(turn)
+	, m_board(m)
+{
+}
+
 IGamePtr IGame::Produce()
 {
 	return std::make_shared<Game>();
@@ -58,8 +65,7 @@ static bool RefuseDraw(const std::string& comand)
 
 bool Game::CanUpgradePawn(Position pos) const
 {
-	auto piece = m_board.GetBoard()[pos.first][pos.second];
-	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.first == 0) || (piece->GetColor() == EPieceColor::Black && pos.first == 7));
+	return m_board.IsUpgradeablePawn(pos);
 }
 
 EPieceType ConvertToType(std::string comand)
