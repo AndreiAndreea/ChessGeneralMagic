@@ -147,6 +147,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="ChessExceptions.h" />
     <ClInclude Include="EDrawComand.h" />
+    <ClInclude Include="EGameResult.h" />
     <ClInclude Include="EGameState.h" />
     <ClInclude Include="EPieceColor.h" />
     <ClInclude Include="EPieceType.h" />

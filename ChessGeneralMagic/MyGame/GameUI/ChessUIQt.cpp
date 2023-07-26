@@ -155,22 +155,19 @@ PieceType ConvertTypeEnum(EPieceType type)
     }
 }
 
- static QString ConvertEplayerWinner(EPlayer player)
+ static QString ConvertEGameResultToQStr(EGameResult result)
 {
-    switch (player)
+    switch (result)
     {
-    case EPlayer::White:
+    case EGameResult::WhiteWon :
         return "The winner is: Player white";
         break;
-    case EPlayer::Black:
+    case EGameResult::BlackWon:
 		return "The winner is: Player black";
         break;
-    case EPlayer::None:
+    case EGameResult::Draw:
 		return "The winner is: None";
         break;
-    default:
-        break;
-
     }
 }
 
@@ -424,8 +421,8 @@ void ChessUIQt::OnMoveMade()
 			}
 
 		}
-    m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 	UpdateBoard(updatedBoard);
+    m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 }
 
 void ChessUIQt::OnPawnUpgrade() 
@@ -433,11 +430,11 @@ void ChessUIQt::OnPawnUpgrade()
 		ShowPromoteOptions();
 }
 
-void ChessUIQt::OnGameOver() 
+void ChessUIQt::OnGameOver(EGameResult result)
 {
 	QMessageBox msgBox;
 	QString str;
-	str = ConvertEplayerWinner(game->GetWinner());
+	str = ConvertEGameResultToQStr(result);
 	msgBox.setText(str);
 	msgBox.exec();
 

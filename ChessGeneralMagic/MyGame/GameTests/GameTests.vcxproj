@@ -159,6 +159,7 @@
     <ClCompile Include="KingTest.cpp" />
     <ClCompile Include="KnightTest.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MockListener.cpp" />
     <ClCompile Include="PawnTest.cpp" />
     <ClCompile Include="PossibleMovesTests.cpp" />
     <ClCompile Include="QueenTest.cpp" />

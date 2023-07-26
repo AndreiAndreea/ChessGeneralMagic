@@ -35,5 +35,5 @@ TEST(BoardTest, ThreefoldRep)
 	g.MakeMove({ 5, 1 }, { 6, 2 }); // Move black bishop back to the initial position 
 	g.MakeMove({ 1, 5 }, { 3, 4 }); // Move white knight back to the initial position 
 
-	EXPECT_TRUE(g.GetBoard().IsThreefoldRepetitionDraw());
+	EXPECT_TRUE(g.IsDraw());
 }

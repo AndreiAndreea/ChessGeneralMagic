@@ -3,7 +3,7 @@
 #include "IGame.h"
 #include "Board.h"
 #include "EGameState.h"
-
+#include "EGameResult.h"
 
 class PieceInfo : public IPieceInfo
 {
@@ -55,7 +55,7 @@ public:
 
 	void NotifyOnMoveMade();
 	void NotifyOnPawnUpgrade();
-	void NotifyOnGameOver();
+	void NotifyOnGameOver(EGameResult result);
 
 private:
 	bool CanUpgradePawn(Position pos) const;

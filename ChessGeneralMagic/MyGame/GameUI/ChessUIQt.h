@@ -9,10 +9,11 @@
 
 #include "IGame.h"
 #include "IGameListener.h"
+#include "EGameResult.h"
 
 #include <memory>
 
-class ChessUIQt : public QMainWindow, public IGameListener, public std::enable_shared_from_this<ChessUIQt>
+class ChessUIQt : public QMainWindow, public IGameListener
 {
     Q_OBJECT
 
@@ -42,7 +43,7 @@ public:
     // listener methods
     void OnMoveMade() override;
     void OnPawnUpgrade() override;
-    void OnGameOver() override;
+    void OnGameOver(EGameResult result) override;
 
 public slots:
     void OnButtonClicked(const std::pair<int, int>& position);

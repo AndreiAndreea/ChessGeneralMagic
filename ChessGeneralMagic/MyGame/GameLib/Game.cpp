@@ -106,14 +106,14 @@ void Game::MakeMove(Position startPos, Position endPos)
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw() || m_board.IsInsufficientMaterial())
 	{
 		UpdateState(EGameState::Draw);
-		NotifyOnGameOver();
+		NotifyOnGameOver(EGameResult::Draw);
 	}
 
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
 	if (m_board.IsCheckmate(colorUpdated))
 	{
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
-		NotifyOnGameOver();
+		NotifyOnGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
 	}
 
 }
@@ -155,12 +155,12 @@ void Game::NotifyOnPawnUpgrade()
 	}
 }
 
-void Game::NotifyOnGameOver()
+void Game::NotifyOnGameOver(EGameResult result)
 {
 	for (auto it : m_observers)
 	{
 		if (auto sp = it.lock())
-			sp->OnGameOver();
+			sp->OnGameOver(result);
 		else
 		{
 			auto itPtr = it.lock().get();
