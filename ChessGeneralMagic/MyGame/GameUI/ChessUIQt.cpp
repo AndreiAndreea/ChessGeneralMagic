@@ -195,7 +195,6 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 			try
 			{
 				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position);
-
 			}
 			catch (ChessExceptions e)
 			{
@@ -279,7 +278,7 @@ void ChessUIQt::OnCopyButtonClicked()
         {
             boardConfig += QString('\'') + PieceInfoToChar(m_grid[i][j]->GetPieceType(), m_grid[i][j]->GetPieceColor()) + '\'';
 			if (j != 7)
-				boardConfig += ',';
+				boardConfig += ", ";
         }
         boardConfig += '}';
         if (i != 7)
@@ -411,6 +410,8 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 	m_grid[startPos.first][startPos.second]->setSelected(false);
 	m_grid[startPos.first][startPos.second]->setHighlighted(false);
 
+
+    auto bol = game->GetCurrentPlayer() == EPieceColor::Black;
     m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 }
 

@@ -26,10 +26,13 @@ PositionList Knight::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 			if (i < 8 && i >= 0 && j < 8 && j >= 0)
 				if (abs(piecePos.first - i) == 2 && abs(piecePos.second - j) == 1 || abs(piecePos.first - i) == 1 && abs(piecePos.second - j) == 2)
 				{
-					if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor())
-						possibleMoves.push_back(Position(i, j));
-					if (board.GetBoard()[i][j] == nullptr)
-						possibleMoves.push_back(Position(i, j));
+					if (!board.IsKingLeftInCheck(piecePos, { i, j }, GetColor()))
+					{
+						if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor())
+							possibleMoves.push_back(Position(i, j));
+						if (board.GetBoard()[i][j] == nullptr)
+							possibleMoves.push_back(Position(i, j));
+					}
 				}
 		}
 	return possibleMoves;

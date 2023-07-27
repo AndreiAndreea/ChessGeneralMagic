@@ -25,17 +25,18 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 
 	while (currentCol < 8 && currentRow >= 0)
 	{
-	
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
-
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+		if (!board.IsKingLeftInCheck(piecePos, { currentRow, currentCol }, GetColor()))
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+			if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+				break;
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+			if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+			{
+				possibleMoves.push_back({ currentRow, currentCol });
+				break;
+			}
+			possibleMoves.push_back({ currentRow, currentCol });
+		}
 		currentRow--;
 		currentCol++;
 	}
@@ -45,16 +46,19 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 
 	while (currentCol < 8 && currentRow < 8)
 	{
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
-
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+		if (!board.IsKingLeftInCheck(piecePos, { currentRow, currentCol }, GetColor()))
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+			if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+				break;
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+			if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+			{
+				possibleMoves.push_back({ currentRow, currentCol });
+				break;
+			}
+
+			possibleMoves.push_back({ currentRow, currentCol });
+		}
 		currentRow++;
 		currentCol++;
 	}
@@ -64,16 +68,19 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 
 	while (currentCol >= 0 && currentRow < 8)
 	{
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
-
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+		if (!board.IsKingLeftInCheck(piecePos, { currentRow, currentCol }, GetColor()))
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+			if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+				break;
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+			if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+			{
+				possibleMoves.push_back({ currentRow, currentCol });
+				break;
+			}
+
+			possibleMoves.push_back({ currentRow, currentCol });
+		}
 
 		currentRow++;
 		currentCol--;
@@ -84,19 +91,23 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 
 	while (currentCol >= 0 && currentRow >= 0)
 	{
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
-
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+		if (!board.IsKingLeftInCheck(piecePos, { currentRow, currentCol }, GetColor()))
 		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+			if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+				break;
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+			if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+			{
+				possibleMoves.push_back({ currentRow, currentCol });
+				break;
+			}
+
+			possibleMoves.push_back({ currentRow, currentCol });
+		}
 
 		currentRow--;
 		currentCol--;
 	}
+
 	return possibleMoves;
 }

@@ -27,19 +27,21 @@ PositionList Pawn::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 	{
 		if (piecePos.first + 1 < 8)
 		{
-			if (board.GetBoard()[piecePos.first + 1][piecePos.second] == nullptr)
+
+			
+			if (board.GetBoard()[piecePos.first + 1][piecePos.second] == nullptr && !board.IsKingLeftInCheck(piecePos, { piecePos.first + 1, piecePos.second }, GetColor()))
 				possibleMoves.push_back(Position(piecePos.first + 1, piecePos.second));
 
-			if (piecePos.second + 1 < 8)
+			if (piecePos.second + 1 < 8 && !board.IsKingLeftInCheck(piecePos, { piecePos.first + 1, piecePos.second + 1 }, GetColor()))
 				if (board.GetBoard()[piecePos.first + 1][piecePos.second + 1] != nullptr && board.GetBoard()[piecePos.first + 1][piecePos.second + 1]->GetColor() != GetColor())
 					possibleMoves.push_back(Position(piecePos.first + 1, piecePos.second + 1));
 
-			if (piecePos.second - 1 >= 0)
+			if (piecePos.second - 1 >= 0 && !board.IsKingLeftInCheck(piecePos, { piecePos.first + 1, piecePos.second - 1 }, GetColor()))
 				if (board.GetBoard()[piecePos.first + 1][piecePos.second - 1] != nullptr && board.GetBoard()[piecePos.first + 1][piecePos.second - 1]->GetColor() != GetColor())
 					possibleMoves.push_back(Position(piecePos.first + 1, piecePos.second - 1));
 
 			//verify for lines 2
-			if (piecePos.first == 1)
+			if (piecePos.first == 1 && !board.IsKingLeftInCheck(piecePos, { piecePos.first + 2, piecePos.second }, GetColor()))
 			{
 				if (board.GetBoard()[piecePos.first + 1][piecePos.second] == nullptr)
 				{
@@ -54,19 +56,19 @@ PositionList Pawn::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 	{
 		if (piecePos.first - 1 >= 0)
 		{
-			if (board.GetBoard()[piecePos.first - 1][piecePos.second] == nullptr)
+			if (board.GetBoard()[piecePos.first - 1][piecePos.second] == nullptr && !board.IsKingLeftInCheck(piecePos, { piecePos.first - 1, piecePos.second  }, GetColor()))
 				possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second));
 
-			if (piecePos.second + 1 < 8)
+			if (piecePos.second + 1 < 8 && !board.IsKingLeftInCheck(piecePos, { piecePos.first - 1, piecePos.second + 1 }, GetColor()))
 				if (board.GetBoard()[piecePos.first - 1][piecePos.second + 1] && board.GetBoard()[piecePos.first - 1][piecePos.second + 1]->GetColor() != GetColor())
 					possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second + 1));
 
-			if (piecePos.second - 1 >= 0)
+			if (piecePos.second - 1 >= 0 && !board.IsKingLeftInCheck(piecePos, { piecePos.first - 1, piecePos.second - 1 }, GetColor()))
 				if (board.GetBoard()[piecePos.first - 1][piecePos.second - 1] && board.GetBoard()[piecePos.first - 1][piecePos.second - 1]->GetColor() != GetColor())
 					possibleMoves.push_back(Position(piecePos.first - 1, piecePos.second - 1));
 
 			//verify for lines 7
-			if (piecePos.first == 6)
+			if (piecePos.first == 6 && !board.IsKingLeftInCheck(piecePos, { piecePos.first + 2, piecePos.second }, GetColor()))
 			{
 				if (board.GetBoard()[piecePos.first - 1][piecePos.second] == nullptr)
 				{

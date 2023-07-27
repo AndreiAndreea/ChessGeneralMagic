@@ -53,16 +53,14 @@ public:
 	void AddListener(IGameListenerPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
 
-	void NotifyOnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves);
-	void NotifyOnPawnUpgrade();
-	void NotifyOnGameOver(EGameResult result);
+	void NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves);
+	void NotifyPawnUpgrade();
+	void NotifyGameOver(EGameResult result);
 
 private:
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;
 	void UpdateState(EGameState state);
-
-	static Position ConvertToPos(const std::string& pos);
 
 private:
 	Board m_board;

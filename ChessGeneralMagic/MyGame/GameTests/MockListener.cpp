@@ -33,8 +33,6 @@ using ::testing::AtLeast;
 
 TEST(ListenreMockTest, OnMoveMade)
 {
-	//MockListener mock;
-
 	auto mock = std::make_shared<MockListener>();
 
 	Game g;

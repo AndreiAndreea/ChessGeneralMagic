@@ -67,49 +67,60 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 	int i = piecePos.first + 1;
 	while (i < 8)
 	{
-		if (localBoard[i][piecePos.second] != nullptr)
+		if (!board.IsKingLeftInCheck(piecePos, { i, piecePos.second }, GetColor()))
 		{
-			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+			if (localBoard[i][piecePos.second] != nullptr)
+			{
+				if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+					possibleMoves.push_back(Position(i, piecePos.second));
+				break;
+			}
+			else
 				possibleMoves.push_back(Position(i, piecePos.second));
-			break;
+
 		}
-		else
-			possibleMoves.push_back(Position(i, piecePos.second));
 		i++;
 	}
 
 	i = piecePos.second - 1;
 	while (i >= 0)
 	{
-		if (localBoard[piecePos.first][i] != nullptr)
+		if (!board.IsKingLeftInCheck(piecePos, { piecePos.first, i }, GetColor()))
 		{
-			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
+			if (localBoard[piecePos.first][i] != nullptr)
+			{
+				if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
+					possibleMoves.push_back(Position(piecePos.first, i));
+				break;
+			}
+			else
 				possibleMoves.push_back(Position(piecePos.first, i));
-			break;
 		}
-		else
-			possibleMoves.push_back(Position(piecePos.first, i));
 		i--;
 	}
 
 	i = piecePos.first - 1;
 	while (i >= 0)
 	{
-
-		if (localBoard[i][piecePos.second] != nullptr)
+		if (!board.IsKingLeftInCheck(piecePos, { i, piecePos.second }, GetColor()))
 		{
-			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+			if (localBoard[i][piecePos.second] != nullptr)
+			{
+				if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+					possibleMoves.push_back(Position(i, piecePos.second));
+				break;
+			}
+			else
 				possibleMoves.push_back(Position(i, piecePos.second));
-			break;
 		}
-		else
-			possibleMoves.push_back(Position(i, piecePos.second));
 		i--;
 	}
 
 	i = piecePos.second + 1;
 	while (i < 8)
 	{
+		if (!board.IsKingLeftInCheck(piecePos, { piecePos.first, i }, GetColor()))
+		{
 		if (localBoard[piecePos.first][i] != nullptr)
 		{
 			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
@@ -118,9 +129,9 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 		}
 		else
 			possibleMoves.push_back(Position(piecePos.first, i));
+		}
 		i++;
 	}
-
 
 	return possibleMoves;
 }

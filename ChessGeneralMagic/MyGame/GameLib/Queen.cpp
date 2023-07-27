@@ -26,155 +26,161 @@ bool Queen::CanMove(Position startPos, Position endPos, bool isKingAttacking, co
 PositionList Queen::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
     PositionList possibleMoves;
+	PositionList possibleMovesBishop;
 	EPieceColor pieceColor = GetColor();
 	auto localBoard = board.GetBoard();
 
 	// rook direction
+	Rook rook(pieceColor);
+	Bishop bishop(pieceColor);
+	possibleMoves = rook.GetPossibleMoves(piecePos, isKingAttacking, board);
+	possibleMovesBishop = bishop.GetPossibleMoves(piecePos, isKingAttacking, board);
+	possibleMoves.insert(possibleMoves.end(), possibleMovesBishop.begin(), possibleMovesBishop.end());
 
-	int i = piecePos.first + 1;
-	while (i < 8)
-	{
-		if (localBoard[i][piecePos.second] != nullptr)
-		{
-			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(i, piecePos.second));
-			break;
-		}
-		else
-			possibleMoves.push_back(Position(i, piecePos.second));
-		i++;
-	}
-
-
-	i = piecePos.second - 1;
-	while (i >= 0)
-	{
-		if (localBoard[piecePos.first][i] != nullptr)
-		{
-			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first,i));
-			break;
-		}
-		else
-			possibleMoves.push_back(Position( piecePos.first,i));
-		i--;
-	}
-
-	i = piecePos.first - 1;
-	while (i >= 0)
-	{
-
-		if (localBoard[i][piecePos.second] != nullptr)
-		{
-			if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(i, piecePos.second));
-			break;
-		}
-		else
-			possibleMoves.push_back(Position(i, piecePos.second));
-		i--;
-	}
-
-	i = piecePos.second + 1;
-	while (i < 8)
-	{
-		if (localBoard[piecePos.first][i] != nullptr)
-		{
-			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first,i));
-			break;
-		}
-		else
-			possibleMoves.push_back(Position(piecePos.first, i));
-		i++;
-	}
+	//int i = piecePos.first + 1;
+	//while (i < 8)
+	//{
+	//	if (localBoard[i][piecePos.second] != nullptr)
+	//	{
+	//		if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+	//			possibleMoves.push_back(Position(i, piecePos.second));
+	//		break;
+	//	}
+	//	else
+	//		possibleMoves.push_back(Position(i, piecePos.second));
+	//	i++;
+	//}
 
 
+	//i = piecePos.second - 1;
+	//while (i >= 0)
+	//{
+	//	if (localBoard[piecePos.first][i] != nullptr)
+	//	{
+	//		if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
+	//			possibleMoves.push_back(Position(piecePos.first,i));
+	//		break;
+	//	}
+	//	else
+	//		possibleMoves.push_back(Position( piecePos.first,i));
+	//	i--;
+	//}
 
-	//bishop direction
+	//i = piecePos.first - 1;
+	//while (i >= 0)
+	//{
 
-	//diagonally upwards right
-	int currentRow = piecePos.first - 1;
-	int currentCol = piecePos.second + 1;
+	//	if (localBoard[i][piecePos.second] != nullptr)
+	//	{
+	//		if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
+	//			possibleMoves.push_back(Position(i, piecePos.second));
+	//		break;
+	//	}
+	//	else
+	//		possibleMoves.push_back(Position(i, piecePos.second));
+	//	i--;
+	//}
 
-	while (currentCol < 8 && currentRow >= 0)
-	{
+	//i = piecePos.second + 1;
+	//while (i < 8)
+	//{
+	//	if (localBoard[piecePos.first][i] != nullptr)
+	//	{
+	//		if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
+	//			possibleMoves.push_back(Position(piecePos.first,i));
+	//		break;
+	//	}
+	//	else
+	//		possibleMoves.push_back(Position(piecePos.first, i));
+	//	i++;
+	//}
 
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
 
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
-		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
-		currentRow--;
-		currentCol++;
-	}
+	////bishop direction
 
-	//diagonally downwards right
-	currentRow = piecePos.first + 1;
-	currentCol = piecePos.second + 1;
+	////diagonally upwards right
+	//int currentRow = piecePos.first - 1;
+	//int currentCol = piecePos.second + 1;
 
-	while (currentCol < 8 && currentRow < 8)
-	{
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
+	//while (currentCol < 8 && currentRow >= 0)
+	//{
 
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
-		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+	//	if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+	//		break;
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
-		currentRow++;
-		currentCol++;
-	}
+	//	if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+	//	{
+	//		possibleMoves.push_back(Position(currentRow, currentCol));
+	//		break;
+	//	}
 
-	//diagonally downwards left
-	currentRow = piecePos.first + 1;
-	currentCol = piecePos.second - 1;
+	//	possibleMoves.push_back(Position(currentRow, currentCol));
+	//	currentRow--;
+	//	currentCol++;
+	//}
 
-	while (currentCol >= 0 && currentRow < 8)
-	{
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
+	////diagonally downwards right
+	//currentRow = piecePos.first + 1;
+	//currentCol = piecePos.second + 1;
 
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
-		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+	//while (currentCol < 8 && currentRow < 8)
+	//{
+	//	if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+	//		break;
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+	//	if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+	//	{
+	//		possibleMoves.push_back(Position(currentRow, currentCol));
+	//		break;
+	//	}
 
-		currentRow++;
-		currentCol--;
-	}
+	//	possibleMoves.push_back(Position(currentRow, currentCol));
+	//	currentRow++;
+	//	currentCol++;
+	//}
 
-	//diagonally upwards left
-	currentRow = piecePos.first - 1;
-	currentCol = piecePos.second - 1;
+	////diagonally downwards left
+	//currentRow = piecePos.first + 1;
+	//currentCol = piecePos.second - 1;
 
-	while (currentCol >= 0 && currentRow >= 0)
-	{
-		if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
-			break;
+	//while (currentCol >= 0 && currentRow < 8)
+	//{
+	//	if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+	//		break;
 
-		if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
-		{
-			possibleMoves.push_back(Position(currentRow, currentCol));
-			break;
-		}
+	//	if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+	//	{
+	//		possibleMoves.push_back(Position(currentRow, currentCol));
+	//		break;
+	//	}
 
-		possibleMoves.push_back(Position(currentRow, currentCol));
+	//	possibleMoves.push_back(Position(currentRow, currentCol));
 
-		currentRow--;
-		currentCol--;
-	}
+	//	currentRow++;
+	//	currentCol--;
+	//}
+
+	////diagonally upwards left
+	//currentRow = piecePos.first - 1;
+	//currentCol = piecePos.second - 1;
+
+	//while (currentCol >= 0 && currentRow >= 0)
+	//{
+	//	if (!(board.GetBoard()[currentRow][currentCol] == nullptr || board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor()))
+	//		break;
+
+	//	if (board.GetBoard()[currentRow][currentCol] != nullptr && board.GetBoard()[currentRow][currentCol]->GetColor() != GetColor())
+	//	{
+	//		possibleMoves.push_back(Position(currentRow, currentCol));
+	//		break;
+	//	}
+
+	//	possibleMoves.push_back(Position(currentRow, currentCol));
+
+	//	currentRow--;
+	//	currentCol--;
+	//}
 
 	return possibleMoves;
 }

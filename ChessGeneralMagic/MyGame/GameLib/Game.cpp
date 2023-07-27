@@ -68,19 +68,6 @@ bool Game::CanUpgradePawn(Position pos) const
 	return m_board.IsUpgradeablePawn(pos);
 }
 
-EPieceType ConvertToType(std::string comand)
-{
-	if (comand == "ROOK")
-		return EPieceType::Rook;
-	if (comand == "KNIGHT")
-		return EPieceType::Knight;
-	if (comand == "BISHOP")
-		return EPieceType::Bishop;
-	if (comand == "QUEEN")
-		return EPieceType::Queen;
-	return EPieceType::None;
-}
-
 void Game::MakeMove(Position startPos, Position endPos)
 {
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
@@ -93,28 +80,29 @@ void Game::MakeMove(Position startPos, Position endPos)
 
 	auto prevPossibleMoves = m_board.GetPossibleMoves(startPos);
 	m_board.MakeMove(startPos, endPos);
-	NotifyOnMoveMade(startPos, endPos, prevPossibleMoves);
 
 	if (CanUpgradePawn(endPos))
 	{
-		m_board.AddToMoves(startPos, endPos, color);
 		UpdateState(EGameState::WaitingForPawnUpgrade);
-		NotifyOnPawnUpgrade();
+		NotifyPawnUpgrade();
 	}
 	else
+	{
 		m_turn = 1 - m_turn;
+		NotifyMoveMade(startPos, endPos, prevPossibleMoves);
+	}
 
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw() || m_board.IsInsufficientMaterial())
 	{
 		UpdateState(EGameState::Draw);
-		NotifyOnGameOver(EGameResult::Draw);
+		NotifyGameOver(EGameResult::Draw);
 	}
 
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
 	if (m_board.IsCheckmate(colorUpdated))
 	{
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
-		NotifyOnGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
+		NotifyGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
 	}
 
 }
@@ -128,45 +116,45 @@ void Game::ResetGame()
 	m_board.SetBitBoardsToEmpty();
 }
 
-void Game::NotifyOnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
+void Game::NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
 {
-	for (auto it : m_observers)
+	for (auto it = m_observers.begin(); it != m_observers.end();)
 	{
-		if (auto sp = it.lock())
+		if (auto sp = it->lock())
+		{
 			sp->OnMoveMade(startPos, endPos, prevPossibleMoves);
-		else
-		{
-			auto itPtr = it.lock().get();
-			RemoveListener(itPtr);
+			++it;
 		}
+		else
+			it = m_observers.erase(it);
 	}
 }
 
-void Game::NotifyOnPawnUpgrade()
+void Game::NotifyPawnUpgrade()
 {
-	for (auto it : m_observers)
+	for (auto it = m_observers.begin(); it != m_observers.end();)
 	{
-		if (auto sp = it.lock())
+		if (auto sp = it->lock())
+		{
 			sp->OnPawnUpgrade();
-		else
-		{
-			auto itPtr = it.lock().get();
-			RemoveListener(itPtr);
+			++it;
 		}
+		else
+			it = m_observers.erase(it);
 	}
 }
 
-void Game::NotifyOnGameOver(EGameResult result)
+void Game::NotifyGameOver(EGameResult result)
 {
-	for (auto it : m_observers)
+	for (auto it = m_observers.begin(); it != m_observers.end();)
 	{
-		if (auto sp = it.lock())
-			sp->OnGameOver(result);
-		else
+		if (auto sp = it->lock())
 		{
-			auto itPtr = it.lock().get();
-			RemoveListener(itPtr);
+			sp->OnGameOver(result);
+			++it;
 		}
+		else
+			it = m_observers.erase(it);
 	}
 }
 
@@ -242,16 +230,18 @@ void Game::UpgradePawnTo(EPieceType type)
 		throw NotStateWaitingForPawnUpdate();
 
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
+	int i = m_turn ? 0 : 7;
 
-	if (type != EPieceType::None)
-	{
-		auto movesVect = m_board.GetMovesVect();
-		m_board.SetPiece(movesVect[(int)color][movesVect[(int)color].size() - 1].second, color, type);
-		m_turn = 1 - m_turn;
-		UpdateState(EGameState::Playing);
-	}
-	else
+	if (type == EPieceType::None || type == EPieceType::Pawn || type == EPieceType::King )
 		throw InvalidUpgradeType();
+
+	for (int j = 0; j < 7; j++)
+	{
+		if (GetPieceInfo({ i, j }) && GetPieceInfo({ i, j })->GetType() == EPieceType::Pawn)
+			m_board.SetPiece({ i, j }, color, type);
+	}
+	m_turn = 1 - m_turn;
+	UpdateState(EGameState::Playing);
 }
 
 bool Game::IsWaitingForPawnUpgrade() const
@@ -283,12 +273,6 @@ void Game::UpdateState(EGameState state)
 {
 	m_state = state;
 }
-
-Position Game::ConvertToPos(const std::string& pos)
-{
-	return Position(8 - (pos[1] - '0'), pos[0] - 'A');
-}
-
 
 IPieceInfoPtr Game::GetPieceInfo(Position pos) const
 {

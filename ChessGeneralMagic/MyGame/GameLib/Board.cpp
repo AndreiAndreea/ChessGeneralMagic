@@ -109,11 +109,6 @@ PieceMatrix Board::GetBoard() const
 	return m_board;
 }
 
-ConfigMovesVesct Board::GetMovesVect() const
-{
-	return m_movesMade;
-}
-
 PositionList Board::GetPossibleMoves(Position pos) const
 {
 	if (m_board[pos.first][pos.second])
@@ -131,11 +126,6 @@ void Board::SetPieceToNullptr(const Position& pos)
 	m_board[pos.first][pos.second] = nullptr;
 }
 
-void Board::AddToMoves(Position startPos, Position endPos, EPieceColor color)
-{
-	m_movesMade[(int)color].push_back(std::make_pair(startPos, endPos));
-}
-
 void Board::MoveRookForCastling(int castlingType, EPieceColor color)
 {
 	int i = (int)color ? 0 : 7;
@@ -146,7 +136,7 @@ void Board::MoveRookForCastling(int castlingType, EPieceColor color)
 	SetPieceToNullptr(Position(i, start));
 }
 
-std::bitset<256> Board::GenerateBitset()
+BoardConfig Board::GenerateBitset()
 {
 	int k = 0;
 	std::bitset<256> currentBitBoard;
@@ -199,10 +189,8 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 
 		SetPiece(endPos, color, type);
 		SetPieceToNullptr(startPos);
-		m_movesMade[(int)color].push_back(std::make_pair(startPos, endPos));
 
 		// CASTLING
-
 		if (type == EPieceType::King)
 		{
 			if (abs(startPos.second - endPos.second) == 2)
@@ -588,17 +576,10 @@ bool Board::IsInsufficientMaterial() const
 
 bool Board::IsThreefoldRepetitionDraw()
 {
-	std::bitset<256> currentBitBoard = GenerateBitset();
+	BoardConfig currentBitBoard = GenerateBitset();
 	m_bitBoards.push_back(currentBitBoard);
-	int contor = 0;
-	for (int it = 0; it < m_bitBoards.size(); it++)
-	{
-		if (m_bitBoards[it] == currentBitBoard)
-			contor++;
-	}
-	if (contor == 3)
-		return true;
-	return false;
+
+	return std::count(m_bitBoards.begin(), m_bitBoards.end(), currentBitBoard) >= 3;
 }
 
 bool Board::IsUpgradeablePawn(Position pos) const
