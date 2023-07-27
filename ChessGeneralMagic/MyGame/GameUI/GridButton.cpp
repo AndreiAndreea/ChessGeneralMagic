@@ -63,13 +63,11 @@ void GridButton::updateBackgroundColor()
 	QString backColor = "";
 
 	if (defaultColorBlack && !m_Highlighted)
-		backColor = "#464e53";
-	if (defaultColorBlack && m_Highlighted)
-		backColor = "#3f4224";
+		backColor = "#0d4771";
 	if (!defaultColorBlack && !m_Highlighted)
-		backColor = "#d6d6d6";
-	if (!defaultColorBlack && m_Highlighted)
-		backColor = "#f8ff94";
+		backColor = "#b17aa2";
+	if (m_Highlighted)
+		backColor = "#ffe5ec";
 
 	if (m_Selected)
 		backColor = "#ff9494";
@@ -97,12 +95,17 @@ void GridButton::setSelected(bool selected)
 	updateBackgroundColor();
 }
 
-PieceColor GridButton::GetPieceColor()
+PieceColor GridButton::GetPieceColor() const
 {
 	return m_PieceColor;
 }
 
-GridButton::GridButton(const std::pair<int, int>& boardPosition, PieceType pieceType, PieceColor pieceColor, QWidget* parent):
+PieceType GridButton::GetPieceType() const
+{
+	return m_PieceType;
+}
+
+GridButton::GridButton(const Position& boardPosition, PieceType pieceType /*= PieceType::none*/, PieceColor pieceColor /*= PieceColor::none*/, QWidget* parent /*= nullptr*/) :
 	m_Position(boardPosition), m_PieceType(pieceType), m_PieceColor(pieceColor), m_Highlighted(false), m_Selected(false)
 {
 	setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

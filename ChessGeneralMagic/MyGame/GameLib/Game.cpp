@@ -91,8 +91,9 @@ void Game::MakeMove(Position startPos, Position endPos)
 	if (!m_board.IsPieceColor(startPos, color))
 		throw InvalidStartPositionExcepton();
 
+	auto prevPossibleMoves = m_board.GetPossibleMoves(startPos);
 	m_board.MakeMove(startPos, endPos);
-	NotifyOnMoveMade();
+	NotifyOnMoveMade(startPos, endPos, prevPossibleMoves);
 
 	if (CanUpgradePawn(endPos))
 	{
@@ -127,12 +128,12 @@ void Game::ResetGame()
 	m_board.SetBitBoardsToEmpty();
 }
 
-void Game::NotifyOnMoveMade()
+void Game::NotifyOnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
 {
 	for (auto it : m_observers)
 	{
 		if (auto sp = it.lock())
-			sp->OnMoveMade();
+			sp->OnMoveMade(startPos, endPos, prevPossibleMoves);
 		else
 		{
 			auto itPtr = it.lock().get();

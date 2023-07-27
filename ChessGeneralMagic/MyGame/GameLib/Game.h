@@ -53,7 +53,7 @@ public:
 	void AddListener(IGameListenerPtr listener) override;
 	void RemoveListener(IGameListener* listener) override;
 
-	void NotifyOnMoveMade();
+	void NotifyOnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves);
 	void NotifyOnPawnUpgrade();
 	void NotifyOnGameOver(EGameResult result);
 

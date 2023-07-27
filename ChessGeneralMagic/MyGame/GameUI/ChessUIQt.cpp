@@ -1,7 +1,8 @@
 #include "ChessUIQt.h"
-#include "ChessUIQt.h"
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QClipboard>
+#include <QApplication>
 
 #include "ChessExceptions.h"
 
@@ -47,6 +48,8 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     QPushButton* loadButton = new QPushButton("Load");
     QPushButton* restartButton = new QPushButton("Restart");
     QPushButton* drawButton = new QPushButton("Draw");
+	QPushButton* copyButton = new QPushButton("Copy");
+
 
     QWidget* buttonContainer = new QWidget();
     QGridLayout* btnGrid = new QGridLayout();
@@ -55,11 +58,13 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
     btnGrid->addWidget(loadButton, 0, 1);
     btnGrid->addWidget(restartButton, 0, 2);
     btnGrid->addWidget(drawButton, 0, 3);
+	btnGrid->addWidget(copyButton, 0, 4);
 
     connect(saveButton, &QPushButton::pressed, this, &ChessUIQt::OnSaveButtonClicked);
     connect(loadButton, &QPushButton::pressed, this, &ChessUIQt::OnLoadButtonClicked);
     connect(restartButton, &QPushButton::pressed, this, &ChessUIQt::OnRestartButtonClicked);
     connect(drawButton, &QPushButton::pressed, this, &ChessUIQt::OnDrawButtonClicked);
+	connect(copyButton, &QPushButton::pressed, this, &ChessUIQt::OnCopyButtonClicked);
 
     buttonContainer->setLayout(btnGrid);
     mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
@@ -94,8 +99,8 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
     m_MovesList = new QListWidget();
-    m_MovesList->setMinimumWidth(250);
-    m_MovesList->setMaximumWidth(350);
+    m_MovesList->setMinimumWidth(320);
+    m_MovesList->setMaximumWidth(420);
     connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
     mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
 }
@@ -171,7 +176,7 @@ PieceType ConvertTypeEnum(EPieceType type)
     }
 }
 
-void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
+void ChessUIQt::OnButtonClicked(const Position& position)
 {
     //At second click
     if (m_selectedCell.has_value()) 
@@ -184,20 +189,12 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 			m_selectedCell.reset();
             auto possibleMoves = game->GetPossibleMoves(position);
             UnhighlightPossibleMoves(possibleMoves);
-            
         }
         else
         {
 			try
 			{
 				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position);
-
-				//if (game->IsStateWaitingForPawnUpgrade())
-				//{
-				//	ShowPromoteOptions();
-				//}
-
-				/*m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");*/
 
 			}
 			catch (ChessExceptions e)
@@ -207,40 +204,11 @@ void ChessUIQt::OnButtonClicked(const std::pair<int, int>&position)
 				msgBox.exec();
 			}
 
-			//Unselect prev. pressed button
+			//Unselect prev. pressed button and  unhighlight board
+			m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 			m_selectedCell.reset();
-			/*std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
-
-
-			for (int i = 0; i < 8; i++)
-				for (int j = 0; j < 8; j++)
-				{
-					if (game->GetPieceInfo(i, j))
-					{
-						auto color = ConvertColorEnum(game->GetPieceInfo(i, j)->GetColor());
-						auto type = ConvertTypeEnum(game->GetPieceInfo(i, j)->GetType());
-						updatedBoard[i][j] = std::make_pair(type, color);
-					}
-					else
-					{
-						updatedBoard[i][j] = std::make_pair(PieceType::none, PieceColor::none);
-					}
-
-				}
-			UpdateBoard(updatedBoard);*/
+            UpdateBoard();
         }
-
-		//if (game->IsGameOver())
-		//{
-		//	QMessageBox msgBox;
-		//	QString str;
-		//	str = ConvertEplayerWinner(game->GetWinner());
-		//	msgBox.setText(str);
-		//	msgBox.exec();
-
-        //  //reset board and turn. new game
-        //  OnRestartButtonClicked();
-		//}
     }
     //At first click
     else {
@@ -270,25 +238,8 @@ void ChessUIQt::OnRestartButtonClicked()
 {
     game->ResetGame();
 
-	std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
-
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
-			if (game->GetPieceInfo(Position(i,j)))
-			{
-				PieceColor color = ConvertColorEnum(game->GetPieceInfo(Position(i,j))->GetColor());
-				auto type = ConvertTypeEnum(game->GetPieceInfo(Position(i, j))->GetType());
-				updatedBoard[i][j] = std::make_pair(type, color);
-			}
-			else
-			{
-				updatedBoard[i][j] = std::make_pair(PieceType::none, PieceColor::none);
-			}
-
-		}
     m_MessageLabel->setText("Waiting for white player");
-	UpdateBoard(updatedBoard);
+	UpdateBoard();
 }
 
 void ChessUIQt::OnDrawButtonClicked()
@@ -304,6 +255,39 @@ void ChessUIQt::OnDrawButtonClicked()
 		msgBox.exec();
         OnRestartButtonClicked();
     }
+}
+
+static char PieceInfoToChar(PieceType type, PieceColor color)
+{
+    std::string letters = "-krbqnp";
+    if (color == PieceColor::black)
+        return toupper(letters[(int)type]);
+    if (color == PieceColor::white)
+        return tolower(letters[(int)type]);
+    return letters[(int)type];
+}
+
+void ChessUIQt::OnCopyButtonClicked()
+{
+    QClipboard* clipboard = QApplication::clipboard();
+    QString boardConfig = "{ \n";
+
+    for (int i = 0; i < 8; i++)
+    {
+        boardConfig += '{';
+        for (int j = 0; j < 8; j++)
+        {
+            boardConfig += QString('\'') + PieceInfoToChar(m_grid[i][j]->GetPieceType(), m_grid[i][j]->GetPieceColor()) + '\'';
+			if (j != 7)
+				boardConfig += ',';
+        }
+        boardConfig += '}';
+        if (i != 7)
+            boardConfig += ", \n";
+    }
+    boardConfig += "\n }";
+
+    clipboard->setText(boardConfig);
 }
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
@@ -324,25 +308,40 @@ void ChessUIQt::UpdateHistory()
     }
 }
 
-void ChessUIQt::UpdateBoard(const std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8>& newBoard)
+void ChessUIQt::UpdateBoard()
 {
+    PieceColor color;
+    PieceType type;
+
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
-            m_grid[i][j]->setPiece(newBoard[i][j]);
+
+            if (game->GetPieceInfo(Position(i, j)))
+            {
+                type = ConvertTypeEnum(game->GetPieceInfo(Position(i, j))->GetType());
+                color = ConvertColorEnum(game->GetPieceInfo(Position(i, j))->GetColor());
+            }
+            else
+            {
+                type = PieceType::none;
+                color = PieceColor::none;
+            }
+
+            m_grid[i][j]->setPiece({type, color});
             m_grid[i][j]->setSelected(false);
             m_grid[i][j]->setHighlighted(false);
         }
     }
 }
 
-void ChessUIQt::HighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
+void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
     for (const auto& position : possibleMoves) {
         m_grid[position.first][position.second]->setHighlighted(true);
     }
 }
 
-void ChessUIQt::UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>& possibleMoves)
+void ChessUIQt::UnhighlightPossibleMoves(const PositionList& possibleMoves)
 {
 	for (const auto& position : possibleMoves) {
 		m_grid[position.first][position.second]->setHighlighted(false);
@@ -351,8 +350,7 @@ void ChessUIQt::UnhighlightPossibleMoves(const std::vector<std::pair<int, int>>&
 
 void ChessUIQt::StartGame()
 {
-    //TODO MODIFY ME OR DELETE ME
-    UpdateBoard(Helper::getDefaultBoard());
+    UpdateBoard();
 }
 
 EPieceType ConvetItemToEPieceType(QString item)
@@ -400,34 +398,25 @@ void ChessUIQt::SetGame(IGamePtr game)
     this->game = game;
 }
 
-void ChessUIQt::OnMoveMade()
-{
-	m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
-	m_selectedCell.reset();
-    std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> updatedBoard;
+void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
+{   
+    auto type = ConvertTypeEnum(game->GetPieceInfo(endPos)->GetType());
+    auto color = ConvertColorEnum(game->GetPieceInfo(endPos)->GetColor());
 
-	for (int i = 0; i < 8; i++)
-		for (int j = 0; j < 8; j++)
-		{
-			if (game->GetPieceInfo(Position(i,j)))
-			{
-				auto color = ConvertColorEnum(game->GetPieceInfo(Position(i, j))->GetColor());
-				auto type = ConvertTypeEnum(game->GetPieceInfo(Position(i, j))->GetType());
-				updatedBoard[i][j] = std::make_pair(type, color);
-			}
-			else
-			{
-				updatedBoard[i][j] = std::make_pair(PieceType::none, PieceColor::none);
-			}
+    m_grid[endPos.first][endPos.second]->setPiece({ type, color });
+	m_grid[endPos.first][endPos.second]->setSelected(false);
+	m_grid[endPos.first][endPos.second]->setHighlighted(false);
 
-		}
-	UpdateBoard(updatedBoard);
+    m_grid[startPos.first][startPos.second]->setPiece({ PieceType::none, PieceColor::none });
+	m_grid[startPos.first][startPos.second]->setSelected(false);
+	m_grid[startPos.first][startPos.second]->setHighlighted(false);
+
     m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 }
 
 void ChessUIQt::OnPawnUpgrade() 
 {
-		ShowPromoteOptions();
+	ShowPromoteOptions();
 }
 
 void ChessUIQt::OnGameOver(EGameResult result)

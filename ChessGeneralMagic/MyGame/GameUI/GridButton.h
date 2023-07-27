@@ -2,12 +2,14 @@
 #include <QPushButton>
 #include "Enums.h"
 
+#include "PositionList.h"
+
 class GridButton : public QPushButton
 {
 	Q_OBJECT
 
 public:
-	GridButton(const std::pair<int, int>& boardPosition, PieceType pieceType = PieceType::none, PieceColor pieceColor = PieceColor::none, QWidget* parent = nullptr);
+	GridButton(const Position& boardPosition, PieceType pieceType = PieceType::none, PieceColor pieceColor = PieceColor::none, QWidget* parent = nullptr);
 	~GridButton() = default;
 
 	void mouseReleaseEvent(QMouseEvent* event) override;
@@ -19,13 +21,14 @@ public:
 	void setHighlighted(bool highlighted);
 	void setSelected(bool selected);
 
-	PieceColor GetPieceColor();
+	PieceColor GetPieceColor() const;
+	PieceType GetPieceType() const;
 
 signals:
-	void Clicked(const std::pair<int, int>& position);
+	void Clicked(const Position& position);
 
 private:
-	std::pair<int, int> m_Position;
+	Position m_Position;
 	PieceType m_PieceType;
 	PieceColor m_PieceColor;
 	bool m_Highlighted;
