@@ -1,9 +1,10 @@
 #pragma once
 
+#include "IGameListener.h"
+#include "IPieceInfo.h"
 #include "EPieceColor.h"
 #include "EPieceType.h"
 #include "EDrawComand.h"
-#include "IGameListener.h"
 #include "PositionList.h"
 
 #include <memory>
@@ -18,17 +19,19 @@ enum class EPlayer
 	None
 };
 
-class IPieceInfo
-{
-public:
-	virtual EPieceColor GetColor() const = 0;
-	virtual EPieceType GetType() const = 0;
+//class IPieceInfo
+//{
+//public:
+//	virtual EPieceColor GetColor() const = 0;
+//	virtual EPieceType GetType() const = 0;
+//
+//	virtual ~IPieceInfo() = default;
+//};
 
-	virtual ~IPieceInfo() = default;
-};
+//using IPieceInfoPtr = std::shared_ptr<IPieceInfo>;
 
-using IPieceInfoPtr = std::shared_ptr<IPieceInfo>;
 using IGamePtr = std::shared_ptr<class IGame>;
+
 using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
 using IGameListenerPtr = std::shared_ptr<IGameListener>;
 

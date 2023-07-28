@@ -141,6 +141,12 @@
     <ClInclude Include="EGameResult.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="IPieceInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PieceInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -208,6 +214,9 @@
     </ClCompile>
     <ClCompile Include="InvalidUpgradeType.cpp">
       <Filter>Source Files\Exceptions\InvalidInputExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="PieceInfo.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

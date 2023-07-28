@@ -159,6 +159,7 @@
     <ClInclude Include="InvalidStartPositionExcepton.h" />
     <ClInclude Include="InvalidUpgradeType.h" />
     <ClInclude Include="IPiece.h" />
+    <ClInclude Include="IPieceInfo.h" />
     <ClInclude Include="King.h" />
     <ClInclude Include="KingLeftInCheckException.h" />
     <ClInclude Include="Knight.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="OutOfBoundException.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="Piece.h" />
+    <ClInclude Include="PieceInfo.h" />
     <ClInclude Include="PieceMovementExceptions.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PositionList.h" />
@@ -194,6 +196,7 @@
     <ClCompile Include="OutOfBoundException.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="Piece.cpp" />
+    <ClCompile Include="PieceInfo.cpp" />
     <ClCompile Include="PieceMovementExceptions.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Queen.cpp" />

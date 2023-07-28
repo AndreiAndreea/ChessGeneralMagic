@@ -105,6 +105,33 @@ PieceType GridButton::GetPieceType() const
 	return m_PieceType;
 }
 
+
+void GridButton::paintEvent(QPaintEvent* event)
+{
+	QPushButton::paintEvent(event);
+	QPainter painter(this);
+	QColor penColor;
+	QFont font = painter.font();
+
+	font.setFamily("Segoe UI");
+	font.setBold(true);
+	painter.setFont(font);
+
+	penColor = "	#1a472a";
+
+	int textXnumbers = 5;
+	int textXletters = 2;
+	int textY = 5;
+
+	painter.setRenderHint(QPainter::TextAntialiasing, true);
+	painter.setPen(penColor);
+
+	if (m_Position.first == 7)
+		painter.drawText(textXletters, textY, width() - 2 * textXletters, height() - 2 * textY, Qt::AlignBottom | Qt::AlignRight, QChar((char)'a' + m_Position.second));
+	if (m_Position.second == 0)
+		painter.drawText(textXnumbers, textY, width() - 2 * textXnumbers, height() - 2 * textY, Qt::AlignTop | Qt::AlignLeft, QString::number(8 - m_Position.first));
+}
+
 GridButton::GridButton(const Position& boardPosition, PieceType pieceType /*= PieceType::none*/, PieceColor pieceColor /*= PieceColor::none*/, QWidget* parent /*= nullptr*/) :
 	m_Position(boardPosition), m_PieceType(pieceType), m_PieceColor(pieceColor), m_Highlighted(false), m_Selected(false)
 {

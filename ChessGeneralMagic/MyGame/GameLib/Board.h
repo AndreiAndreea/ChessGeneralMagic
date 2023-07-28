@@ -1,7 +1,8 @@
 #pragma once
 
-#include "EGameState.h"
 #include "Piece.h"
+#include "IPieceInfo.h"
+#include "EGameState.h"
 
 #include<memory>
 #include <bitset>
@@ -10,7 +11,7 @@
 using PieceMatrix = std::vector<std::vector<PiecePtr>>;
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ConfigCastlingPossible = std::vector<std::vector<bool>>;
-
+using ConfigCapturedPieces = std::vector<IPieceInfoPtrList>;
 using BoardConfig = std::bitset<256>;
 using BoardConfigList = std::vector<BoardConfig>;
 
@@ -26,7 +27,8 @@ public:
 
 	PieceMatrix GetBoard() const;
 	PositionList GetPossibleMoves(Position pos) const;
-
+	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const;
+	IPieceInfoPtr GetPieceInfo(Position pos) const;
 
 	bool MakeMove(const Position& startPos, const Position& endPos);
 
@@ -54,8 +56,8 @@ private:
 	BoardConfig GenerateBitset();
 
 private:
-	PieceMatrix m_board;
+	PieceMatrix m_pieceMatrix;
 	ConfigCastlingPossible CastlingPossible = { {true, true}, {true, true} };
-
+	ConfigCapturedPieces m_capturedPieces = { {}, {} };
 	BoardConfigList m_bitBoards;
 };

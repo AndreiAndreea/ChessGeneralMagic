@@ -1,4 +1,6 @@
+
 #include "Game.h"
+#include "PieceInfo.h"
 
 #include "ChessExceptions.h"
 #include "OutOfBoundException.h"
@@ -194,6 +196,11 @@ PositionList Game::GetPossibleMoves(Position pos)
 	return m_board.GetPossibleMoves(pos);
 }
 
+const IPieceInfoPtrList& Game::GetCapturedPieces(EPieceColor color) const
+{
+	return m_board.GetCapturedPieces(color);
+}
+
 bool Game::IsPlaying() const
 {
 	return m_state == EGameState::Playing;
@@ -276,26 +283,22 @@ void Game::UpdateState(EGameState state)
 
 IPieceInfoPtr Game::GetPieceInfo(Position pos) const
 {
-	//return m_board->GetPieceInfo(i, j);
-
-	if (auto piece = m_board.GetBoard()[pos.first][pos.second])
-		return std::make_shared<PieceInfo>(piece->GetType(), piece->GetColor());
-	return {};
+	return m_board.GetPieceInfo(pos);
 }
 
-PieceInfo::PieceInfo(EPieceType type, EPieceColor color)
-	: m_type(type)
-	, m_color(color)
-{
-
-}
-
-EPieceColor PieceInfo::GetColor() const
-{
-	return m_color;
-}
-
-EPieceType PieceInfo::GetType() const
-{
-	return m_type;
-}
+//PieceInfo::PieceInfo(EPieceType type, EPieceColor color)
+//	: m_type(type)
+//	, m_color(color)
+//{
+//
+//}
+//
+//EPieceColor PieceInfo::GetColor() const
+//{
+//	return m_color;
+//}
+//
+//EPieceType PieceInfo::GetType() const
+//{
+//	return m_type;
+//}

@@ -1,5 +1,9 @@
 #pragma once
 #include <QPushButton>
+#include <QPainter>
+#include <QColor>
+#include <QFont>
+#include <QPushButton>
 #include "Enums.h"
 
 #include "PositionList.h"
@@ -23,6 +27,9 @@ public:
 
 	PieceColor GetPieceColor() const;
 	PieceType GetPieceType() const;
+
+protected:
+	void paintEvent(QPaintEvent* event) override;
 
 signals:
 	void Clicked(const Position& position);

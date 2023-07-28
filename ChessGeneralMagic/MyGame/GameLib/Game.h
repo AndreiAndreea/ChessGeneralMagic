@@ -5,18 +5,18 @@
 #include "EGameState.h"
 #include "EGameResult.h"
 
-class PieceInfo : public IPieceInfo
-{
-public:
-	PieceInfo(EPieceType type, EPieceColor color);
-
-	EPieceColor GetColor() const override;
-	EPieceType GetType() const override;
-
-private:
-	EPieceType m_type;
-	EPieceColor m_color;
-};
+//class PieceInfo : public IPieceInfo
+//{
+//public:
+//	PieceInfo(EPieceType type, EPieceColor color);
+//
+//	EPieceColor GetColor() const override;
+//	EPieceType GetType() const override;
+//
+//private:
+//	EPieceType m_type;
+//	EPieceColor m_color;
+//};
 
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
@@ -33,14 +33,14 @@ public:
 	EPlayer GetWinner() const override;
 	EPieceColor GetCurrentPlayer() const override;
 	PositionList GetPossibleMoves(Position pos) override;
+	const IPieceInfoPtrList& GetCapturedPieces(EPieceColor color) const;
+	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;
 	bool IsWaitingForPawnUpgrade() const override;
 	bool IsDraw() const override;
 	bool IsGameOver() const override;
-
-	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	
 	void PlayerDrawComand(EDrawComand respons) override;
 	void MakeMove(Position startPos, Position endPos) override;
