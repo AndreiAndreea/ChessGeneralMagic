@@ -117,7 +117,7 @@ void GridButton::paintEvent(QPaintEvent* event)
 	font.setBold(true);
 	painter.setFont(font);
 
-	penColor = "	#1a472a";
+	penColor = "#1a472a";
 
 	int textXnumbers = 5;
 	int textXletters = 2;

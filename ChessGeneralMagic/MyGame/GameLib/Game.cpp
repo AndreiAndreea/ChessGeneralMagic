@@ -81,7 +81,17 @@ void Game::MakeMove(Position startPos, Position endPos)
 		throw InvalidStartPositionExcepton();
 
 	auto prevPossibleMoves = m_board.GetPossibleMoves(startPos);
-	m_board.MakeMove(startPos, endPos);
+
+	auto endPosPiece = GetPieceInfo(endPos);
+
+	if (m_board.MakeMove(startPos, endPos))
+		if (endPosPiece)
+		{
+			auto capturedColor = endPosPiece->GetColor();
+			m_board.AddCapturedPiece(endPosPiece);	
+			NotifyCaptureMade(capturedColor, GetCapturedPieces(capturedColor));
+		}
+		
 
 	if (CanUpgradePawn(endPos))
 	{
@@ -125,6 +135,20 @@ void Game::NotifyMoveMade(Position startPos, Position endPos, PositionList prevP
 		if (auto sp = it->lock())
 		{
 			sp->OnMoveMade(startPos, endPos, prevPossibleMoves);
+			++it;
+		}
+		else
+			it = m_observers.erase(it);
+	}
+}
+
+void Game::NotifyCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces)
+{
+	for (auto it = m_observers.begin(); it != m_observers.end();)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnCaptureMade(color, capturedPieces);
 			++it;
 		}
 		else
@@ -196,8 +220,9 @@ PositionList Game::GetPossibleMoves(Position pos)
 	return m_board.GetPossibleMoves(pos);
 }
 
-const IPieceInfoPtrList& Game::GetCapturedPieces(EPieceColor color) const
+IPieceInfoPtrList Game::GetCapturedPieces(EPieceColor color) const
 {
+	auto ceva = m_board.GetCapturedPieces(color);
 	return m_board.GetCapturedPieces(color);
 }
 

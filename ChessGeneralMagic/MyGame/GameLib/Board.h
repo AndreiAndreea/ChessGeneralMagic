@@ -36,6 +36,10 @@ public:
 
 	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(const Position& pos);
+	void SetBitBoardsToEmpty();
+
+	void AddCapturedPiece(IPieceInfoPtr piece);
+	void RemoveLastCapturedPiece(EPieceColor color);
 
 	//cant move piece if king is left in check
 	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;
@@ -47,7 +51,6 @@ public:
 	
 	bool IsUpgradeablePawn(Position pos) const;
 
-	void SetBitBoardsToEmpty();
 
 	ConfigCastlingPossible GetCastlingVect() const;
 

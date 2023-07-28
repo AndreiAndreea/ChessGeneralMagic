@@ -1,17 +1,21 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "GridButton.h"
 #include <QtWidgets/qgridlayout.h>
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include "GridButton.h"
+#include "CapturedPiecesCellDisplay.h"
 
 #include "IGame.h"
 #include "IGameListener.h"
 #include "EGameResult.h"
 
 #include <memory>
+
+using ConfigGrid = std::array<std::array<GridButton*, 8>, 8>;
+using ConfigCapturedPieces = std::array<std::array<std::array<CapturedPiecesCellDisplay*, 2>, 8>, 2>;
 
 class ChessUIQt : public QMainWindow, public IGameListener
 {
@@ -26,6 +30,7 @@ public:
     void InitializeTimers(QGridLayout* mainGridLayout);
     void InitializeHistory(QGridLayout* mainGridLayout);
     void InitializeBoard(QGridLayout* mainGridLayout);
+    void InitializeCapturedPiecesDisplay(QGridLayout* mainGridLayout);
 
     //Modify if necessary with your history representation
     void UpdateHistory();
@@ -44,6 +49,7 @@ public:
     void OnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves) override;
     void OnPawnUpgrade() override;
     void OnGameOver(EGameResult result) override;
+    void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) override;
 
 public slots:
     void OnButtonClicked(const Position& position);
@@ -60,61 +66,11 @@ signals:
     void Exit();
 
 private:
-    std::array<std::array<GridButton*, 8>, 8> m_grid;
+    ConfigGrid m_grid;
+    ConfigCapturedPieces m_capturedPieces;
     std::optional<Position> m_selectedCell;
     QLabel* m_MessageLabel;
     QListWidget* m_MovesList;
     QLabel* m_BlackTimer, *m_WhiteTimer;
     IGamePtr game;
 };
-
-//TODO REMOVE THIS AFTER IMPLEMENTATION
-//class Helper {
-//public:
-//    static std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> getDefaultBoard() {
-//        std::array<std::array<std::pair<PieceType, PieceColor>, 8>, 8> board;
-//        for (int rank = 0; rank < 8; ++rank) {
-//            for (int file = 0; file < 8; ++file) {
-//                if (rank == 0 || rank == 7) {
-//                    PieceColor color = (rank == 0) ? PieceColor::black : PieceColor::white;
-//                    PieceType type;
-//                    switch (file) {
-//                    case 0:
-//                    case 7:
-//                        type = PieceType::rook;
-//                        break;
-//                    case 1:
-//                    case 6:
-//                        type = PieceType::knight;
-//                        break;
-//                    case 2:
-//                    case 5:
-//                        type = PieceType::bishop;
-//                        break;
-//                    case 3:
-//                        type = PieceType::queen;
-//                        break;
-//                    case 4:
-//                        type = PieceType::king;
-//                        break;
-//                    default:
-//                        type = PieceType::none;
-//                        break;
-//                    }
-//                    board[rank][file] = std::make_pair(type, color);
-//                }
-//                else if (rank == 1 || rank == 6) {
-//                     Set up the pawns row with black and white pawns respectively
-//                    PieceColor color = (rank == 1) ? PieceColor::black : PieceColor::white;
-//                    board[rank][file] = std::make_pair(PieceType::pawn, color);
-//                }
-//                else {
-//                     Empty squares for the rest of the board
-//                    board[rank][file] = std::make_pair(PieceType::none, PieceColor::none);
-//                }
-//            }
-//        }
-//
-//        return board;
-//    }
-//};

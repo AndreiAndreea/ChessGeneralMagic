@@ -33,7 +33,7 @@ public:
 	EPlayer GetWinner() const override;
 	EPieceColor GetCurrentPlayer() const override;
 	PositionList GetPossibleMoves(Position pos) override;
-	const IPieceInfoPtrList& GetCapturedPieces(EPieceColor color) const;
+	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 
 	bool IsPlaying() const override;
@@ -54,6 +54,7 @@ public:
 	void RemoveListener(IGameListener* listener) override;
 
 	void NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves);
+	void NotifyCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces);
 	void NotifyPawnUpgrade();
 	void NotifyGameOver(EGameResult result);
 

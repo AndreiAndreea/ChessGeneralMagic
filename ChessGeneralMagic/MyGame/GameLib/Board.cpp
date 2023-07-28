@@ -119,6 +119,7 @@ PositionList Board::GetPossibleMoves(Position pos) const
 
 IPieceInfoPtrList Board::GetCapturedPieces(EPieceColor color) const
 {
+	auto ceva = m_capturedPieces[(int)color];
 	return m_capturedPieces[(int)color];
 }
 
@@ -200,9 +201,9 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 			}
 		}
 
-		auto pieceCaptured = m_pieceMatrix[endPos.first][endPos.second];
-		if (pieceCaptured)
-			m_capturedPieces[(int)pieceCaptured->GetColor()].push_back(GetPieceInfo(endPos));
+		//auto pieceCaptured = m_pieceMatrix[endPos.first][endPos.second];
+		//if (pieceCaptured)
+		//	m_capturedPieces[(int)pieceCaptured->GetColor()].push_back(GetPieceInfo(endPos));
 
 		SetPiece(endPos, color, type);
 		SetPieceToNullptr(startPos);
@@ -609,6 +610,16 @@ bool Board::IsUpgradeablePawn(Position pos) const
 void Board::SetBitBoardsToEmpty()
 {
 	m_bitBoards.clear();
+}
+
+void Board::AddCapturedPiece(IPieceInfoPtr piece)
+{
+	m_capturedPieces[(int)piece->GetColor()].push_back(piece);
+}
+
+void Board::RemoveLastCapturedPiece(EPieceColor color)
+{
+	m_capturedPieces[(int)color].pop_back();
 }
 
 ConfigCastlingPossible Board::GetCastlingVect() const

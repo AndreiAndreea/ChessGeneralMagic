@@ -105,6 +105,7 @@
     <QtRcc Include="GameUI.qrc" />
     <QtUic Include="GameUI.ui" />
     <QtMoc Include="GameUI.h" />
+    <ClCompile Include="CapturedPiecesCellDisplay.cpp" />
     <ClCompile Include="ChessUIQt.cpp" />
     <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="GridButton.cpp" />
@@ -114,6 +115,7 @@
     <QtMoc Include="ChessUIQt.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="CapturedPiecesCellDisplay.h" />
     <ClInclude Include="Enums.h" />
     <QtMoc Include="GridButton.h" />
   </ItemGroup>

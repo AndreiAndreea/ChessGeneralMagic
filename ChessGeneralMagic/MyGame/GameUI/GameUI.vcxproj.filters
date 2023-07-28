@@ -49,12 +49,18 @@
     <ClCompile Include="ChessUIQt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CapturedPiecesCellDisplay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ChessUIQt.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="GridButton.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="CapturedPiecesCellDisplay.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

@@ -42,6 +42,7 @@ public:
 
 	virtual EPlayer GetWinner() const = 0;
 	virtual EPieceColor GetCurrentPlayer() const = 0;
+	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
 
 	virtual bool IsPlaying() const = 0;
