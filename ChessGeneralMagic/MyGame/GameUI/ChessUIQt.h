@@ -51,6 +51,10 @@ public:
     void OnGameOver(EGameResult result) override;
     void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) override;
 
+private:
+    void ResetCapturedPiecesDisplay();
+    void UpdateCapturedPiecesDispay();
+
 public slots:
     void OnButtonClicked(const Position& position);
 

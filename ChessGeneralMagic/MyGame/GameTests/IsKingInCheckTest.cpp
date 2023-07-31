@@ -116,14 +116,19 @@ TEST(BoardTest, QueenRookAttack)
 
 TEST(BoardTest, QueenRookAttack1)
 {
-	Board board(0);
+	ConfigMatrix m = {
+				/*0    1    2    3    4    5    6    7*/
+		/*0*/	{'-', '-', '-', 'Q', 'K', 'B', '-', '-'},
+		/*1*/	{'-', '-', '-', 'P', 'P', '-', '-', '-'},
+		/*2*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*3*/	{'-', '-', '-', '-', '-', '-', '-', 'q'},
+		/*4*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*5*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*6*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*7*/	{'-', '-', '-', 'k', '-', '-', '-', '-'}
+	};
 
-	board.SetPiece(Position(0, 4), EPieceColor::Black, EPieceType::King);
-	board.SetPiece(Position(0, 3), EPieceColor::Black, EPieceType::Queen);
-	board.SetPiece(Position(0, 5), EPieceColor::Black, EPieceType::Bishop);
-	board.SetPiece(Position(1, 3), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(3, 7), EPieceColor::White, EPieceType::Queen);
+	Board board(m);
 
 	EXPECT_TRUE(board.IsCheckmate(EPieceColor::Black));
 }

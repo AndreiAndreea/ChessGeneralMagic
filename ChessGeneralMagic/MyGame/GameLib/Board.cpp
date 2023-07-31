@@ -23,13 +23,14 @@ static EPieceType GetType(char c)
 	return TYPES[p - str];
 }
 
+
 Board::Board(ConfigMatrix board)
 {
-	m_pieceMatrix.resize(8);
-	for (int i = 0; i < 8; i++)
-	{
-		m_pieceMatrix[i].resize(8);
-	}
+	//m_pieceMatrix.resize(8);
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	m_pieceMatrix[i].resize(8);
+	//}
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -55,6 +56,15 @@ Board::Board(ConfigMatrix board)
 	m_bitBoards.push_back(GenerateBitset());
 }
 
+static char PieceInfoToChar(EPieceType type, EPieceColor color)
+{
+	std::string letters = "prnbqk";
+	if (color == EPieceColor::Black)
+		return tolower(letters[(int)type]);
+	if (color == EPieceColor::White)
+		return toupper(letters[(int)type]);
+}
+
 Board::Board(int)
 {
 	m_pieceMatrix.resize(8);
@@ -72,6 +82,62 @@ Board::Board(int)
 Board::Board(const Board& ob)
 {
 	m_pieceMatrix = ob.GetBoard();
+}
+
+void Board::InitializeBoardFEN(ConfigFEN& strFEN)
+{
+	// pieces on board
+	for (int i = 0; i < 8 && strFEN[0] != ' '; i++)
+	{
+		for (int j = 0; j < 8 && strFEN[0] != ' '; j++)
+		{
+
+			if (strFEN[0] > '0' && strFEN[0] < '9')
+			{
+				int contor = strFEN[0] - '0';
+				while (contor)
+				{
+					m_pieceMatrix[i][j] = nullptr;
+					contor--;
+					j++;
+				}
+				j--;
+			}
+			else if(strFEN[0] != '/')
+			{
+				EPieceColor color = strFEN[0] < 91 ? EPieceColor::White : EPieceColor::Black;
+				EPieceType type = GetType(strFEN[0]);
+
+				m_pieceMatrix[i][j] = Piece::Produce(type, color);
+			}
+			strFEN.erase(strFEN.begin());
+		}
+		strFEN.erase(strFEN.begin());
+	}
+
+
+	// castling possibility
+	m_castlingPossible = { {false, false}, {false, false} };
+
+	int i;
+	for (i = strFEN.size() - 1; i < strFEN.size() - 5; i--)
+	{
+		if (strFEN[i] = 'q')
+			m_castlingPossible[1][0] = true;
+		if (strFEN[i] = 'k')
+			m_castlingPossible[1][1] = true;
+		if (strFEN[i] = 'Q')
+			m_castlingPossible[0][0] = true;
+		if (strFEN[i] = 'K')
+			m_castlingPossible[0][1] = true;
+		strFEN.erase(strFEN.begin() + i);
+	}
+	strFEN.erase(strFEN.begin() + i);
+
+	// captured pieces
+
+	m_capturedPieces = { {}, {} };
+
 }
 
 void Board::InitializeBoard()
@@ -119,7 +185,6 @@ PositionList Board::GetPossibleMoves(Position pos) const
 
 IPieceInfoPtrList Board::GetCapturedPieces(EPieceColor color) const
 {
-	auto ceva = m_capturedPieces[(int)color];
 	return m_capturedPieces[(int)color];
 }
 
@@ -128,6 +193,52 @@ IPieceInfoPtr Board::GetPieceInfo(Position pos) const
 	if (auto piece = m_pieceMatrix[pos.first][pos.second])
 		return std::make_shared<PieceInfo>(piece->GetType(), piece->GetColor());
 	return {};
+}
+
+ConfigFEN Board::GenerateBoardFEN()
+{
+	ConfigFEN boardStateFEN;
+
+	int emptyCell = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			if (m_pieceMatrix[i][j])
+			{
+				if (emptyCell)
+				{
+					boardStateFEN += '0' + emptyCell;
+					emptyCell = 0;
+				}
+				boardStateFEN += PieceInfoToChar(m_pieceMatrix[i][j]->GetType(), m_pieceMatrix[i][j]->GetColor());
+
+			}
+			else
+				emptyCell++;
+		}
+		if (emptyCell)
+			boardStateFEN += '0' + emptyCell;
+		if (i != 7)
+			boardStateFEN += '/';
+		emptyCell = 0;
+	}
+
+	boardStateFEN += ' ';
+	return boardStateFEN;
+}
+
+ConfigFEN Board::GenerateCastlingPossibleFEN()
+{
+	ConfigFEN castlingPossibleFEN;
+
+	castlingPossibleFEN += m_castlingPossible[0][0] ? 'Q' : '-';
+	castlingPossibleFEN += m_castlingPossible[0][1] ? 'K' : '-';
+	castlingPossibleFEN += m_castlingPossible[1][0] ? 'q' : '-';
+	castlingPossibleFEN += m_castlingPossible[1][1] ? 'k' : '-';
+
+	return castlingPossibleFEN;
+
 }
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
@@ -201,10 +312,6 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 			}
 		}
 
-		//auto pieceCaptured = m_pieceMatrix[endPos.first][endPos.second];
-		//if (pieceCaptured)
-		//	m_capturedPieces[(int)pieceCaptured->GetColor()].push_back(GetPieceInfo(endPos));
-
 		SetPiece(endPos, color, type);
 		SetPieceToNullptr(startPos);
 
@@ -215,15 +322,15 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 				MoveRookForCastling(startPos.second - endPos.second, color);
 
 			//king move for castling
-			CastlingPossible[(int)color] = { false, false };
+			m_castlingPossible[(int)color] = { false, false };
 		}
 
 		if (type == EPieceType::Rook)
 		{
 			if (startPos.second == 0)
-				CastlingPossible[(int)color][0] = false;
+				m_castlingPossible[(int)color][0] = false;
 			if (startPos.second == 7)
-				CastlingPossible[(int)color][1] = false;
+				m_castlingPossible[(int)color][1] = false;
 		}
 
 		return true;
@@ -603,7 +710,7 @@ bool Board::IsThreefoldRepetitionDraw()
 bool Board::IsUpgradeablePawn(Position pos) const
 {
 	auto piece = m_pieceMatrix[pos.first][pos.second];
-	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.first == 0) 
+	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.first == 0)
 		|| (piece->GetColor() == EPieceColor::Black && pos.first == 7));
 }
 
@@ -624,5 +731,5 @@ void Board::RemoveLastCapturedPiece(EPieceColor color)
 
 ConfigCastlingPossible Board::GetCastlingVect() const
 {
-	return CastlingPossible;
+	return m_castlingPossible;
 }

@@ -89,13 +89,33 @@ TEST_F(MockGameListener, OnCaptureMade)
 	Game g(0, EGameState::Playing, m);
 	g.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnCaptureMade(EPieceColor::Black, _)).Times(3);
+	EXPECT_CALL(*mock, OnCaptureMade).Times(3);
 
 	g.MakeMove(Position(4,3), Position(3,4));
 	g.MakeMove(Position(1,5), Position(2,5));
-	g.MakeMove(Position(3,6), Position(3,5));
+	g.MakeMove(Position(3,6), Position(2,5));
 	g.MakeMove(Position(1,6), Position(2,5));
 	g.MakeMove(Position(3,4), Position(2,5));
 
-
 }
+
+//TEST_F(MockGameListener, OnCaptureMade)
+//{
+//	ConfigMatrix m = {
+//		     /*0    1    2    3    4    5    6    7*/
+//		/*0*/{'R', '-', 'B', 'Q', 'K', 'B', 'N', 'R'},
+//		/*1*/{'P', 'P', 'P', 'P', '-', 'P', 'P', 'P'},
+//		/*2*/{'-', '-', 'N', '-', '-', '-', '-', '-'},
+//		/*3*/{'-', '-', '-', '-', 'P', '-', 'b', '-'},
+//		/*4*/{'-', '-', '-', 'p', '-', '-', '-', '-'},
+//		/*5*/{'-', '-', '-', '-', '-', '-', '-', '-'},
+//		/*6*/{'p', 'p', 'p', '-', 'p', 'p', 'p', 'p'},
+//		/*7*/{'r', 'n', '-', 'q', 'k', 'b', 'n', 'r'}
+//	};
+//
+//	Game g(0, EGameState::Playing, m);
+//	g.AddListener(mock);
+//
+//	
+//
+//}

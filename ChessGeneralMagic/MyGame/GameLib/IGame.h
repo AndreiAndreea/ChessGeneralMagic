@@ -34,6 +34,7 @@ using IGamePtr = std::shared_ptr<class IGame>;
 
 using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
 using IGameListenerPtr = std::shared_ptr<IGameListener>;
+using ConfigFEN = std::string;
 
 class IGame
 {
@@ -44,6 +45,9 @@ public:
 	virtual EPieceColor GetCurrentPlayer() const = 0;
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
+	virtual ConfigFEN GenerateFEN() = 0;
+
+	virtual void InitializeBoardFEN(ConfigFEN strFEN) = 0;
 
 	virtual bool IsPlaying() const = 0;
 	virtual bool IsWaitingForPawnUpgrade() const = 0;

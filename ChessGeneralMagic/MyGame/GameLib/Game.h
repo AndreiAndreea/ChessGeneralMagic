@@ -26,6 +26,9 @@ class Game : public IGame
 public:
 	Game();
 	Game(int turn, EGameState state, ConfigMatrix m);
+	Game(ConfigFEN strFEN);
+
+	void InitializeBoardFEN(ConfigFEN strFEN) override;
 
 	Board GetBoard() const;
 	
@@ -35,6 +38,7 @@ public:
 	PositionList GetPossibleMoves(Position pos) override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
+	ConfigFEN GenerateFEN() override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;

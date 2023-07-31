@@ -111,13 +111,21 @@ TEST(PossibleMovesTest, ValidMovesPosibilitiesKing2)
 
 TEST(PossibleMovesTest, ValidMovesPosibilitiesKing4)
 {
-	Board board(0);
-	board.SetPiece(Position(0, 4), EPieceColor::Black, EPieceType::King);
-	board.SetPiece(Position(0, 3), EPieceColor::Black, EPieceType::Queen);
-	board.SetPiece(Position(0, 5), EPieceColor::Black, EPieceType::Bishop);
-	board.SetPiece(Position(1, 3), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Pawn);
-	board.SetPiece(Position(3, 7), EPieceColor::White, EPieceType::Queen);	
+
+	ConfigMatrix m = {
+				/*0    1    2    3    4    5    6    7*/
+		/*0*/	{'-', '-', '-', 'Q', 'K', 'B', '-', '-'},
+		/*1*/	{'-', '-', '-', 'P', 'P', '-', '-', '-'},
+		/*2*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*3*/	{'-', '-', '-', '-', '-', '-', '-', 'q'},
+		/*4*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*5*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*6*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*7*/	{'-', '-', '-', 'k', '-', '-', '-', '-'}
+	};
+
+	Board board(m);
+
 	std::vector<Position> vector = {};
 	auto vect1 = board.GetBoard()[0][4]->GetPossibleMoves(Position(0, 4), false, board);
 	EXPECT_EQ(board.GetBoard()[0][4]->GetPossibleMoves(Position(0, 4), false, board), vector);

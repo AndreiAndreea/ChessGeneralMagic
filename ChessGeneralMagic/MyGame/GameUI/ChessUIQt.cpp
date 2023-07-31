@@ -1,8 +1,11 @@
 #include "ChessUIQt.h"
+#include <QPlainTextEdit>
+#include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QClipboard>
 #include <QApplication>
+#include <fstream>
 
 #include "ChessExceptions.h"
 
@@ -252,20 +255,69 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	//TODO ...
+	QString fileName = QFileDialog::getSaveFileName(this, "Save File", "", "Text Files (*.txt)");
+	if (!fileName.isEmpty()) {
+		std::string content =game->GenerateFEN();
 
+		std::ofstream outputFile(fileName.toStdString());
+		if (outputFile.is_open()) {
+			outputFile << content;
+			outputFile.close();
+		}
+	}
 }
 
 void ChessUIQt::OnLoadButtonClicked()
 {
-	//TODO ...
+	QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "Text Files (*.txt)");
+	if (!fileName.isEmpty()) {
+		std::ifstream inputFile(fileName.toStdString());
+		if (inputFile.is_open()) {
+			std::string strFEN((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
+			inputFile.close();
+
+			OnRestartButtonClicked();
+
+			game->InitializeBoardFEN(strFEN);
+
+			m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+
+			UpdateCapturedPiecesDispay();
+			UpdateBoard();
+
+			//QPlainTextEdit* textEdit = centralWidget()->findChild<QPlainTextEdit*>();
+			//textEdit->setPlainText(QString::fromStdString(strFEN));
+		}
+
+	}
+}
+
+void ChessUIQt::ResetCapturedPiecesDisplay()
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 2; j++)
+		{
+			m_capturedPieces[0][i][j]->Update(PieceType::none, PieceColor::none);
+			m_capturedPieces[1][i][j]->Update(PieceType::none, PieceColor::none);
+		}
+	}
+}
+
+void ChessUIQt::UpdateCapturedPiecesDispay()
+{
+	OnCaptureMade(EPieceColor::Black, game->GetCapturedPieces(EPieceColor::Black));
+	OnCaptureMade(EPieceColor::White, game->GetCapturedPieces(EPieceColor::White));
 }
 
 void ChessUIQt::OnRestartButtonClicked()
 {
 	game->ResetGame();
 
+	ResetCapturedPiecesDisplay();
+
 	m_MessageLabel->setText("Waiting for white player");
+
 	UpdateBoard();
 }
 

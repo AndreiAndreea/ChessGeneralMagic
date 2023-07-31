@@ -24,6 +24,12 @@ Game::Game(int turn, EGameState state, ConfigMatrix m)
 {
 }
 
+Game::Game(ConfigFEN strFEN)
+{
+
+}
+
+
 IGamePtr IGame::Produce()
 {
 	return std::make_shared<Game>();
@@ -184,6 +190,31 @@ void Game::NotifyGameOver(EGameResult result)
 	}
 }
 
+void Game::InitializeBoardFEN(ConfigFEN strFEN)
+{
+	auto ceva = strFEN;
+	m_board.InitializeBoardFEN(ceva);
+
+	if (strFEN == "w")
+		m_turn = 0;
+	else
+		m_turn = 1;
+}
+
+ConfigFEN Game::GenerateFEN()
+{
+	auto gameFENState = m_board.GenerateBoardFEN();
+
+	gameFENState += m_turn ? 'b' : 'w';
+	gameFENState += ' ';
+
+	auto castlingPossibleFEN = m_board.GenerateCastlingPossibleFEN();
+
+	gameFENState += castlingPossibleFEN;
+
+	return gameFENState;
+}
+
 void Game::AddListener(IGameListenerPtr listener)
 {
 	m_observers.push_back(listener);
@@ -222,7 +253,6 @@ PositionList Game::GetPossibleMoves(Position pos)
 
 IPieceInfoPtrList Game::GetCapturedPieces(EPieceColor color) const
 {
-	auto ceva = m_board.GetCapturedPieces(color);
 	return m_board.GetCapturedPieces(color);
 }
 
@@ -310,20 +340,3 @@ IPieceInfoPtr Game::GetPieceInfo(Position pos) const
 {
 	return m_board.GetPieceInfo(pos);
 }
-
-//PieceInfo::PieceInfo(EPieceType type, EPieceColor color)
-//	: m_type(type)
-//	, m_color(color)
-//{
-//
-//}
-//
-//EPieceColor PieceInfo::GetColor() const
-//{
-//	return m_color;
-//}
-//
-//EPieceType PieceInfo::GetType() const
-//{
-//	return m_type;
-//}
