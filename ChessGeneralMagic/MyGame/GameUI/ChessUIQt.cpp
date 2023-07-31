@@ -1,6 +1,7 @@
 #include "ChessUIQt.h"
 #include <QPlainTextEdit>
 #include <QFileDialog>
+#include <QPlainTextEdit>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QClipboard>
@@ -254,15 +255,23 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	QString fileName = QFileDialog::getSaveFileName(this, "Save File", "", "FEN Files(*.fen);; PGN Files(*.pgn)");
-	if (!fileName.isEmpty()) {
-		std::string content = game->GenerateFEN();
+	QString fileN = QFileDialog::getSaveFileName(this, "Save File", "", "FEN Files(*.fen);; PGN Files(*.pgn)");
+	if (!fileN.isEmpty()) {
+		std::string data;
 
-		std::ofstream outputFile(fileName.toStdString());
-		if (outputFile.is_open()) {
-			outputFile << content;
-			outputFile.close();
+		QString fileExtension = QFileInfo(fileN).suffix();
+		if (fileExtension == "fen")
+		{
+			data = game->GenerateFEN();
 		}
+		if (fileExtension == "pgn")
+		{
+			data = game->GeneratePGN();
+		}
+
+		QFile file(fileN);
+		QTextStream stream(&file);
+		file.close();
 	}
 }
 

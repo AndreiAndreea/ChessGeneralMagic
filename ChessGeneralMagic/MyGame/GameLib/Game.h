@@ -39,6 +39,7 @@ public:
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	ConfigFEN GenerateFEN() override;
+	ConfigPGN GeneratePGN() override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;

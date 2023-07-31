@@ -190,6 +190,11 @@ void Game::NotifyGameOver(EGameResult result)
 	}
 }
 
+ConfigPGN Game::GeneratePGN()
+{
+	return ;
+}
+
 void Game::InitializeBoardFEN(ConfigFEN strFEN)
 {
 	auto ceva = strFEN;
