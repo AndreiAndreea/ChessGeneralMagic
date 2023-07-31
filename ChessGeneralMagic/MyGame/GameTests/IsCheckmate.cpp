@@ -37,7 +37,7 @@ TEST(IsCheckmate, KingIsNotInCheck1)
 
 TEST(IsCheckmate, InvalidMove1) {
 
-	ConfigMatrix m = { {
+	ConfigMatrix m = { 
 	{'-', '-', '-', '-', '-', '-', '-', '-'},
 	{'-', '-', '-', '-', '-', '-', '-', '-'},
 	{'-', '-', '-', '-', '-', '-', '-', '-'},
@@ -46,7 +46,7 @@ TEST(IsCheckmate, InvalidMove1) {
 	{'-', '-', '-', '-', '-', '-', '-', '-'},
 	{'-', 'r', '-', '-', '-', '-', '-', '-'},
 	{'b', '-', '-', '-', 'k', '-', '-', 'r'}
-	} };
+	};
 
 	Board board(m);
 	EXPECT_FALSE(board.IsCheckmate(EPieceColor::White));

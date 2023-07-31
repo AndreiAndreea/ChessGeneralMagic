@@ -23,14 +23,13 @@ static EPieceType GetType(char c)
 	return TYPES[p - str];
 }
 
-
 Board::Board(ConfigMatrix board)
 {
-	//m_pieceMatrix.resize(8);
-	//for (int i = 0; i < 8; i++)
-	//{
-	//	m_pieceMatrix[i].resize(8);
-	//}
+	m_pieceMatrix.resize(8);
+	for (int i = 0; i < 8; i++)
+	{
+		m_pieceMatrix[i].resize(8);
+	}
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -345,10 +344,47 @@ bool Board::IsPieceColor(Position pos, EPieceColor color) const
 	return piece && piece->GetColor() == color;
 }
 
-
 static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType> types)
 {
 	return piece && piece->IsOpposite(color, { EPieceType::Bishop, EPieceType::Queen });
+}
+
+bool Board::CheckingRookThreat(const Position& kingPos, const Position& startPos, const Position& endPos, int i , int j, std::bitset<2> direction)
+{
+	auto pieceColor = m_pieceMatrix[kingPos.first][kingPos.second]->GetColor();
+	auto directionStr = direction.to_string();
+	int rowIncrement, columnIncrement, limit;
+	std::vector<EPieceType> TYPES = { EPieceType::Queen, EPieceType::Rook };
+
+	if (directionStr[0])
+	{
+		rowIncrement = 0;
+		columnIncrement = directionStr[1] ? -1 : +1 ;
+	}
+	else
+	{
+		columnIncrement = 0;
+		rowIncrement = directionStr[1] ? -1 : +1;
+	}
+
+	limit = directionStr[1] ? 0 : 7;
+
+	while ((i != 8 || i!= -1) && (j != 8 || j!=-1))
+	{
+		if (i == endPos.first && j == endPos.second)
+			break;
+		auto piece = m_pieceMatrix[i][j];
+		if (!(i == startPos.first && j == startPos.second))
+			if (piece)
+			{
+				if (IsOpposite(piece, pieceColor, TYPES))
+					return true;
+				break;
+			}
+		i += rowIncrement;
+		j += columnIncrement;
+	}
+	
 }
 
 bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const
@@ -389,6 +425,10 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 			}
 		i++;
 	}
+
+	//std::bitset<2> direction(0);
+	//CheckingRookThreat(kingPos, startPos, endPos, kingPos.first + 1, kingPos.second, direction);
+	//std::bitset<2> direction(1);
 
 	i = kingPos.first - 1;
 	while (i >= 0)
@@ -570,8 +610,6 @@ bool Board::IsKingInCheck(const Position& currentPos, EPieceColor color) const
 	return false;
 }
 
-// m_board[i][j]->GetType() != EPieceType::King && (m_board[i][j]->GetColor() != color)
-
 bool Board::IsCheckmate(EPieceColor color) const
 {
 	Position kingPos;
@@ -637,8 +675,8 @@ static bool VerifyInsufficientMaterialVect(std::vector<bool> vect)
 	{
 		if (vect[i] == false)
 			return false;
-		return true;
 	}
+	return true;
 }
 
 bool Board::IsInsufficientMaterial() const

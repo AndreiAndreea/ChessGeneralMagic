@@ -287,12 +287,11 @@ void Game::PlayerDrawComand(EDrawComand respons)
 
 void Game::UpgradePawnTo(EPieceType type)
 {
-	auto ceva = m_state;
 	if (!IsState(EGameState::WaitingForPawnUpgrade))
 		throw NotStateWaitingForPawnUpdate();
 
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
-	int i = m_turn ? 0 : 7;
+	int i = m_turn ? 7 : 0;
 
 	if (type == EPieceType::None || type == EPieceType::Pawn || type == EPieceType::King )
 		throw InvalidUpgradeType();

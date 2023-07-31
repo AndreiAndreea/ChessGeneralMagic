@@ -181,3 +181,21 @@ TEST(BoardTest, InsufficientMaterial10)
 	Board board(m);
 	EXPECT_TRUE(board.IsInsufficientMaterial());
 }
+
+TEST(BoardTest, InsufficientMaterial11)
+{
+	ConfigMatrix m = { {
+	{'-', '-', '-', '-', '-', 'K', '-', 'k'},
+	{'-', '-', '-', '-', '-', '-', '-', 'b'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', 'B', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', '-', '-', '-', '-'}
+	}
+	};
+
+	Board board(m);
+	EXPECT_FALSE(board.IsInsufficientMaterial());
+}

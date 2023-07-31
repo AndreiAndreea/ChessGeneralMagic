@@ -224,7 +224,6 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		{
 			try
 			{
-
 				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position);
 			}
 			catch (ChessExceptions e)
@@ -255,9 +254,9 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	QString fileName = QFileDialog::getSaveFileName(this, "Save File", "", "Text Files (*.txt)");
+	QString fileName = QFileDialog::getSaveFileName(this, "Save File", "", "FEN Files(*.fen);; PGN Files(*.pgn)");
 	if (!fileName.isEmpty()) {
-		std::string content =game->GenerateFEN();
+		std::string content = game->GenerateFEN();
 
 		std::ofstream outputFile(fileName.toStdString());
 		if (outputFile.is_open()) {
@@ -269,24 +268,30 @@ void ChessUIQt::OnSaveButtonClicked()
 
 void ChessUIQt::OnLoadButtonClicked()
 {
-	QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "Text Files (*.txt)");
+	QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "FEN Files (*.fen);; PGN Files (*.pgn)");
 	if (!fileName.isEmpty()) {
 		std::ifstream inputFile(fileName.toStdString());
 		if (inputFile.is_open()) {
 			std::string strFEN((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
 			inputFile.close();
 
-			OnRestartButtonClicked();
+			QString fileExtension = QFileInfo(fileName).suffix();
 
-			game->InitializeBoardFEN(strFEN);
+			if (fileExtension == "fen")
+			{
+				OnRestartButtonClicked();
 
-			m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+				game->InitializeBoardFEN(strFEN);
 
-			UpdateCapturedPiecesDispay();
-			UpdateBoard();
+				m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+				UpdateCapturedPiecesDispay();
+				UpdateBoard();
+			}
 
-			//QPlainTextEdit* textEdit = centralWidget()->findChild<QPlainTextEdit*>();
-			//textEdit->setPlainText(QString::fromStdString(strFEN));
+			if (fileExtension == "pgn")
+			{
+				OnRestartButtonClicked();
+			}
 		}
 
 	}
@@ -462,13 +467,7 @@ void ChessUIQt::ShowPromoteOptions()
 
 	if (ok && !item.isEmpty())
 	{
-		//TODO
 		game->UpgradePawnTo(ConvetItemToEPieceType(item));
-
-		//TODO DELETE ME...
-		QMessageBox notification;
-		notification.setText("You selected " + item);
-		notification.exec();
 	}
 }
 
@@ -498,6 +497,7 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 
 void ChessUIQt::OnPawnUpgrade()
 {
+	UpdateBoard();
 	ShowPromoteOptions();
 }
 
