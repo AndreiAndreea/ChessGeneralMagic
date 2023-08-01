@@ -266,12 +266,18 @@ void ChessUIQt::OnSaveButtonClicked()
 		}
 		if (fileExtension == "pgn")
 		{
-			data = game->GeneratePGN();
+			data = game->GetPGN();
 		}
 
-		QFile file(fileN);
-		QTextStream stream(&file);
-		file.close();
+		std::ofstream outputFile(fileN.toStdString());
+		if (outputFile.is_open()) {
+			outputFile << data;
+			outputFile.close();
+
+			//QFile file(fileN);
+			//QTextStream stream(&file);
+			//file.close();
+		}
 	}
 }
 
@@ -279,30 +285,30 @@ void ChessUIQt::OnLoadButtonClicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "FEN Files (*.fen);; PGN Files (*.pgn)");
 	if (!fileName.isEmpty()) {
-		std::ifstream inputFile(fileName.toStdString());
-		if (inputFile.is_open()) {
-			std::string strFEN((std::istreambuf_iterator<char>(inputFile)), std::istreambuf_iterator<char>());
-			inputFile.close();
-
-			QString fileExtension = QFileInfo(fileName).suffix();
-
-			if (fileExtension == "fen")
-			{
-				OnRestartButtonClicked();
-
-				game->InitializeBoardFEN(strFEN);
-
-				m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
-				UpdateCapturedPiecesDispay();
-				UpdateBoard();
-			}
-
-			if (fileExtension == "pgn")
-			{
-				OnRestartButtonClicked();
-			}
+		QString fileData;
+		QFile file(fileName);
+		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+			QTextStream stream(&file);
+			fileData = stream.readAll();
+			file.close();
 		}
 
+		QFileInfo fileInfo(fileName);
+		QString fileExtension = fileInfo.suffix().toLower();
+
+		if (fileExtension == "fen") {
+			OnRestartButtonClicked();
+			game->InitializeGameFEN(fileData.toStdString());
+			m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+			UpdateCapturedPiecesDispay();
+			UpdateBoard();
+		}
+		else if (fileExtension == "pgn") {
+			// pgn load
+		}
+		else {
+			QMessageBox::critical(this, "Error", "Unsupported file extension: " + fileExtension, QMessageBox::Ok);
+		}
 	}
 }
 
@@ -497,8 +503,6 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 	m_grid[startPos.first][startPos.second]->setPiece({ PieceType::none, PieceColor::none });
 	m_grid[startPos.first][startPos.second]->setSelected(false);
 	m_grid[startPos.first][startPos.second]->setHighlighted(false);
-
-	//capture made update
 
 	auto bol = game->GetCurrentPlayer() == EPieceColor::Black;
 	m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");

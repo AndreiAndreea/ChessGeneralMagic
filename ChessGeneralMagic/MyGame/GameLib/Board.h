@@ -33,10 +33,10 @@ public:
 	IPieceInfoPtr GetPieceInfo(Position pos) const;
 	ConfigFEN GenerateBoardFEN();
 	ConfigFEN GenerateCastlingPossibleFEN();
+	Position GetKingPos(EPieceColor color) const;
 
 	bool MakeMove(const Position& startPos, const Position& endPos);
 
-	bool IsPieceColor(Position pos, EPieceColor color) const;
 
 	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(const Position& pos);
@@ -44,6 +44,9 @@ public:
 
 	void AddCapturedPiece(IPieceInfoPtr piece);
 	void RemoveLastCapturedPiece(EPieceColor color);
+
+	bool IsPieceColor(Position pos, EPieceColor color) const;
+	bool IsPieceColorType(Position pos, EPieceColor color, EPieceType type) const;
 
 	//cant move piece if king is left in check
 	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;
@@ -55,6 +58,7 @@ public:
 	
 	bool IsUpgradeablePawn(Position pos) const;
 
+	Position CanTheOtherPieceMove(Position startPos, Position endPos);
 
 	ConfigCastlingPossible GetCastlingVect() const;
 

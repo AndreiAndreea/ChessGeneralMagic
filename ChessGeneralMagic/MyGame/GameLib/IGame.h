@@ -47,9 +47,9 @@ public:
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
 	virtual ConfigFEN GenerateFEN() = 0;
-	virtual ConfigPGN GeneratePGN() = 0;
+	virtual ConfigPGN GetPGN() = 0;
 
-	virtual void InitializeBoardFEN(ConfigFEN strFEN) = 0;
+	virtual void InitializeGameFEN(ConfigFEN strFEN) = 0;
 
 	virtual bool IsPlaying() const = 0;
 	virtual bool IsWaitingForPawnUpgrade() const = 0;

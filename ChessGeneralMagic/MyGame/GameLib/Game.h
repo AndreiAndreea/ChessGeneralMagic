@@ -26,9 +26,8 @@ class Game : public IGame
 public:
 	Game();
 	Game(int turn, EGameState state, ConfigMatrix m);
-	Game(ConfigFEN strFEN);
 
-	void InitializeBoardFEN(ConfigFEN strFEN) override;
+	void InitializeGameFEN(ConfigFEN strFEN) override;
 
 	Board GetBoard() const;
 	
@@ -38,8 +37,8 @@ public:
 	PositionList GetPossibleMoves(Position pos) override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
+	ConfigPGN GetPGN() override;
 	ConfigFEN GenerateFEN() override;
-	ConfigPGN GeneratePGN() override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;
@@ -64,6 +63,7 @@ public:
 	void NotifyGameOver(EGameResult result);
 
 private:
+	void UpdatePGN(Position startPos, Position endPos);
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;
 	void UpdateState(EGameState state);
@@ -71,6 +71,8 @@ private:
 private:
 	Board m_board;
 	int m_turn;
+	int m_moves;
+	ConfigPGN m_pgn;
 	EGameState m_state;
 	ObserversList m_observers;
 };

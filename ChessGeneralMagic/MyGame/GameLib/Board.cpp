@@ -81,6 +81,9 @@ Board::Board(int)
 Board::Board(const Board& ob)
 {
 	m_pieceMatrix = ob.GetBoard();
+	m_castlingPossible = ob.GetCastlingVect();
+	m_capturedPieces[0] = ob.GetCapturedPieces(EPieceColor::White);
+	m_capturedPieces[1] = ob.GetCapturedPieces(EPieceColor::Black);
 }
 
 void Board::InitializeBoardFEN(ConfigFEN& strFEN)
@@ -344,9 +347,56 @@ bool Board::IsPieceColor(Position pos, EPieceColor color) const
 	return piece && piece->GetColor() == color;
 }
 
+bool Board::IsPieceColorType(Position pos, EPieceColor color, EPieceType type) const
+{
+	auto piece = m_pieceMatrix[pos.first][pos.second];
+
+	bool ceva  = piece && piece->GetColor() == color && piece->GetType() == type;
+	return piece && piece->GetColor() == color && piece->GetType() == type;
+}
+
 static bool IsOpposite(PiecePtr piece, EPieceColor color, std::vector<EPieceType> types)
 {
 	return piece && piece->IsOpposite(color, { EPieceType::Bishop, EPieceType::Queen });
+}
+
+Position Board::GetKingPos(EPieceColor color) const
+{
+	Position kingPos;
+	int found = 0;
+	for (int i = 0; i < 8 && found == 0; i++)
+	{
+		for (int j = 0; j < 8 && found == 0; j++)
+		{
+			if (m_pieceMatrix[i][j] && m_pieceMatrix[i][j]->Is(EPieceType::King, color))
+			{
+				kingPos.first = i;
+				kingPos.second = j;
+				found = 1;
+			}
+		}
+	}
+
+	return kingPos;
+}
+
+Position Board::CanTheOtherPieceMove(Position startPos, Position endPos)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			auto initialPiece = m_pieceMatrix[startPos.first][startPos.second];
+			auto currentPiece = m_pieceMatrix[i][j];
+			if (Position(i, j) != startPos && IsPieceColorType({ i,j }, initialPiece->GetColor(), initialPiece->GetType())
+				 && currentPiece->CanMove({i, j}, endPos, false, *this))
+			{
+				return { i,j };
+			}
+		}
+	}
+
+	return { -1,-1 };
 }
 
 bool Board::CheckingRookThreat(const Position& kingPos, const Position& startPos, const Position& endPos, int i , int j, std::bitset<2> direction)
@@ -384,30 +434,11 @@ bool Board::CheckingRookThreat(const Position& kingPos, const Position& startPos
 		i += rowIncrement;
 		j += columnIncrement;
 	}
-	
 }
 
 bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const
 {
-	Position kingPos;
-
-	//search king position on board
-	bool found = 0;
-	for (int i = 0; i < 8 && found == 0; i++)
-	{
-		for (int j = 0; j < 8 && found == 0; j++)
-		{
-			if (m_pieceMatrix[i][j] && m_pieceMatrix[i][j]->Is(EPieceType::King, pieceColor))
-			{
-				kingPos.first = i;
-				kingPos.second = j;
-				found = 1;
-			}
-		}
-	}
-
-	if (kingPos.first == 0 && kingPos.second == 0)
-		found = 1;
+	Position kingPos = GetKingPos(pieceColor);
 
 	//checking Rook
 	int i = kingPos.first + 1;

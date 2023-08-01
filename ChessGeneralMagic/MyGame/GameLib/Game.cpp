@@ -14,27 +14,20 @@
 Game::Game()
 	: m_turn(0)
 	, m_state(EGameState::Playing)
-{
-}
+	, m_moves(1)
+{}
 
 Game::Game(int turn, EGameState state, ConfigMatrix m)
-	:m_state(state)
+	: m_state(state)
 	, m_turn(turn)
 	, m_board(m)
-{
-}
-
-Game::Game(ConfigFEN strFEN)
-{
-
-}
-
+	, m_moves(1)
+{}
 
 IGamePtr IGame::Produce()
 {
 	return std::make_shared<Game>();
 }
-
 
 Board Game::GetBoard() const
 {
@@ -61,14 +54,84 @@ static bool IsPositionValid(Position p)
 	return p.first >= 0 && p.first < 8 && p.second >= 0 && p.second < 8;
 }
 
-static bool IsComandDraw(const std::string& comand)
+static char PieceTypeToChar(EPieceType type)
 {
-	return comand == "DRAW";
+	std::string TYPES = "PRNBQK";
+	return TYPES[(int)type];
 }
 
-static bool RefuseDraw(const std::string& comand)
+void Game::UpdatePGN(Position startPos, Position endPos)
 {
-	return comand == "NO DRAW";
+	if (m_turn)
+		m_pgn += ' ';
+	else
+	{
+		m_pgn += ' ';
+		m_pgn += '0' + m_moves;
+		m_pgn += ". ";
+		m_moves++;
+	}		
+
+	//copy board
+	Board board(m_board);
+	//valid pos of the second rook or knight if it can move the same
+	Position otherPiecePos = board.CanTheOtherPieceMove(startPos, endPos);
+
+	// simulate the move to see if it can be done
+	if (board.MakeMove(startPos, endPos))
+	{
+		auto piece = GetPieceInfo(startPos);
+		auto endPosPiece = GetPieceInfo(endPos);
+
+		if (piece->GetType() == EPieceType::King)
+		{
+			// symbol for castling
+			if (startPos.second - endPos.second == 2)
+			{
+				m_pgn += "O-O-O";
+				return;
+			}
+			if (startPos.second - endPos.second == -2)
+			{
+				m_pgn += "O-O";
+				return;
+			}
+		}
+		if (piece->GetType() != EPieceType::Pawn)
+		{
+			m_pgn += PieceTypeToChar(piece->GetType());
+			if (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Knight)
+			{
+				//verify if the second rook or knight can make the same move, add specifications
+				if (otherPiecePos.first == startPos.first)
+					m_pgn += 'a' + startPos.second;
+				else if (otherPiecePos.second == startPos.second)
+					m_pgn += '0' + (8 - startPos.first);
+			}
+
+			if (endPosPiece)
+				m_pgn += 'x';
+		}
+		else
+		{
+			// pawn move representation
+			if (endPosPiece)
+			{
+				m_pgn += 'a' + startPos.second;
+				m_pgn += 'x';
+			}
+		}
+		// end position representation
+		m_pgn += 'a' + endPos.second;
+		m_pgn +='0' + (8 - endPos.first);
+	}
+
+	auto colorUpdated = m_turn ? EPieceColor::White : EPieceColor::Black;
+	Position kingPos = board.GetKingPos(colorUpdated);
+	if (board.IsCheckmate(colorUpdated))
+		m_pgn += '#';
+	else if (board.IsKingInCheck(kingPos, colorUpdated))
+		m_pgn += '+';
 }
 
 bool Game::CanUpgradePawn(Position pos) const
@@ -86,18 +149,18 @@ void Game::MakeMove(Position startPos, Position endPos)
 	if (!m_board.IsPieceColor(startPos, color))
 		throw InvalidStartPositionExcepton();
 
-	auto prevPossibleMoves = m_board.GetPossibleMoves(startPos);
+	UpdatePGN(startPos, endPos);
 
+	auto prevPossibleMoves = m_board.GetPossibleMoves(startPos);
 	auto endPosPiece = GetPieceInfo(endPos);
 
 	if (m_board.MakeMove(startPos, endPos))
 		if (endPosPiece)
 		{
 			auto capturedColor = endPosPiece->GetColor();
-			m_board.AddCapturedPiece(endPosPiece);	
+			m_board.AddCapturedPiece(endPosPiece);
 			NotifyCaptureMade(capturedColor, GetCapturedPieces(capturedColor));
 		}
-		
 
 	if (CanUpgradePawn(endPos))
 	{
@@ -119,6 +182,8 @@ void Game::MakeMove(Position startPos, Position endPos)
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
 	if (m_board.IsCheckmate(colorUpdated))
 	{
+		m_pgn += '#';
+		m_pgn += "//WHOWON//"; //how won
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
 		NotifyGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
 	}
@@ -190,12 +255,12 @@ void Game::NotifyGameOver(EGameResult result)
 	}
 }
 
-ConfigPGN Game::GeneratePGN()
+ConfigPGN Game::GetPGN()
 {
-	return ;
+	return m_pgn;
 }
 
-void Game::InitializeBoardFEN(ConfigFEN strFEN)
+void Game::InitializeGameFEN(ConfigFEN strFEN)
 {
 	auto ceva = strFEN;
 	m_board.InitializeBoardFEN(ceva);
@@ -232,7 +297,7 @@ void Game::RemoveListener(IGameListener* listener)
 		auto sp = weak.lock();
 
 		return !sp || sp.get() == listener;
-			
+
 	};
 
 	m_observers.erase(std::remove_if(m_observers.begin(), m_observers.end(), func));
@@ -298,7 +363,7 @@ void Game::UpgradePawnTo(EPieceType type)
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
 	int i = m_turn ? 7 : 0;
 
-	if (type == EPieceType::None || type == EPieceType::Pawn || type == EPieceType::King )
+	if (type == EPieceType::None || type == EPieceType::Pawn || type == EPieceType::King)
 		throw InvalidUpgradeType();
 
 	for (int j = 0; j < 7; j++)
@@ -306,6 +371,10 @@ void Game::UpgradePawnTo(EPieceType type)
 		if (GetPieceInfo({ i, j }) && GetPieceInfo({ i, j })->GetType() == EPieceType::Pawn)
 			m_board.SetPiece({ i, j }, color, type);
 	}
+
+	// update PGN 
+	m_pgn += '=' + PieceTypeToChar(type);
+
 	m_turn = 1 - m_turn;
 	UpdateState(EGameState::Playing);
 }
