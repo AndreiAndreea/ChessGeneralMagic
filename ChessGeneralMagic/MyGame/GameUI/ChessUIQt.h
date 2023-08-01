@@ -5,6 +5,9 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QListWidget>
+#include <QTableWidget>
+#include <QTableWidgetItem>
+#include <QHeaderView>
 #include "GridButton.h"
 #include "CapturedPiecesCellDisplay.h"
 
@@ -74,7 +77,7 @@ private:
     ConfigCapturedPieces m_capturedPieces;
     std::optional<Position> m_selectedCell;
     QLabel* m_MessageLabel;
-    QListWidget* m_MovesList;
+    QTableWidget* m_historyTableWidget;
     QLabel* m_BlackTimer, *m_WhiteTimer;
     IGamePtr game;
 };

@@ -28,6 +28,7 @@ public:
 	Game(int turn, EGameState state, ConfigMatrix m);
 
 	void InitializeGameFEN(ConfigFEN strFEN) override;
+	void InitializeGamePGN(ConfigPGN strPGN) override;
 
 	Board GetBoard() const;
 	
@@ -61,6 +62,8 @@ public:
 	void NotifyCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces);
 	void NotifyPawnUpgrade();
 	void NotifyGameOver(EGameResult result);
+
+
 
 private:
 	void UpdatePGN(Position startPos, Position endPos);

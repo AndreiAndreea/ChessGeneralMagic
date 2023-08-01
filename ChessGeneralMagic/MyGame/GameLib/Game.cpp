@@ -255,6 +255,11 @@ void Game::NotifyGameOver(EGameResult result)
 	}
 }
 
+void Game::InitializeGamePGN(ConfigPGN strPGN)
+{
+	
+}
+
 ConfigPGN Game::GetPGN()
 {
 	return m_pgn;
@@ -262,8 +267,7 @@ ConfigPGN Game::GetPGN()
 
 void Game::InitializeGameFEN(ConfigFEN strFEN)
 {
-	auto ceva = strFEN;
-	m_board.InitializeBoardFEN(ceva);
+	m_board.InitializeBoardFEN(strFEN);
 
 	if (strFEN == "w")
 		m_turn = 0;

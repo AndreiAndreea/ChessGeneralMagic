@@ -6,6 +6,8 @@
 #include <QMessageBox>
 #include <QClipboard>
 #include <QApplication>
+#include <QGroupBox>
+#include <QVBoxLayout>
 #include <fstream>
 
 #include "ChessExceptions.h"
@@ -98,16 +100,61 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	timerGrid->addWidget(m_WhiteTimer, 0, 4);
 
 	timerContainer->setLayout(timerGrid);
-	mainGridLayout->addWidget(timerContainer, 2, 0, 1, 2, Qt::AlignCenter);
+	mainGridLayout->addWidget(timerContainer, 2, 1, 1, 2, Qt::AlignCenter);
+}
+
+static void AddExampleItems(QListWidget* listWidget)
+{
+	for (int i = 1; i <= 5; ++i) {
+		QString itemText = QString::number(i);
+		QListWidgetItem* item = new QListWidgetItem(itemText);
+		item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		listWidget->addItem(item);
+	}
 }
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-	m_MovesList = new QListWidget();
-	m_MovesList->setMinimumWidth(320);
-	m_MovesList->setMaximumWidth(420);
-	connect(m_MovesList, &QListWidget::itemActivated, this, &ChessUIQt::OnHistoryClicked);
-	mainGridLayout->addWidget(m_MovesList, 1, 0, 1, 1);
+	QListWidget* moveNumberList = new QListWidget(this);
+	QListWidget* whiteMoveList = new QListWidget(this);
+	QListWidget* blackMoveList = new QListWidget(this);
+
+	moveNumberList->setFixedWidth(50);
+	whiteMoveList->setFixedWidth(150);
+	blackMoveList->setFixedWidth(150);
+
+	// Create QLabel widgets for headers
+	QLabel* moveNumberHeader = new QLabel("Nr.");
+	QLabel* whiteMoveHeader = new QLabel("White Move");
+	QLabel* blackMoveHeader = new QLabel("Black Move");
+
+	moveNumberHeader->setAlignment(Qt::AlignCenter);
+	whiteMoveHeader->setAlignment(Qt::AlignCenter);
+	blackMoveHeader->setAlignment(Qt::AlignCenter);
+	moveNumberList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	whiteMoveList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	blackMoveList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+	// Create the layout for the three group boxes
+	QVBoxLayout* moveNumberLayout = new QVBoxLayout();
+	moveNumberLayout->addWidget(moveNumberHeader);
+	moveNumberLayout->addWidget(moveNumberList);
+
+	QVBoxLayout* whiteMoveLayout = new QVBoxLayout();
+	whiteMoveLayout->addWidget(whiteMoveHeader);
+	whiteMoveLayout->addWidget(whiteMoveList);
+
+	QVBoxLayout* blackMoveLayout = new QVBoxLayout();
+	blackMoveLayout->addWidget(blackMoveHeader);
+	blackMoveLayout->addWidget(blackMoveList);
+
+	// Create the layout for the entire window
+	QHBoxLayout* layout = new QHBoxLayout();
+	layout->addLayout(moveNumberLayout);
+	layout->addLayout(whiteMoveLayout);
+	layout->addLayout(blackMoveLayout);
+
+	mainGridLayout->addLayout(layout, 1, 0, 1, 1);
 }
 
 void ChessUIQt::InitializeBoard(QGridLayout* mainGridLayout)
@@ -304,7 +351,8 @@ void ChessUIQt::OnLoadButtonClicked()
 			UpdateBoard();
 		}
 		else if (fileExtension == "pgn") {
-			// pgn load
+			OnRestartButtonClicked();
+
 		}
 		else {
 			QMessageBox::critical(this, "Error", "Unsupported file extension: " + fileExtension, QMessageBox::Ok);
@@ -391,20 +439,20 @@ void ChessUIQt::OnCopyButtonClicked()
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 {
-	int index = m_MovesList->currentRow();
+	int index = m_historyTableWidget->currentRow();
 
 	//TODO ...
 }
 
 void ChessUIQt::UpdateHistory()
 {
-	m_MovesList->clear();
+	m_historyTableWidget->clear();
 
 	//TODO modify me...
-	int numMoves = 10;
+	/*int numMoves = 10;
 	for (int i = 0; i < numMoves; i++) {
-		m_MovesList->addItem("#1   Color: Black   Move: A1 A2");
-	}
+		m_historyTableWidget->addItem("#1   Color: Black   Move: A1 A2");
+	}*/
 }
 
 void ChessUIQt::UpdateBoard()
