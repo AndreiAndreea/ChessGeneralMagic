@@ -38,8 +38,9 @@ public:
 	PositionList GetPossibleMoves(Position pos) override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
-	ConfigPGN GetPGN() override;
+	ConfigPGN GetPGN() const override;
 	ConfigFEN GenerateFEN() override;
+	int GetMovesContor() const override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;
@@ -63,9 +64,8 @@ public:
 	void NotifyPawnUpgrade();
 	void NotifyGameOver(EGameResult result);
 
-
-
 private:
+	std::string GeneratePGNMove(Position startPos, Position endPos);
 	void UpdatePGN(Position startPos, Position endPos);
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;

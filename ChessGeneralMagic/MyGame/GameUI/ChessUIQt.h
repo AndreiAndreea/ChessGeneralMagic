@@ -44,6 +44,7 @@ public:
     void UnhighlightPossibleMoves(const PositionList& possibleMoves);
     //Modify or delete
     void StartGame();
+
     void ShowPromoteOptions();
 
     void SetGame(IGamePtr game);
@@ -77,7 +78,7 @@ private:
     ConfigCapturedPieces m_capturedPieces;
     std::optional<Position> m_selectedCell;
     QLabel* m_MessageLabel;
-    QTableWidget* m_historyTableWidget;
+	QListWidget* m_moveNumberList, * m_whiteMoveList, * m_blackMoveList;
     QLabel* m_BlackTimer, *m_WhiteTimer;
     IGamePtr game;
 };

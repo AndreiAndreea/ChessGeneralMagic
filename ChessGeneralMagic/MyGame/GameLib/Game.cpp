@@ -60,17 +60,9 @@ static char PieceTypeToChar(EPieceType type)
 	return TYPES[(int)type];
 }
 
-void Game::UpdatePGN(Position startPos, Position endPos)
+std::string Game::GeneratePGNMove(Position startPos, Position endPos)
 {
-	if (m_turn)
-		m_pgn += ' ';
-	else
-	{
-		m_pgn += ' ';
-		m_pgn += '0' + m_moves;
-		m_pgn += ". ";
-		m_moves++;
-	}		
+	ConfigPGN pgnMove;
 
 	//copy board
 	Board board(m_board);
@@ -88,46 +80,67 @@ void Game::UpdatePGN(Position startPos, Position endPos)
 			// symbol for castling
 			if (startPos.second - endPos.second == 2)
 			{
-				m_pgn += "O-O-O";
-				return;
+				pgnMove += "O-O-O";
+				return pgnMove;
 			}
 			if (startPos.second - endPos.second == -2)
 			{
-				m_pgn += "O-O";
-				return;
+				pgnMove += "O-O";
+				return pgnMove;
 			}
 		}
 		if (piece->GetType() != EPieceType::Pawn)
 		{
-			m_pgn += PieceTypeToChar(piece->GetType());
+			pgnMove += PieceTypeToChar(piece->GetType());
 			if (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Knight)
 			{
 				//verify if the second rook or knight can make the same move, add specifications
 				if (otherPiecePos.first == startPos.first)
-					m_pgn += 'a' + startPos.second;
+					pgnMove += 'a' + startPos.second;
 				else if (otherPiecePos.second == startPos.second)
-					m_pgn += '0' + (8 - startPos.first);
+					pgnMove += '0' + (8 - startPos.first);
 			}
 
 			if (endPosPiece)
-				m_pgn += 'x';
+				pgnMove += 'x';
 		}
 		else
 		{
 			// pawn move representation
 			if (endPosPiece)
 			{
-				m_pgn += 'a' + startPos.second;
-				m_pgn += 'x';
+				pgnMove += 'a' + startPos.second;
+				pgnMove += 'x';
 			}
 		}
 		// end position representation
-		m_pgn += 'a' + endPos.second;
-		m_pgn +='0' + (8 - endPos.first);
+		pgnMove += 'a' + endPos.second;
+		pgnMove += '0' + (8 - endPos.first);
 	}
+
+	return pgnMove;
+}
+
+void Game::UpdatePGN(Position startPos, Position endPos)
+{
+	if (m_turn)
+		m_pgn += ' ';
+	else
+	{
+		m_pgn += ' ';
+		m_pgn += std::to_string(m_moves);
+		m_pgn += ". ";
+		m_moves++;
+	}		
+
+	m_pgn += GeneratePGNMove(startPos, endPos);
+
+	//copy board
+	Board board(m_board);
 
 	auto colorUpdated = m_turn ? EPieceColor::White : EPieceColor::Black;
 	Position kingPos = board.GetKingPos(colorUpdated);
+
 	if (board.IsCheckmate(colorUpdated))
 		m_pgn += '#';
 	else if (board.IsKingInCheck(kingPos, colorUpdated))
@@ -255,12 +268,17 @@ void Game::NotifyGameOver(EGameResult result)
 	}
 }
 
+int Game::GetMovesContor() const
+{
+	return m_moves;
+}
+
 void Game::InitializeGamePGN(ConfigPGN strPGN)
 {
 	
 }
 
-ConfigPGN Game::GetPGN()
+ConfigPGN Game::GetPGN() const 
 {
 	return m_pgn;
 }
@@ -275,7 +293,7 @@ void Game::InitializeGameFEN(ConfigFEN strFEN)
 		m_turn = 1;
 }
 
-ConfigFEN Game::GenerateFEN()
+ConfigFEN Game::GenerateFEN()  
 {
 	auto gameFENState = m_board.GenerateBoardFEN();
 

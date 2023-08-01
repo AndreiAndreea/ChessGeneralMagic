@@ -103,25 +103,15 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	mainGridLayout->addWidget(timerContainer, 2, 1, 1, 2, Qt::AlignCenter);
 }
 
-static void AddExampleItems(QListWidget* listWidget)
-{
-	for (int i = 1; i <= 5; ++i) {
-		QString itemText = QString::number(i);
-		QListWidgetItem* item = new QListWidgetItem(itemText);
-		item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		listWidget->addItem(item);
-	}
-}
-
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 {
-	QListWidget* moveNumberList = new QListWidget(this);
-	QListWidget* whiteMoveList = new QListWidget(this);
-	QListWidget* blackMoveList = new QListWidget(this);
+	m_moveNumberList = new QListWidget(this);
+	m_whiteMoveList = new QListWidget(this);
+	m_blackMoveList = new QListWidget(this);
 
-	moveNumberList->setFixedWidth(50);
-	whiteMoveList->setFixedWidth(150);
-	blackMoveList->setFixedWidth(150);
+	m_moveNumberList->setFixedWidth(50);
+	m_whiteMoveList->setFixedWidth(150);
+	m_blackMoveList->setFixedWidth(150);
 
 	// Create QLabel widgets for headers
 	QLabel* moveNumberHeader = new QLabel("Nr.");
@@ -131,22 +121,22 @@ void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
 	moveNumberHeader->setAlignment(Qt::AlignCenter);
 	whiteMoveHeader->setAlignment(Qt::AlignCenter);
 	blackMoveHeader->setAlignment(Qt::AlignCenter);
-	moveNumberList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	whiteMoveList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	blackMoveList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	m_moveNumberList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	m_whiteMoveList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	m_blackMoveList->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 	// Create the layout for the three group boxes
 	QVBoxLayout* moveNumberLayout = new QVBoxLayout();
 	moveNumberLayout->addWidget(moveNumberHeader);
-	moveNumberLayout->addWidget(moveNumberList);
+	moveNumberLayout->addWidget(m_moveNumberList);
 
 	QVBoxLayout* whiteMoveLayout = new QVBoxLayout();
 	whiteMoveLayout->addWidget(whiteMoveHeader);
-	whiteMoveLayout->addWidget(whiteMoveList);
+	whiteMoveLayout->addWidget(m_whiteMoveList);
 
 	QVBoxLayout* blackMoveLayout = new QVBoxLayout();
 	blackMoveLayout->addWidget(blackMoveHeader);
-	blackMoveLayout->addWidget(blackMoveList);
+	blackMoveLayout->addWidget(m_blackMoveList);
 
 	// Create the layout for the entire window
 	QHBoxLayout* layout = new QHBoxLayout();
@@ -320,10 +310,6 @@ void ChessUIQt::OnSaveButtonClicked()
 		if (outputFile.is_open()) {
 			outputFile << data;
 			outputFile.close();
-
-			//QFile file(fileN);
-			//QTextStream stream(&file);
-			//file.close();
 		}
 	}
 }
@@ -439,20 +425,22 @@ void ChessUIQt::OnCopyButtonClicked()
 
 void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 {
-	int index = m_historyTableWidget->currentRow();
+	//int index = m_historyTableWidget->currentRow();
 
 	//TODO ...
 }
 
 void ChessUIQt::UpdateHistory()
 {
-	m_historyTableWidget->clear();
-
-	//TODO modify me...
-	/*int numMoves = 10;
-	for (int i = 0; i < numMoves; i++) {
-		m_historyTableWidget->addItem("#1   Color: Black   Move: A1 A2");
-	}*/
+	int movesContor = game->GetMovesContor();
+	
+	if (game->GetCurrentPlayer() == EPieceColor::White)
+	{
+		QString itemText =QString::number(movesContor);
+		QListWidgetItem* item = new QListWidgetItem(itemText);
+		item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+		m_moveNumberList->addItem(item);
+	}
 }
 
 void ChessUIQt::UpdateBoard()
@@ -498,6 +486,7 @@ void ChessUIQt::UnhighlightPossibleMoves(const PositionList& possibleMoves)
 void ChessUIQt::StartGame()
 {
 	UpdateBoard();
+	UpdateHistory();
 }
 
 EPieceType ConvetItemToEPieceType(QString item)
@@ -554,6 +543,9 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 
 	auto bol = game->GetCurrentPlayer() == EPieceColor::Black;
 	m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+
+	//update history
+	UpdateHistory();
 }
 
 void ChessUIQt::OnPawnUpgrade()
