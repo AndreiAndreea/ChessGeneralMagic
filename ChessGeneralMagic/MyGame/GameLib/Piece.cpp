@@ -30,7 +30,6 @@ bool Piece::IsOpposite(EPieceColor color, std::vector<EPieceType> list) const
 	return false;
 }
 
-
 Piece::Piece(EPieceType type, EPieceColor color)
 {
 	m_type = type;

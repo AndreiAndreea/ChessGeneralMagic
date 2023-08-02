@@ -783,6 +783,14 @@ bool Board::IsUpgradeablePawn(Position pos) const
 		|| (piece->GetColor() == EPieceColor::Black && pos.first == 7));
 }
 
+void Board::ResetBoard()
+{
+	InitializeBoard();
+	m_castlingPossible = { {true, true}, {true, true} };
+	m_capturedPieces = { {}, {} };
+	SetBitBoardsToEmpty();
+}
+
 void Board::SetBitBoardsToEmpty()
 {
 	m_bitBoards.clear();

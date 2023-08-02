@@ -22,7 +22,10 @@ Game::Game(int turn, EGameState state, ConfigMatrix m)
 	, m_turn(turn)
 	, m_board(m)
 	, m_moves(1)
-{}
+{
+	if (m_turn)
+		m_pgnMovesVect.push_back({ "-", "-"});
+}
 
 IGamePtr IGame::Produce()
 {
@@ -60,63 +63,61 @@ static char PieceTypeToChar(EPieceType type)
 	return TYPES[(int)type];
 }
 
-std::string Game::GeneratePGNMove(Position startPos, Position endPos)
+ConfigPGN Game::GeneratePGNMove(Position startPos, Position endPos)
 {
 	ConfigPGN pgnMove;
 
-	//copy board
-	Board board(m_board);
 	//valid pos of the second rook or knight if it can move the same
-	Position otherPiecePos = board.CanTheOtherPieceMove(startPos, endPos);
+	Position otherPiecePos = m_board.CanTheOtherPieceMove(startPos, endPos);
 
 	// simulate the move to see if it can be done
-	if (board.MakeMove(startPos, endPos))
+	auto piece = GetPieceInfo(startPos);
+	auto endPosPiece = GetPieceInfo(endPos);
+	Board board(m_board);
+	board.MakeMove(startPos, endPos);
+
+	if (piece->GetType() == EPieceType::King)
 	{
-		auto piece = GetPieceInfo(startPos);
-		auto endPosPiece = GetPieceInfo(endPos);
-
-		if (piece->GetType() == EPieceType::King)
+		// symbol for castling
+		if (startPos.second - endPos.second == 2)
 		{
-			// symbol for castling
-			if (startPos.second - endPos.second == 2)
-			{
-				pgnMove += "O-O-O";
-				return pgnMove;
-			}
-			if (startPos.second - endPos.second == -2)
-			{
-				pgnMove += "O-O";
-				return pgnMove;
-			}
+			pgnMove += "O-O-O";
+			return pgnMove;
 		}
-		if (piece->GetType() != EPieceType::Pawn)
+		if (startPos.second - endPos.second == -2)
 		{
-			pgnMove += PieceTypeToChar(piece->GetType());
-			if (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Knight)
-			{
-				//verify if the second rook or knight can make the same move, add specifications
-				if (otherPiecePos.first == startPos.first)
-					pgnMove += 'a' + startPos.second;
-				else if (otherPiecePos.second == startPos.second)
-					pgnMove += '0' + (8 - startPos.first);
-			}
-
-			if (endPosPiece)
-				pgnMove += 'x';
+			pgnMove += "O-O";
+			return pgnMove;
 		}
-		else
-		{
-			// pawn move representation
-			if (endPosPiece)
-			{
-				pgnMove += 'a' + startPos.second;
-				pgnMove += 'x';
-			}
-		}
-		// end position representation
-		pgnMove += 'a' + endPos.second;
-		pgnMove += '0' + (8 - endPos.first);
 	}
+	if (piece->GetType() != EPieceType::Pawn)
+	{
+		pgnMove += PieceTypeToChar(piece->GetType());
+		if (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Knight)
+		{
+			//verify if the second rook or knight can make the same move, add specifications
+			if (otherPiecePos.second == startPos.second)
+				pgnMove += '0' + (8 - startPos.first);
+			else if (otherPiecePos.second != -1)
+				pgnMove += 'a' + startPos.second;
+		}
+
+		if (endPosPiece)
+			pgnMove += 'x';
+	}
+	else
+	{
+		// pawn move representation
+		if (endPosPiece)
+		{
+			pgnMove += 'a' + startPos.second;
+			pgnMove += 'x';
+		}
+	}
+	// end position representation
+	pgnMove += 'a' + endPos.second;
+	pgnMove += '0' + (8 - endPos.first);
+
 
 	return pgnMove;
 }
@@ -124,27 +125,69 @@ std::string Game::GeneratePGNMove(Position startPos, Position endPos)
 void Game::UpdatePGN(Position startPos, Position endPos)
 {
 	if (m_turn)
-		m_pgn += ' ';
+	{
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second = GeneratePGNMove(startPos, endPos);
+	}
 	else
 	{
-		m_pgn += ' ';
-		m_pgn += std::to_string(m_moves);
-		m_pgn += ". ";
-		m_moves++;
-	}		
+		m_pgnMovesVect.push_back({ GeneratePGNMove(startPos,	endPos), {} });
+	}
 
-	m_pgn += GeneratePGNMove(startPos, endPos);
-
-	//copy board
+	//copy board to simulate the move
 	Board board(m_board);
+	board.MakeMove(startPos, endPos);
+	UpdatePGNCheckOrMate(board);
+}
 
+void Game::UpdatePGNUpgradePawn(EPieceType type)
+{
+	if (m_turn)
+	{
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '=';
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += PieceTypeToChar(type);
+	}
+	else
+	{
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '=';
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += PieceTypeToChar(type);
+	}
+	UpdatePGNCheckOrMate(m_board);
+}
+
+void Game::UpdatePGNDraw()
+{
+	if (m_turn)
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second = "1/2-1/2";
+	else
+		m_pgnMovesVect.push_back({ "1/2-1/2" ,{} });
+}
+
+void Game::UpdatePGNCheckOrMate(const Board& board)
+{
 	auto colorUpdated = m_turn ? EPieceColor::White : EPieceColor::Black;
 	Position kingPos = board.GetKingPos(colorUpdated);
 
+
 	if (board.IsCheckmate(colorUpdated))
-		m_pgn += '#';
+	{
+		if (!(int)colorUpdated)
+		{
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '#';
+			m_pgnMovesVect.push_back({ "0-1", {} });
+		}
+		else
+		{
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '#';
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '1-0';
+		}
+	}
 	else if (board.IsKingInCheck(kingPos, colorUpdated))
-		m_pgn += '+';
+	{
+		if (!(int)colorUpdated)
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '+';
+		else
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '+';
+	}
 }
 
 bool Game::CanUpgradePawn(Position pos) const
@@ -189,27 +232,26 @@ void Game::MakeMove(Position startPos, Position endPos)
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw() || m_board.IsInsufficientMaterial())
 	{
 		UpdateState(EGameState::Draw);
+		UpdatePGNDraw();
 		NotifyGameOver(EGameResult::Draw);
 	}
 
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
 	if (m_board.IsCheckmate(colorUpdated))
 	{
-		m_pgn += '#';
-		m_pgn += "//WHOWON//"; //how won
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
 		NotifyGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
 	}
-
 }
-
 
 void Game::ResetGame()
 {
 	m_turn = 0;
+	m_pgn = {};
+	m_pgnMovesVect.clear();
+	m_moves = 1;
 	UpdateState(EGameState::Playing);
-	m_board.InitializeBoard();
-	m_board.SetBitBoardsToEmpty();
+	m_board.ResetBoard();
 }
 
 void Game::NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
@@ -268,19 +310,94 @@ void Game::NotifyGameOver(EGameResult result)
 	}
 }
 
-int Game::GetMovesContor() const
+void Game::NotifyDraw()
 {
-	return m_moves;
+	for (auto it = m_observers.begin(); it != m_observers.end();)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnDraw();
+			++it;
+		}
+		else
+			it = m_observers.erase(it);
+	}
+}
+
+MovesPGN Game::GetMovesPGN() const
+{
+	return m_pgnMovesVect;
 }
 
 void Game::InitializeGamePGN(ConfigPGN strPGN)
 {
-	
+
 }
 
-ConfigPGN Game::GetPGN() const 
+std::vector<std::string> parsePGNChessString(const std::string& pgnString) {
+	// Vector to store individual moves
+	std::vector<std::string> moves;
+
+	// Temporary string to hold a move while processing
+	std::string currentMove;
+
+	// Iterate through each character in the PGN string
+	for (char c : pgnString) {
+		if (c == '+' || c == '#') {
+			// Skip the '+' sign for check and '#' sign for mate
+			continue;
+		}
+		else if (c == ' ' || c == '\n') {
+			// If space or newline is encountered, the move is complete
+			if (!currentMove.empty()) {
+				// Remove the move number prefix (e.g., "1. ", "2. ", etc.)
+				size_t prefixPos = currentMove.find('.');
+				if (prefixPos != std::string::npos) {
+					currentMove.erase(0, prefixPos + 1);
+				}
+
+				moves.push_back(currentMove);
+				currentMove.clear();
+			}
+		}
+		else {
+			// Add the character to the current move
+			currentMove += c;
+		}
+	}
+
+	// Add the last move if it exists
+	if (!currentMove.empty()) {
+		// Remove the move number prefix from the last move
+		size_t prefixPos = currentMove.find('.');
+		if (prefixPos != std::string::npos) {
+			currentMove.erase(0, prefixPos + 1);
+		}
+
+		moves.push_back(currentMove);
+	}
+
+	return moves;
+}
+
+ConfigPGN Game::GetPGN() const
 {
-	return m_pgn;
+	ConfigPGN pgn;
+	for (int i = 0; i < m_pgnMovesVect.size(); i++)
+	{
+		if (m_pgnMovesVect[i].first != "1-0" && m_pgnMovesVect[i].first != "0-1" && m_pgnMovesVect[i].first != "1/2-1/2")
+		{
+			pgn += std::to_string(i + 1);
+			pgn += ". ";
+		}
+		pgn += m_pgnMovesVect[i].first;
+		pgn += ' ';
+		pgn += m_pgnMovesVect[i].second;
+
+		pgn += ' ';
+	}
+
+	return pgn;
 }
 
 void Game::InitializeGameFEN(ConfigFEN strFEN)
@@ -293,7 +410,7 @@ void Game::InitializeGameFEN(ConfigFEN strFEN)
 		m_turn = 1;
 }
 
-ConfigFEN Game::GenerateFEN()  
+ConfigFEN Game::GenerateFEN()
 {
 	auto gameFENState = m_board.GenerateBoardFEN();
 
@@ -367,6 +484,8 @@ void Game::PlayerDrawComand(EDrawComand respons)
 		if (!IsState(EGameState::DrawProposed))
 			throw NotStateDrawProposedException();
 		UpdateState(EGameState::Draw);
+		UpdatePGNDraw();
+		NotifyDraw();
 		break;
 	case EDrawComand::Decline:
 		if (!IsState(EGameState::DrawProposed))
@@ -395,7 +514,40 @@ void Game::UpgradePawnTo(EPieceType type)
 	}
 
 	// update PGN 
-	m_pgn += '=' + PieceTypeToChar(type);
+	UpdatePGNUpgradePawn(type);
+	/*m_pgn += '=';
+	m_pgn += PieceTypeToChar(type);
+
+	if (m_turn)
+	{
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '=';
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += PieceTypeToChar(type);
+	}
+	else
+	{
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '=';
+		m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += PieceTypeToChar(type);
+	}
+
+	auto colorUpdated = m_turn ? EPieceColor::White : EPieceColor::Black;
+	Position kingPos = m_board.GetKingPos(colorUpdated);
+
+	if (m_board.IsCheckmate(colorUpdated))
+	{
+		if ((int)colorUpdated)
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '#';
+		else
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '#';
+		m_pgn += '#';
+	}
+	else if (m_board.IsKingInCheck(kingPos, colorUpdated))
+	{
+		if ((int)colorUpdated)
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '+';
+		else
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '+';
+		m_pgn += '+';
+	}*/
 
 	m_turn = 1 - m_turn;
 	UpdateState(EGameState::Playing);

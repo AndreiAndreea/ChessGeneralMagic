@@ -346,6 +346,13 @@ void ChessUIQt::OnLoadButtonClicked()
 	}
 }
 
+void ChessUIQt::ResetHistory()
+{
+	m_moveNumberList->clear();
+	m_whiteMoveList->clear();
+	m_blackMoveList->clear();
+}
+
 void ChessUIQt::ResetCapturedPiecesDisplay()
 {
 	for (int i = 0; i < 8; i++)
@@ -369,6 +376,7 @@ void ChessUIQt::OnRestartButtonClicked()
 	game->ResetGame();
 
 	ResetCapturedPiecesDisplay();
+	ResetHistory();
 
 	m_MessageLabel->setText("Waiting for white player");
 
@@ -377,17 +385,18 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnDrawButtonClicked()
 {
-	//TODO MODIFY ME
-
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
+	game->PlayerDrawComand(EDrawComand::Draw);
 
 	if (reply == QMessageBox::Yes) {
 		QMessageBox msgBox;
 		msgBox.setText("Draw Accepted. Winner is: None.");
 		msgBox.exec();
-		OnRestartButtonClicked();
+		game->PlayerDrawComand(EDrawComand::Accept);
 	}
+	else
+		game->PlayerDrawComand(EDrawComand::Decline);
 }
 
 static char PieceInfoToChar(PieceType type, PieceColor color)
@@ -432,14 +441,31 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 void ChessUIQt::UpdateHistory()
 {
-	int movesContor = game->GetMovesContor();
+	auto movesPGN = game->GetMovesPGN();
 	
-	if (game->GetCurrentPlayer() == EPieceColor::White)
+	if (movesPGN.size())
 	{
-		QString itemText =QString::number(movesContor);
-		QListWidgetItem* item = new QListWidgetItem(itemText);
-		item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-		m_moveNumberList->addItem(item);
+
+		if (game->GetCurrentPlayer() != EPieceColor::White)
+		{
+
+			QString itemText = QString::number(movesPGN.size());
+			QListWidgetItem* item = new QListWidgetItem(itemText);
+			item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			m_moveNumberList->addItem(item);
+
+			QString moveText = QString::fromStdString(movesPGN[movesPGN.size() - 1].first);
+			QListWidgetItem* itemMove = new QListWidgetItem(moveText);
+			itemMove->setFlags(itemMove->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			m_whiteMoveList->addItem(itemMove);
+		}
+		else
+		{
+			QString moveText = QString::fromStdString(movesPGN[movesPGN.size() - 1].second);
+			QListWidgetItem* itemMove = new QListWidgetItem(moveText);
+			itemMove->setFlags(itemMove->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			m_blackMoveList->addItem(itemMove);
+		}
 	}
 }
 
@@ -501,28 +527,6 @@ EPieceType ConvetItemToEPieceType(QString item)
 		return EPieceType::Knight;
 }
 
-void ChessUIQt::ShowPromoteOptions()
-{
-	QInputDialog dialog;
-	QList<QString> options;
-	options.append("Rook");
-	options.append("Bishop");
-	options.append("Queen");
-	options.append("Knight");
-
-	dialog.setComboBoxItems(options);
-	dialog.setModal(true);
-
-	bool ok;
-	QString item = QInputDialog::getItem(this, tr("Pawn promote"),
-		tr("Promote pawn to: "), options, 0, false, &ok);
-
-	if (ok && !item.isEmpty())
-	{
-		game->UpgradePawnTo(ConvetItemToEPieceType(item));
-	}
-}
-
 void ChessUIQt::SetGame(IGamePtr game)
 {
 	this->game = game;
@@ -551,7 +555,26 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 void ChessUIQt::OnPawnUpgrade()
 {
 	UpdateBoard();
-	ShowPromoteOptions();
+
+	QInputDialog dialog;
+	QList<QString> options;
+	options.append("Rook");
+	options.append("Bishop");
+	options.append("Queen");
+	options.append("Knight");
+
+	dialog.setComboBoxItems(options);
+	dialog.setModal(true);
+
+	bool ok;
+	QString item = QInputDialog::getItem(this, tr("Pawn promote"),
+		tr("Promote pawn to: "), options, 0, false, &ok);
+
+	if (ok && !item.isEmpty())
+	{
+		game->UpgradePawnTo(ConvetItemToEPieceType(item));
+	}
+	UpdateHistory();
 }
 
 void ChessUIQt::OnGameOver(EGameResult result)
@@ -560,7 +583,16 @@ void ChessUIQt::OnGameOver(EGameResult result)
 	QString str;
 	str = ConvertEGameResultToQStr(result);
 	msgBox.setText(str);
-	msgBox.exec();
+
+	msgBox.addButton(QMessageBox::Save);
+
+	// Execute the dialog and handle the result
+	int msg = msgBox.exec();
+
+	// Check which button was clicked
+	if (msg == QMessageBox::Save) {
+		OnSaveButtonClicked();
+	}
 
 	//reset board and turn. new game
 	OnRestartButtonClicked();
@@ -582,5 +614,10 @@ void ChessUIQt::OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPiece
 			}
 		}
 	}
+}
+
+void ChessUIQt::OnDraw()
+{
+	OnRestartButtonClicked();
 }
 

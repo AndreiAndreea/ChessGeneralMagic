@@ -9,53 +9,53 @@ Rook::Rook(EPieceColor color)
 
 bool Rook::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
-	/*PositionList possibleMoves;
-	possibleMoves = GetPossibleMoves(startPos, board);
+	PositionList possibleMoves;
+	possibleMoves = GetPossibleMoves(startPos, false, board);
 	if (std::find(possibleMoves.begin(), possibleMoves.end(), endPos) != possibleMoves.end())
 		return true;
 
-	return false;*/
+	return false;
 
-	EPieceColor currentColor = GetColor();
-	PieceMatrix localBoard = board.GetBoard();
+	//EPieceColor currentColor = GetColor();
+	//PieceMatrix localBoard = board.GetBoard();
 
-	if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
-		return false;
+	//if (localBoard[endPos.first][endPos.second] != nullptr && currentColor == localBoard[endPos.first][endPos.second]->GetColor())
+	//	return false;
 
-	if (startPos.first != endPos.first && startPos.second != endPos.second || (startPos.first == endPos.first && startPos.second == endPos.second))
-		return false;
+	//if (startPos.first != endPos.first && startPos.second != endPos.second || (startPos.first == endPos.first && startPos.second == endPos.second))
+	//	return false;
 
-	// vertical movement
-	if (startPos.first < endPos.first)
-	{
-		for (int i = startPos.first + 1; i < endPos.first; i++)
-			if (localBoard[i][startPos.second] != nullptr)
-				return false;
-	}
-	else
-		for (int i = startPos.first - 1; i > endPos.first; i--)
-		{
-			if (localBoard[i][startPos.second] != nullptr)
-				return false;
-		}
+	//// vertical movement
+	//if (startPos.first < endPos.first)
+	//{
+	//	for (int i = startPos.first + 1; i < endPos.first; i++)
+	//		if (localBoard[i][startPos.second] != nullptr)
+	//			return false;
+	//}
+	//else
+	//	for (int i = startPos.first - 1; i > endPos.first; i--)
+	//	{
+	//		if (localBoard[i][startPos.second] != nullptr)
+	//			return false;
+	//	}
 
-	//horizontal movement
-	if (startPos.second < endPos.second)
-	{
-		for (int i = startPos.second + 1; i < endPos.second; i++)
-		{
-			if (localBoard[startPos.first][i] != nullptr)
-				return false;
-		}
-	}
-	else
-		for (int i = startPos.second - 1; i > endPos.second; i--)
-		{
-			if (localBoard[startPos.first][i] != nullptr)
-				return false;
-		}
+	////horizontal movement
+	//if (startPos.second < endPos.second)
+	//{
+	//	for (int i = startPos.second + 1; i < endPos.second; i++)
+	//	{
+	//		if (localBoard[startPos.first][i] != nullptr)
+	//			return false;
+	//	}
+	//}
+	//else
+	//	for (int i = startPos.second - 1; i > endPos.second; i--)
+	//	{
+	//		if (localBoard[startPos.first][i] != nullptr)
+	//			return false;
+	//	}
 
-	return true;
+	//return true;
 }
 
 PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
@@ -79,6 +79,8 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 				possibleMoves.push_back(Position(i, piecePos.second));
 
 		}
+		else if(localBoard[i][piecePos.second] != nullptr && localBoard[i][piecePos.second] != nullptr)
+			break;
 		i++;
 	}
 
@@ -96,6 +98,8 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 			else
 				possibleMoves.push_back(Position(piecePos.first, i));
 		}
+		else if (localBoard[piecePos.first][i] != nullptr && localBoard[piecePos.first][i] != nullptr)
+			break;
 		i--;
 	}
 
@@ -113,6 +117,8 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 			else
 				possibleMoves.push_back(Position(i, piecePos.second));
 		}
+		else if (localBoard[i][piecePos.second] != nullptr && localBoard[i][piecePos.second] != nullptr)
+			break;
 		i--;
 	}
 
@@ -130,6 +136,8 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 		else
 			possibleMoves.push_back(Position(piecePos.first, i));
 		}
+		else if (localBoard[piecePos.first][i] != nullptr && localBoard[piecePos.first][i] != nullptr)
+			break;
 		i++;
 	}
 

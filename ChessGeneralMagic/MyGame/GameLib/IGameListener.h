@@ -11,6 +11,7 @@ public:
 	virtual void OnPawnUpgrade() = 0;
 	virtual void OnGameOver(EGameResult result) = 0;
 	virtual void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) = 0;
+	virtual void OnDraw() = 0;
 
 	virtual ~IGameListener() = default;
 };

@@ -45,8 +45,6 @@ public:
     //Modify or delete
     void StartGame();
 
-    void ShowPromoteOptions();
-
     void SetGame(IGamePtr game);
 
     // listener methods
@@ -54,8 +52,10 @@ public:
     void OnPawnUpgrade() override;
     void OnGameOver(EGameResult result) override;
     void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) override;
+    void OnDraw() override;
 
 private:
+    void ResetHistory();
     void ResetCapturedPiecesDisplay();
     void UpdateCapturedPiecesDispay();
 

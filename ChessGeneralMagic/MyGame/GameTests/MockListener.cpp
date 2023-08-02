@@ -13,6 +13,7 @@ public:
 	MOCK_METHOD(void, OnPawnUpgrade, ());
 	MOCK_METHOD(void, OnGameOver, (EGameResult result));
 	MOCK_METHOD(void, OnCaptureMade, (EPieceColor color, IPieceInfoPtrList capturedPieces));
+	MOCK_METHOD(void, OnDraw, ());
 };
 
 

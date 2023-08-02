@@ -58,6 +58,8 @@ public:
 	
 	bool IsUpgradeablePawn(Position pos) const;
 
+	void ResetBoard();
+
 	Position CanTheOtherPieceMove(Position startPos, Position endPos);
 
 	ConfigCastlingPossible GetCastlingVect() const;

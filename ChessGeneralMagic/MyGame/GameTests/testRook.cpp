@@ -59,3 +59,22 @@ TEST_F(RookTest, InvalidMovement1)
 	Position endPos(7,7);
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, false, board));
 }
+
+TEST_F(RookTest, InvalidMovement3)
+{
+	ConfigMatrix m = {
+				/*0    1    2    3    4    5    6    7*/
+		/*0*/	{'-', '-', '-', '-', 'K', '-', '-', '-'},
+		/*1*/	{'-', '-', '-', 'P', 'P', '-', '-', '-'},
+		/*2*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*3*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*4*/	{'-', '-', '-', '-', '-', '-', '-', 'Q'},
+		/*5*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
+		/*6*/	{'-', '-', '-', '-', '-', '-', '-', 'p'},
+		/*7*/	{'-', '-', '-', 'k', '-', '-', '-', 'r'}
+	};
+
+	Board board(m);
+
+	EXPECT_FALSE(rok->CanMove({7,7}, {4,7}, false, board));
+}
