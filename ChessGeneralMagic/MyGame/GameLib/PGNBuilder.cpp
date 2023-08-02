@@ -60,7 +60,8 @@ std::string PGNBuilder::GeneratePGN() const
 
 	// Add moves section
 	pgn += "1. "; // Starting move number
-	for (size_t i = 0; i < m_moves.size(); ++i) {
+	for (size_t i = 0; i < m_moves.size(); ++i)
+	{
 		pgn += m_moves[i];
 		if (i != m_moves.size() - 1) {
 			pgn += " ";

@@ -329,9 +329,61 @@ MovesPGN Game::GetMovesPGN() const
 	return m_pgnMovesVect;
 }
 
-void Game::InitializeGamePGN(ConfigPGN strPGN)
+EPieceType CharToType(char c)
 {
+	static const EPieceType TYPES[] = { EPieceType::Pawn, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King };
+	char str[] = "RNBQK";
+	char* p = strchr(str, c);
 
+	return TYPES[p - str];
+}
+
+void Game::InitializeGamePGN(std::vector<std::string> movesPGN)
+{
+	ResetGame();
+
+	Position startPos, endPos;
+	EPieceType type;
+
+	for ( int i = 0; i < movesPGN.size(); i++)
+	{
+		auto move = movesPGN[i];
+		auto size = move.size();
+
+		//castling verif
+		if (move[0] == 'O')
+		{
+			startPos.first = i % 2 ? 0 : 7;
+			startPos.second = 4;
+			endPos.first = i % 2 ? 0 : 7;
+			
+			if (size == 3)
+				endPos.second = 6;
+			else
+				endPos.second = 2;
+		}
+		else
+		{
+			endPos.first = move[size -2] - 'a';
+			endPos.second = move[size - 1] - '0';
+
+			move.erase(move.end() - 2, move.end());
+
+			// if it is uppercase it is not a pawn
+			if (move[0] < 91)
+			{
+				type = CharToType(move[0]);
+				move.erase(move.begin() + 0);
+				if(move.size())
+					if(move[0] != 'x' )
+					{ }
+			}
+			else
+				type = EPieceType::Pawn;
+		}
+
+		//make move
+	}
 }
 
 std::vector<std::string> parsePGNChessString(const std::string& pgnString) {

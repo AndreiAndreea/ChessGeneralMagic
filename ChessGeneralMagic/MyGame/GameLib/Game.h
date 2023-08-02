@@ -28,7 +28,7 @@ public:
 	Game(int turn, EGameState state, ConfigMatrix m);
 
 	void InitializeGameFEN(ConfigFEN strFEN) override;
-	void InitializeGamePGN(ConfigPGN strPGN) override;
+	void InitializeGamePGN(std::vector<std::string> movesPGN) override;
 
 	Board GetBoard() const;
 	

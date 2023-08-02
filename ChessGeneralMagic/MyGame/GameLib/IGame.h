@@ -52,7 +52,7 @@ public:
 	virtual MovesPGN GetMovesPGN() const = 0;
 
 	virtual void InitializeGameFEN(ConfigFEN strFEN) = 0;
-	virtual void InitializeGamePGN(ConfigPGN strPGN) = 0;
+	virtual void InitializeGamePGN(std::vector<std::string> movesPGN) = 0;
 
 	virtual bool IsPlaying() const = 0;
 	virtual bool IsWaitingForPawnUpgrade() const = 0;
