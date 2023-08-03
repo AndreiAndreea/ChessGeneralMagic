@@ -338,7 +338,8 @@ void ChessUIQt::OnLoadButtonClicked()
 		}
 		else if (fileExtension == "pgn") {
 			OnRestartButtonClicked();
-
+			auto movesVect = game->parsePGNChessString(fileData.toStdString());
+			game->InitializeGamePGN(movesVect);
 		}
 		else {
 			QMessageBox::critical(this, "Error", "Unsupported file extension: " + fileExtension, QMessageBox::Ok);

@@ -338,55 +338,95 @@ EPieceType CharToType(char c)
 	return TYPES[p - str];
 }
 
-void Game::InitializeGamePGN(std::vector<std::string> movesPGN)
+Position Game::FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn)
 {
-	ResetGame();
+	EPieceColor	color = turn ? EPieceColor::Black : EPieceColor::White;
+	return m_board.FindPieceStartPos(startRow, startCol, endPos, type, color);
+}
 
-	Position startPos, endPos;
-	EPieceType type;
+std::pair<Position, Position> Game::ConvertPGNMoveToPositions(std::string move, bool turn)
+{
+	Position startPos = { -1, -1 }, endPos;
+	EPieceType type, upgradeType = EPieceType::None;
 
-	for ( int i = 0; i < movesPGN.size(); i++)
+	if (move[0] == 'O')
 	{
-		auto move = movesPGN[i];
-		auto size = move.size();
+		startPos.first = turn ? 0 : 7;
+		startPos.second = 4;
+		endPos.first = turn ? 0 : 7;
 
-		//castling verif
-		if (move[0] == 'O')
+		if (move.size() == 3)
+			endPos.second = 6;
+		else
+			endPos.second = 2;
+	}
+	else
+	{
+		//verif upgrade
+		if (move[move.size() - 2] == '=')
 		{
-			startPos.first = i % 2 ? 0 : 7;
-			startPos.second = 4;
-			endPos.first = i % 2 ? 0 : 7;
-			
-			if (size == 3)
-				endPos.second = 6;
-			else
-				endPos.second = 2;
+			upgradeType = CharToType(move[move.size() - 1]);
+			move.erase(move.end() - 2, move.end());
+		}
+
+		//take end position
+		endPos.first = 8 - (move[move.size() - 1] - '0');
+		endPos.second = move[move.size() - 2] - 'a';
+
+		move.erase(move.end() - 2, move.end());
+
+		// if it is uppercase it is not a pawn
+		if (move.size() && move[0] < 91)
+		{
+			type = CharToType(move[0]);
+			move.erase(move.begin() + 0);
+
+			if (move.size() == 3)
+			{
+				startPos.first = 8 - (move[1] - '0');
+				startPos.second = move[0] - 'a';
+			}
+			else if (move.size() == 2)
+			{
+				if (move[move.size() - 1] != 'x')
+				{
+					startPos.first = 8 - (move[1] - '0');
+					startPos.second = move[0] - 'a';
+				}
+				else if (isdigit(move[0]))
+					startPos.first = 8 - (move[0] - '0');
+				else
+					startPos.second = move[0] - 'a';
+			}
+			else if (move.size() == 1)
+				if (isdigit(move[0]))
+					startPos.first = 8 - (move[0] - '0');
+				else
+					startPos.second = move[0] - 'a';
 		}
 		else
 		{
-			endPos.first = move[size -2] - 'a';
-			endPos.second = move[size - 1] - '0';
-
-			move.erase(move.end() - 2, move.end());
-
-			// if it is uppercase it is not a pawn
-			if (move[0] < 91)
-			{
-				type = CharToType(move[0]);
-				move.erase(move.begin() + 0);
-				if(move.size())
-					if(move[0] != 'x' )
-					{ }
-			}
-			else
-				type = EPieceType::Pawn;
+			type = EPieceType::Pawn;
+			if(move.size())
+				startPos.second = move[0] - 'a';
 		}
-
-		//make move
 	}
+
+	if (startPos.first == -1)
+	{
+		if (startPos.second == -1)
+			startPos = FindPieceStartPos(-1, -1, endPos, type, turn);
+		else
+			startPos = FindPieceStartPos(-1, startPos.second, endPos, type, turn);
+	}
+	else if (startPos.second == -1)
+		startPos = FindPieceStartPos(startPos.first, -1, endPos, type, turn);
+
+	return { startPos, endPos };
 }
 
-std::vector<std::string> parsePGNChessString(const std::string& pgnString) {
+std::vector<std::string> Game::parsePGNChessString(const std::string& pgnString)
+{
 	// Vector to store individual moves
 	std::vector<std::string> moves;
 
@@ -408,7 +448,8 @@ std::vector<std::string> parsePGNChessString(const std::string& pgnString) {
 					currentMove.erase(0, prefixPos + 1);
 				}
 
-				moves.push_back(currentMove);
+				if (currentMove != "")
+					moves.push_back(currentMove);
 				currentMove.clear();
 			}
 		}
@@ -426,10 +467,23 @@ std::vector<std::string> parsePGNChessString(const std::string& pgnString) {
 			currentMove.erase(0, prefixPos + 1);
 		}
 
-		moves.push_back(currentMove);
+		if(currentMove != "")
+			moves.push_back(currentMove);
 	}
 
 	return moves;
+}
+
+void Game::InitializeGamePGN(std::vector<std::string> movesPGN)
+{
+	ResetGame();
+
+	for ( int i = 0; i < movesPGN.size(); i++)
+	{
+		std::pair<Position, Position> movePos = ConvertPGNMoveToPositions(movesPGN[i], i%2);
+
+		MakeMove(movePos.first, movePos.second);
+	}
 }
 
 ConfigPGN Game::GetPGN() const

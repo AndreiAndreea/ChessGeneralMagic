@@ -68,6 +68,8 @@ public:
 
 	virtual IPieceInfoPtr GetPieceInfo(Position pos) const = 0;
 
+	virtual std::vector<std::string> parsePGNChessString(const std::string& pgnString) =0;
+
 	// subject methods
 	virtual void AddListener(IGameListenerPtr listener) = 0;
 	virtual void RemoveListener(IGameListener* listener) = 0;

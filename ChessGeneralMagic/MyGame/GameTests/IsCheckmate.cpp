@@ -5,6 +5,7 @@
 TEST(IsCheckmate, KingIsNotInCheck)
 {
 	Board board(0);
+	board.SetPiece(Position(7, 7), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(2, 4), EPieceColor::White, EPieceType::Bishop);
@@ -22,6 +23,7 @@ TEST(IsCheckmate, KingIsNotInCheck)
 TEST(IsCheckmate, KingIsNotInCheck1)
 {
 	Board board(0);
+	board.SetPiece(Position(7,7), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(3, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(2, 4), EPieceColor::White, EPieceType::Bishop);
@@ -38,7 +40,7 @@ TEST(IsCheckmate, KingIsNotInCheck1)
 TEST(IsCheckmate, InvalidMove1) {
 
 	ConfigMatrix m = { 
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
+	{'-', '-', '-', '-', 'K', '-', '-', '-'},
 	{'-', '-', '-', '-', '-', '-', '-', '-'},
 	{'-', '-', '-', '-', '-', '-', '-', '-'},
 	{'-', '-', '-', '-', '-', '-', '-', '-'},

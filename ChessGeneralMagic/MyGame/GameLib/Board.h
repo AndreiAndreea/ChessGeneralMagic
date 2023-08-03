@@ -35,8 +35,9 @@ public:
 	ConfigFEN GenerateCastlingPossibleFEN();
 	Position GetKingPos(EPieceColor color) const;
 
-	bool MakeMove(const Position& startPos, const Position& endPos);
+	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, EPieceColor color);
 
+	bool MakeMove(const Position& startPos, const Position& endPos);
 
 	void SetPiece(const Position& pos, EPieceColor color, EPieceType type);
 	void SetPieceToNullptr(const Position& pos);

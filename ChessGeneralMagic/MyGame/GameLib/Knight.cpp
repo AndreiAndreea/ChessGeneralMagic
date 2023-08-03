@@ -28,9 +28,10 @@ PositionList Knight::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 				{
 					if (!board.IsKingLeftInCheck(piecePos, { i, j }, GetColor()))
 					{
-						if (board.GetBoard()[i][j] != nullptr && board.GetBoard()[i][j]->GetColor() != GetColor())
+						auto piece = board.GetBoard()[i][j];
+						if (piece && !piece->Is( GetColor()))
 							possibleMoves.push_back(Position(i, j));
-						if (board.GetBoard()[i][j] == nullptr)
+						if (!piece)
 							possibleMoves.push_back(Position(i, j));
 					}
 				}

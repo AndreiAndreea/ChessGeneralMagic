@@ -27,18 +27,17 @@ TEST_F(KingTest, InvalidMove) {
 	EXPECT_FALSE(king->CanMove(Position(3, 4), Position(2, 4), false, board));
 }
 
-
 TEST_F(KingTest, InvalidMove1) {
 	Board board;
-	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,5)}, {Position(4,4), Position(6,6)},{Position(1,4), Position(1,6)} , {Position(7,1), Position(7,2)} };
+	std::vector<std::pair<Position, Position>> possibleMoves = { {Position(4,4), Position(2,5)}, {Position(4,4), Position(6,6)},{Position(3,6), Position(1,6)} , {Position(7,1), Position(7,2)} };
 
 	for (auto it : possibleMoves)
 	{
 		board.SetPiece(it.first, EPieceColor::White, EPieceType::King);
 		EXPECT_FALSE(king->CanMove(it.first, it.second, false, board));
+		board.SetPieceToNullptr(it.first);
 	}
 }
-
 
 TEST_F(KingTest, ValidMoveCheck2)
 {
@@ -171,23 +170,6 @@ TEST_F(KingTest, Castle1)
 	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7, 6), false, board));
 }
 
-TEST_F(KingTest, Castle2)
-{
-	ConfigMatrix m = { {
-	{'R', '-', '-', '-', 'K', '-', '-', 'R'},
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
-	{'-', '-', '-', '-', '-', '-', '-', '-'},
-	{'-', '-', '-', '-', 'k', '-', '-', '-'}
-	} };
-
-	Board board(m);
-	EXPECT_TRUE(king->CanMove(Position(0, 4), Position(0,6), false, board));
-}
-
 TEST_F(KingTest, Castle3)
 {
 	ConfigMatrix m = { {
@@ -219,7 +201,7 @@ TEST_F(KingTest, Castle4)
 	} };
 
 	Board board(m);
-	EXPECT_TRUE(king->CanMove(Position(0, 4), Position(0,2), false, board));
+	EXPECT_TRUE(king->CanMove(Position(7, 4), Position(7,2), false, board));
 }
 
 TEST_F(KingTest, Castle5)

@@ -27,8 +27,6 @@ PositionList Pawn::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 	{
 		if (piecePos.first + 1 < 8)
 		{
-
-			
 			if (board.GetBoard()[piecePos.first + 1][piecePos.second] == nullptr && !board.IsKingLeftInCheck(piecePos, { piecePos.first + 1, piecePos.second }, GetColor()))
 				possibleMoves.push_back(Position(piecePos.first + 1, piecePos.second));
 

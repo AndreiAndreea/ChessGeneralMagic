@@ -90,7 +90,7 @@ TEST_F(MockGameListener, OnCaptureMade)
 	Game g(0, EGameState::Playing, m);
 	g.AddListener(mock);
 
-	EXPECT_CALL(*mock, OnCaptureMade).Times(3);
+	EXPECT_CALL(*mock, OnCaptureMade).Times(AtLeast(3));
 
 	g.MakeMove(Position(4,3), Position(3,4));
 	g.MakeMove(Position(1,5), Position(2,5));

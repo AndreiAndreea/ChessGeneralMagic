@@ -6,6 +6,7 @@
 TEST(BoardTest, ValidMove)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(4, 4), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(1, 1), EPieceColor::White, EPieceType::Queen);
@@ -19,6 +20,7 @@ TEST(BoardTest, ValidMove)
 TEST(BoardTest, AttackQueen)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(4,4), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(2, 2), EPieceColor::White, EPieceType::Queen);
@@ -32,6 +34,7 @@ TEST(BoardTest, AttackQueen)
 TEST(BoardTest, AttackRook)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(2, 5), EPieceColor::White, EPieceType::Rook);
@@ -44,6 +47,7 @@ TEST(BoardTest, AttackRook)
 TEST(BoardTest, PawnAttack)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(6, 4), EPieceColor::White, EPieceType::Pawn);
@@ -56,6 +60,7 @@ TEST(BoardTest, PawnAttack)
 TEST(BoardTest, PawnAttack2)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(4, 4), EPieceColor::White, EPieceType::Pawn);
@@ -68,6 +73,8 @@ TEST(BoardTest, PawnAttack2)
 TEST(BoardTest, KnightAttack)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
+
 
 	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(3, 4), EPieceColor::White, EPieceType::Knight);
@@ -80,6 +87,7 @@ TEST(BoardTest, KnightAttack)
 TEST(BoardTest, KnightAttack2)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(3, 4), EPieceColor::White, EPieceType::Knight);
@@ -92,6 +100,7 @@ TEST(BoardTest, KnightAttack2)
 TEST(BoardTest, KnightAttack3)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(5, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(3, 4), EPieceColor::White, EPieceType::Knight);
@@ -105,6 +114,7 @@ TEST(BoardTest, KnightAttack3)
 TEST(BoardTest, QueenRookAttack)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(4, 4), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(1, 7), EPieceColor::White, EPieceType::Queen);
@@ -136,6 +146,7 @@ TEST(BoardTest, QueenRookAttack1)
 TEST(BoardTest, BoardDeveloped)
 {
 	Board board(0);
+	board.SetPiece(Position(0, 0), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(1, 5), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(1, 6), EPieceColor::Black, EPieceType::Bishop);
@@ -154,6 +165,7 @@ TEST(BoardTest, BoardDeveloped)
 TEST(BoardTest, BoardDeveloped1)
 {
 	Board board(0);
+	board.SetPiece(Position(7, 7), EPieceColor::White, EPieceType::King);
 
 	board.SetPiece(Position(0, 4), EPieceColor::Black, EPieceType::King);
 	board.SetPiece(Position(1, 4), EPieceColor::Black, EPieceType::Pawn);

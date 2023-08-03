@@ -65,6 +65,10 @@ public:
 	void NotifyGameOver(EGameResult result);
 	void NotifyDraw();
 
+	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
+	std::pair<Position, Position> ConvertPGNMoveToPositions(std::string move, bool turn);
+	std::vector<std::string> parsePGNChessString(const std::string& pgnString) override;
+
 private:
 	ConfigPGN GeneratePGNMove(Position startPos, Position endPos);
 	void UpdatePGN(Position startPos, Position endPos);
