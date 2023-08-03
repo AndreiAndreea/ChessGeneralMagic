@@ -49,7 +49,7 @@ public:
 	bool IsGameOver() const override;
 	
 	void PlayerDrawComand(EDrawComand respons) override;
-	void MakeMove(Position startPos, Position endPos) override;
+	void MakeMove(Position startPos, Position endPos, bool isLoadingPGN) override;
 	void UpgradePawnTo(EPieceType type) override;
 
 	void ResetGame() override;
@@ -64,9 +64,10 @@ public:
 	void NotifyPawnUpgrade();
 	void NotifyGameOver(EGameResult result);
 	void NotifyDraw();
+	void NotifyPawnUpgradePGN();
 
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
-	std::pair<Position, Position> ConvertPGNMoveToPositions(std::string move, bool turn);
+	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
 	std::vector<std::string> parsePGNChessString(const std::string& pgnString) override;
 
 private:

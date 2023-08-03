@@ -262,7 +262,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		{
 			try
 			{
-				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position);
+				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position, false);
 			}
 			catch (ChessExceptions e)
 			{
@@ -340,6 +340,9 @@ void ChessUIQt::OnLoadButtonClicked()
 			OnRestartButtonClicked();
 			auto movesVect = game->parsePGNChessString(fileData.toStdString());
 			game->InitializeGamePGN(movesVect);
+			UpdateCapturedPiecesDispay();
+			UpdateBoard();
+			UpdateHistory();
 		}
 		else {
 			QMessageBox::critical(this, "Error", "Unsupported file extension: " + fileExtension, QMessageBox::Ok);
@@ -455,17 +458,20 @@ void ChessUIQt::UpdateHistory()
 			item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			m_moveNumberList->addItem(item);
 
-			QString moveText = QString::fromStdString(movesPGN[movesPGN.size() - 1].first);
-			QListWidgetItem* itemMove = new QListWidgetItem(moveText);
-			itemMove->setFlags(itemMove->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-			m_whiteMoveList->addItem(itemMove);
+			QString moveTextW = QString::fromStdString(movesPGN[movesPGN.size() - 1].first);
+			QListWidgetItem* itemMoveW = new QListWidgetItem(moveTextW);
+			itemMoveW->setFlags(itemMoveW->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			m_whiteMoveList->addItem(itemMoveW);
+
+			QString moveTextB = QString::fromStdString("  ");
+			QListWidgetItem* itemMoveB = new QListWidgetItem(moveTextB);
+			itemMoveB->setFlags(itemMoveB->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+			m_blackMoveList->addItem(itemMoveB);
 		}
 		else
 		{
-			QString moveText = QString::fromStdString(movesPGN[movesPGN.size() - 1].second);
-			QListWidgetItem* itemMove = new QListWidgetItem(moveText);
-			itemMove->setFlags(itemMove->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
-			m_blackMoveList->addItem(itemMove);
+			QListWidgetItem* lastItem = m_blackMoveList->item(m_blackMoveList->count() - 1);
+			lastItem->setText(QString::fromStdString(movesPGN[movesPGN.size() - 1].second));
 		}
 	}
 }
@@ -551,6 +557,7 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 
 	//update history
 	UpdateHistory();
+	UpdateBoard();
 }
 
 void ChessUIQt::OnPawnUpgrade()
@@ -575,28 +582,35 @@ void ChessUIQt::OnPawnUpgrade()
 	{
 		game->UpgradePawnTo(ConvetItemToEPieceType(item));
 	}
-	UpdateHistory();
 }
 
 void ChessUIQt::OnGameOver(EGameResult result)
 {
 	QMessageBox msgBox;
+	msgBox.setWindowTitle("Game Over");
 	QString str;
 	str = ConvertEGameResultToQStr(result);
 	msgBox.setText(str);
 
-	msgBox.addButton(QMessageBox::Save);
+	// Add custom buttons
+	QPushButton* Save = msgBox.addButton("Save", QMessageBox::AcceptRole);
+	QPushButton* close = msgBox.addButton("Close", QMessageBox::AcceptRole);
+	QPushButton* newGame = msgBox.addButton("New Game", QMessageBox::AcceptRole);
 
-	// Execute the dialog and handle the result
-	int msg = msgBox.exec();
-
-	// Check which button was clicked
-	if (msg == QMessageBox::Save) {
+	QObject::connect(Save, &QPushButton::clicked, [&]() {
 		OnSaveButtonClicked();
-	}
+		});
 
-	//reset board and turn. new game
-	OnRestartButtonClicked();
+	QObject::connect(close, &QPushButton::clicked, [&]() {
+		});
+
+	QObject::connect(newGame, &QPushButton::clicked, [&]() {
+		OnRestartButtonClicked();
+		});
+
+
+	// Show the custom popup
+	msgBox.exec();
 }
 
 void ChessUIQt::OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces)
@@ -620,5 +634,10 @@ void ChessUIQt::OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPiece
 void ChessUIQt::OnDraw()
 {
 	OnRestartButtonClicked();
+}
+
+void ChessUIQt::OnPawnUpgradePGN()
+{
+	UpdateHistory();
 }
 

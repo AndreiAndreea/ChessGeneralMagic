@@ -11,6 +11,8 @@
 #include "NotStateWaitingForPawnUpdate.h"
 #include "NotStatePlayingException.h"
 
+#include <tuple>
+
 Game::Game()
 	: m_turn(0)
 	, m_state(EGameState::Playing)
@@ -195,7 +197,7 @@ bool Game::CanUpgradePawn(Position pos) const
 	return m_board.IsUpgradeablePawn(pos);
 }
 
-void Game::MakeMove(Position startPos, Position endPos)
+void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 {
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
 
@@ -221,7 +223,9 @@ void Game::MakeMove(Position startPos, Position endPos)
 	if (CanUpgradePawn(endPos))
 	{
 		UpdateState(EGameState::WaitingForPawnUpgrade);
-		NotifyPawnUpgrade();
+		
+		if(!isLoadingPGN)
+			NotifyPawnUpgrade();
 	}
 	else
 	{
@@ -324,6 +328,20 @@ void Game::NotifyDraw()
 	}
 }
 
+void Game::NotifyPawnUpgradePGN()
+{
+	for (auto it = m_observers.begin(); it != m_observers.end();)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnPawnUpgradePGN();
+			++it;
+		}
+		else
+			it = m_observers.erase(it);
+	}
+}
+
 MovesPGN Game::GetMovesPGN() const
 {
 	return m_pgnMovesVect;
@@ -331,7 +349,7 @@ MovesPGN Game::GetMovesPGN() const
 
 EPieceType CharToType(char c)
 {
-	static const EPieceType TYPES[] = { EPieceType::Pawn, EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King };
+	static const EPieceType TYPES[] = { EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King };
 	char str[] = "RNBQK";
 	char* p = strchr(str, c);
 
@@ -344,7 +362,7 @@ Position Game::FindPieceStartPos(int startRow, int startCol, Position endPos, EP
 	return m_board.FindPieceStartPos(startRow, startCol, endPos, type, color);
 }
 
-std::pair<Position, Position> Game::ConvertPGNMoveToPositions(std::string move, bool turn)
+std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::string move, bool turn)
 {
 	Position startPos = { -1, -1 }, endPos;
 	EPieceType type, upgradeType = EPieceType::None;
@@ -401,7 +419,7 @@ std::pair<Position, Position> Game::ConvertPGNMoveToPositions(std::string move, 
 			else if (move.size() == 1)
 				if (isdigit(move[0]))
 					startPos.first = 8 - (move[0] - '0');
-				else
+				else if(move[0]!= 'x')
 					startPos.second = move[0] - 'a';
 		}
 		else
@@ -411,6 +429,7 @@ std::pair<Position, Position> Game::ConvertPGNMoveToPositions(std::string move, 
 				startPos.second = move[0] - 'a';
 		}
 	}
+
 
 	if (startPos.first == -1)
 	{
@@ -422,7 +441,7 @@ std::pair<Position, Position> Game::ConvertPGNMoveToPositions(std::string move, 
 	else if (startPos.second == -1)
 		startPos = FindPieceStartPos(startPos.first, -1, endPos, type, turn);
 
-	return { startPos, endPos };
+	return make_tuple(startPos, endPos, upgradeType);
 }
 
 std::vector<std::string> Game::parsePGNChessString(const std::string& pgnString)
@@ -480,9 +499,15 @@ void Game::InitializeGamePGN(std::vector<std::string> movesPGN)
 
 	for ( int i = 0; i < movesPGN.size(); i++)
 	{
-		std::pair<Position, Position> movePos = ConvertPGNMoveToPositions(movesPGN[i], i%2);
+		if (i == 55)
+			auto ceva = 1;
+		if (i == 21)
+			auto ceva = 1;
+		std::tuple<Position, Position, EPieceType> movePos = ConvertPGNMoveToInfoMove(movesPGN[i], i%2);
 
-		MakeMove(movePos.first, movePos.second);
+		MakeMove(std::get<0>(movePos), std::get<1>(movePos), true);
+		if (std::get<2>(movePos) != EPieceType::None)
+			UpgradePawnTo(std::get<2>(movePos));
 	}
 }
 
@@ -542,7 +567,6 @@ void Game::RemoveListener(IGameListener* listener)
 		auto sp = weak.lock();
 
 		return !sp || sp.get() == listener;
-
 	};
 
 	m_observers.erase(std::remove_if(m_observers.begin(), m_observers.end(), func));
@@ -613,47 +637,18 @@ void Game::UpgradePawnTo(EPieceType type)
 	if (type == EPieceType::None || type == EPieceType::Pawn || type == EPieceType::King)
 		throw InvalidUpgradeType();
 
-	for (int j = 0; j < 7; j++)
+	for (int j = 0; j < 8; j++)
 	{
 		if (GetPieceInfo({ i, j }) && GetPieceInfo({ i, j })->GetType() == EPieceType::Pawn)
+		{
 			m_board.SetPiece({ i, j }, color, type);
+			break;
+		}
 	}
 
 	// update PGN 
 	UpdatePGNUpgradePawn(type);
-	/*m_pgn += '=';
-	m_pgn += PieceTypeToChar(type);
-
-	if (m_turn)
-	{
-		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '=';
-		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += PieceTypeToChar(type);
-	}
-	else
-	{
-		m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '=';
-		m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += PieceTypeToChar(type);
-	}
-
-	auto colorUpdated = m_turn ? EPieceColor::White : EPieceColor::Black;
-	Position kingPos = m_board.GetKingPos(colorUpdated);
-
-	if (m_board.IsCheckmate(colorUpdated))
-	{
-		if ((int)colorUpdated)
-			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '#';
-		else
-			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '#';
-		m_pgn += '#';
-	}
-	else if (m_board.IsKingInCheck(kingPos, colorUpdated))
-	{
-		if ((int)colorUpdated)
-			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '+';
-		else
-			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '+';
-		m_pgn += '+';
-	}*/
+	//NotifyPawnUpgradePGN();
 
 	m_turn = 1 - m_turn;
 	UpdateState(EGameState::Playing);

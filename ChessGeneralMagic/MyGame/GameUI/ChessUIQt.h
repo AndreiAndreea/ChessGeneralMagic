@@ -53,6 +53,7 @@ public:
     void OnGameOver(EGameResult result) override;
     void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) override;
     void OnDraw() override;
+    void OnPawnUpgradePGN() override;
 
 private:
     void ResetHistory();

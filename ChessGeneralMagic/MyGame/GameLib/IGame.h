@@ -52,7 +52,7 @@ public:
 	virtual MovesPGN GetMovesPGN() const = 0;
 
 	virtual void InitializeGameFEN(ConfigFEN strFEN) = 0;
-	virtual void InitializeGamePGN(std::vector<std::string> movesPGN) = 0;
+	virtual void InitializeGamePGN(std::vector<ConfigPGN> movesPGN) = 0;
 
 	virtual bool IsPlaying() const = 0;
 	virtual bool IsWaitingForPawnUpgrade() const = 0;
@@ -61,7 +61,7 @@ public:
 	virtual bool IsGameOver() const = 0;
 
 	virtual void PlayerDrawComand(EDrawComand respons) = 0;
-	virtual void MakeMove(Position startPos, Position endPos) = 0;
+	virtual void MakeMove(Position startPos, Position endPos, bool isLoadingPGN) = 0;
 	virtual void UpgradePawnTo(EPieceType type) = 0;
 
 	virtual void ResetGame() = 0;
