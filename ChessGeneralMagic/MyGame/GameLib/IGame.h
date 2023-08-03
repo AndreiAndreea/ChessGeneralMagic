@@ -61,7 +61,7 @@ public:
 	virtual bool IsGameOver() const = 0;
 
 	virtual void PlayerDrawComand(EDrawComand respons) = 0;
-	virtual void MakeMove(Position startPos, Position endPos, bool isLoadingPGN) = 0;
+	virtual void MakeMove(Position startPos, Position endPos, bool isLoadingPGN = 0) = 0;
 	virtual void UpgradePawnTo(EPieceType type) = 0;
 
 	virtual void ResetGame() = 0;

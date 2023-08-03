@@ -49,7 +49,7 @@ public:
 	bool IsGameOver() const override;
 	
 	void PlayerDrawComand(EDrawComand respons) override;
-	void MakeMove(Position startPos, Position endPos, bool isLoadingPGN) override;
+	void MakeMove(Position startPos, Position endPos, bool isLoadingPGN = false) override;
 	void UpgradePawnTo(EPieceType type) override;
 
 	void ResetGame() override;
