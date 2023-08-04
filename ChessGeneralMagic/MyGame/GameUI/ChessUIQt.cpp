@@ -449,10 +449,8 @@ void ChessUIQt::UpdateHistory()
 	
 	if (movesPGN.size())
 	{
-
 		if (game->GetCurrentPlayer() != EPieceColor::White)
 		{
-
 			QString itemText = QString::number(movesPGN.size());
 			QListWidgetItem* item = new QListWidgetItem(itemText);
 			item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
@@ -564,23 +562,26 @@ void ChessUIQt::OnPawnUpgrade()
 {
 	UpdateBoard();
 
-	QInputDialog dialog;
 	QList<QString> options;
 	options.append("Rook");
 	options.append("Bishop");
 	options.append("Queen");
 	options.append("Knight");
 
-	dialog.setComboBoxItems(options);
-	dialog.setModal(true);
-
-	bool ok;
-	QString item = QInputDialog::getItem(this, tr("Pawn promote"),
-		tr("Promote pawn to: "), options, 0, false, &ok);
-
-	if (ok && !item.isEmpty())
+	while (true)
 	{
-		game->UpgradePawnTo(ConvetItemToEPieceType(item));
+		QInputDialog dialog;
+		dialog.setComboBoxItems(options);
+		dialog.setModal(true);
+		int result = dialog.exec();
+
+		// Process the user's selection
+		if (result == QDialog::Accepted) {
+			QString selectedPiece = dialog.textValue(); // Get the selected piece (e.g., "Rook", "Bishop", etc.)
+		
+			game->UpgradePawnTo(ConvetItemToEPieceType(selectedPiece));
+			break;
+		}
 	}
 }
 
