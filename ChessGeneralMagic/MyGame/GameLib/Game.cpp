@@ -95,14 +95,14 @@ ConfigPGN Game::GeneratePGNMove(Position startPos, Position endPos)
 	if (piece->GetType() != EPieceType::Pawn)
 	{
 		pgnMove += PieceTypeToChar(piece->GetType());
-		if (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Knight)
-		{
+		//if (piece->GetType() == EPieceType::Rook || piece->GetType() == EPieceType::Knight)
+		//{
 			//verify if the second rook or knight can make the same move, add specifications
 			if (otherPiecePos.second == startPos.second)
 				pgnMove += '0' + (8 - startPos.first);
 			else if (otherPiecePos.second != -1)
 				pgnMove += 'a' + startPos.second;
-		}
+		//}
 
 		if (endPosPiece)
 			pgnMove += 'x';
@@ -135,6 +135,8 @@ void Game::UpdatePGN(Position startPos, Position endPos)
 		m_pgnMovesVect.push_back({ GeneratePGNMove(startPos,	endPos), {} });
 	}
 
+	m_pgnBuilder.AddMove(GeneratePGNMove(startPos, endPos));
+
 	//copy board to simulate the move
 	Board board(m_board);
 	board.MakeMove(startPos, endPos);
@@ -159,9 +161,13 @@ void Game::UpdatePGNUpgradePawn(EPieceType type)
 void Game::UpdatePGNDraw()
 {
 	if (m_turn)
+	{
 		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second = "1/2-1/2";
+	}
 	else
 		m_pgnMovesVect.push_back({ "1/2-1/2" ,{} });
+
+	m_pgnBuilder.AddMove("1/2-1/2");
 }
 
 void Game::UpdatePGNCheckOrMate(const Board& board)
@@ -176,11 +182,14 @@ void Game::UpdatePGNCheckOrMate(const Board& board)
 		{
 			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '#';
 			m_pgnMovesVect.push_back({ "0-1", {} });
+			m_pgnBuilder.AddMove("0-1");
 		}
 		else
 		{
 			m_pgnMovesVect[m_pgnMovesVect.size() - 1].first += '#';
-			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += '1-0';
+			m_pgnMovesVect[m_pgnMovesVect.size() - 1].second += "1-0";
+			m_pgnBuilder.AddMove("1-0");
+
 		}
 	}
 	else if (board.IsKingInCheck(kingPos, colorUpdated))
@@ -245,6 +254,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 	{
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
 		NotifyGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
+		UpdatePGNCheckOrMate(m_board);
 	}
 }
 
@@ -342,9 +352,9 @@ void Game::NotifyPawnUpgradePGN()
 	}
 }
 
-MovesPGN Game::GetMovesPGN() const
+std::vector<std::string> Game::GetMovesPGN() const 
 {
-	return m_pgnMovesVect;
+	return m_pgnBuilder.GetMoves();
 }
 
 EPieceType CharToType(char c)
@@ -380,6 +390,10 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 	}
 	else
 	{
+		// verif if it is game result
+		if (move[1] == '-')
+			return make_tuple(startPos, endPos, upgradeType);
+
 		//verif upgrade
 		if (move[move.size() - 2] == '=')
 		{
@@ -430,7 +444,6 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 		}
 	}
 
-
 	if (startPos.first == -1)
 	{
 		if (startPos.second == -1)
@@ -444,68 +457,31 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 	return make_tuple(startPos, endPos, upgradeType);
 }
 
-std::vector<std::string> Game::parsePGNChessString(const std::string& pgnString)
+void Game::LoadPGNFromFile(const std::string& filePath)
 {
-	// Vector to store individual moves
-	std::vector<std::string> moves;
-
-	// Temporary string to hold a move while processing
-	std::string currentMove;
-
-	// Iterate through each character in the PGN string
-	for (char c : pgnString) {
-		if (c == '+' || c == '#') {
-			// Skip the '+' sign for check and '#' sign for mate
-			continue;
-		}
-		else if (c == ' ' || c == '\n') {
-			// If space or newline is encountered, the move is complete
-			if (!currentMove.empty()) {
-				// Remove the move number prefix (e.g., "1. ", "2. ", etc.)
-				size_t prefixPos = currentMove.find('.');
-				if (prefixPos != std::string::npos) {
-					currentMove.erase(0, prefixPos + 1);
-				}
-
-				if (currentMove != "")
-					moves.push_back(currentMove);
-				currentMove.clear();
-			}
-		}
-		else {
-			// Add the character to the current move
-			currentMove += c;
-		}
+	m_pgnConverter.LoadPGNFromFile(filePath);
+	auto moves = m_pgnConverter.ConvertToPGNStringMoves();
+	for (auto it: moves)
+	{
+		m_pgnBuilder.AddMove(it);
 	}
-
-	// Add the last move if it exists
-	if (!currentMove.empty()) {
-		// Remove the move number prefix from the last move
-		size_t prefixPos = currentMove.find('.');
-		if (prefixPos != std::string::npos) {
-			currentMove.erase(0, prefixPos + 1);
-		}
-
-		if(currentMove != "")
-			moves.push_back(currentMove);
-	}
-
-	return moves;
 }
 
-void Game::InitializeGamePGN(std::vector<std::string> movesPGN)
+void Game::SavePGNToFile(const std::string& filePath)
+{
+	m_pgnBuilder.SavePGNToFile(filePath);
+}
+
+void Game::InitializeGamePGN(std::vector<ConfigPGN> movesPGN)
 {
 	ResetGame();
 
 	for ( int i = 0; i < movesPGN.size(); i++)
 	{
-		if (i == 55)
-			auto ceva = 1;
-		if (i == 21)
-			auto ceva = 1;
 		std::tuple<Position, Position, EPieceType> movePos = ConvertPGNMoveToInfoMove(movesPGN[i], i%2);
 
-		MakeMove(std::get<0>(movePos), std::get<1>(movePos), true);
+		if(std::get<0>(movePos).first != -1)
+			MakeMove(std::get<0>(movePos), std::get<1>(movePos), true);
 		if (std::get<2>(movePos) != EPieceType::None)
 			UpgradePawnTo(std::get<2>(movePos));
 	}
@@ -513,7 +489,7 @@ void Game::InitializeGamePGN(std::vector<std::string> movesPGN)
 
 ConfigPGN Game::GetPGN() const
 {
-	ConfigPGN pgn;
+	/*ConfigPGN pgn;
 	for (int i = 0; i < m_pgnMovesVect.size(); i++)
 	{
 		if (m_pgnMovesVect[i].first != "1-0" && m_pgnMovesVect[i].first != "0-1" && m_pgnMovesVect[i].first != "1/2-1/2")
@@ -528,7 +504,9 @@ ConfigPGN Game::GetPGN() const
 		pgn += ' ';
 	}
 
-	return pgn;
+	return pgn;*/
+
+	return m_pgnBuilder.GeneratePGN();
 }
 
 void Game::InitializeGameFEN(ConfigFEN strFEN)

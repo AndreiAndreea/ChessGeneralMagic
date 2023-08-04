@@ -2,16 +2,16 @@
 #include <string>
 #include <vector>
 
+#include "EInfoPGN.h"
+
 class PGNBuilder {
 public:
-	PGNBuilder(const std::string& playerOne, const std::string& playerTwo, const std::string& location);
+	PGNBuilder();
+	PGNBuilder(const std::string& playerWhite, const std::string& playerBlack, const std::string& location);
 
 	// Getter methods
-	const std::string& GetPlayerOne() const;
-	const std::string& GetPlayerTwo() const;
-	const std::string& GetLocation() const;
-	const std::string& GetResult() const;
-	const std::vector<std::string>& GetMoves() const;
+	const std::string& GetInfoPGN(EInfoPGN infoType) const;
+	const std::vector<std::string> GetMoves() const;
 
 	// Add a move to the moves vector
 	void AddMove(const std::string& move);
@@ -22,10 +22,13 @@ public:
 	// Generate the PGN file content as a string
 	std::string GeneratePGN() const;
 
+	void SavePGNToFile(const std::string& filePath);
+
 private:
-	std::string m_playerOne;
-	std::string m_playerTwo;
+	std::string m_playerWhite;
+	std::string m_playerBlack;
 	std::string m_location;
 	std::string m_result;
+	std::string m_pgnStr;
 	std::vector<std::string> m_moves;
 };

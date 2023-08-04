@@ -149,6 +149,7 @@
     <ClInclude Include="EDrawComand.h" />
     <ClInclude Include="EGameResult.h" />
     <ClInclude Include="EGameState.h" />
+    <ClInclude Include="EInfoPGN.h" />
     <ClInclude Include="EPieceColor.h" />
     <ClInclude Include="EPieceType.h" />
     <ClInclude Include="Game.h" />

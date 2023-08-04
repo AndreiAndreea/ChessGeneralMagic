@@ -49,10 +49,13 @@ public:
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
 	virtual ConfigFEN GenerateFEN() = 0;
 	virtual ConfigPGN GetPGN() const = 0;
-	virtual MovesPGN GetMovesPGN() const = 0;
+	virtual std::vector<ConfigPGN> GetMovesPGN() const = 0;
 
 	virtual void InitializeGameFEN(ConfigFEN strFEN) = 0;
 	virtual void InitializeGamePGN(std::vector<ConfigPGN> movesPGN) = 0;
+
+	virtual void LoadPGNFromFile(const std::string& filePath) = 0;
+	virtual void SavePGNToFile(const std::string& filePath) = 0;
 
 	virtual bool IsPlaying() const = 0;
 	virtual bool IsWaitingForPawnUpgrade() const = 0;
@@ -67,8 +70,6 @@ public:
 	virtual void ResetGame() = 0;
 
 	virtual IPieceInfoPtr GetPieceInfo(Position pos) const = 0;
-
-	virtual std::vector<std::string> parsePGNChessString(const std::string& pgnString) =0;
 
 	// subject methods
 	virtual void AddListener(IGameListenerPtr listener) = 0;

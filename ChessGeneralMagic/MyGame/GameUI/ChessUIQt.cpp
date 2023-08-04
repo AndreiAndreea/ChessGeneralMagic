@@ -292,25 +292,26 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnSaveButtonClicked()
 {
-	QString fileN = QFileDialog::getSaveFileName(this, "Save File", "", "FEN Files(*.fen);; PGN Files(*.pgn)");
-	if (!fileN.isEmpty()) {
+	QString fileSave = QFileDialog::getSaveFileName(this, "Save File", "", "FEN Files(*.fen);; PGN Files(*.pgn)");
+	if (!fileSave.isEmpty()) {
 		std::string data;
 
-		QString fileExtension = QFileInfo(fileN).suffix();
+		QString fileExtension = QFileInfo(fileSave).suffix();
 		if (fileExtension == "fen")
 		{
 			data = game->GenerateFEN();
+			std::ofstream outputFile(fileSave.toStdString());
+			if (outputFile.is_open()) {
+				outputFile << data;
+				outputFile.close();
+			}
 		}
 		if (fileExtension == "pgn")
 		{
-			data = game->GetPGN();
+			//data = game->GetPGN();
+			game->SavePGNToFile(fileSave.toStdString());
 		}
 
-		std::ofstream outputFile(fileN.toStdString());
-		if (outputFile.is_open()) {
-			outputFile << data;
-			outputFile.close();
-		}
 	}
 }
 
@@ -318,28 +319,35 @@ void ChessUIQt::OnLoadButtonClicked()
 {
 	QString fileName = QFileDialog::getOpenFileName(this, "Open File", "", "FEN Files (*.fen);; PGN Files (*.pgn)");
 	if (!fileName.isEmpty()) {
-		QString fileData;
-		QFile file(fileName);
-		if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-			QTextStream stream(&file);
-			fileData = stream.readAll();
-			file.close();
-		}
-
 		QFileInfo fileInfo(fileName);
 		QString fileExtension = fileInfo.suffix().toLower();
 
 		if (fileExtension == "fen") {
+			QString fileData;
+			QFile file(fileName);
+
+			// this if should be in PGN builder 
+			if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+				QTextStream stream(&file);
+				fileData = stream.readAll();
+				file.close();
+			}
+
 			OnRestartButtonClicked();
 			game->InitializeGameFEN(fileData.toStdString());
+
 			m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();
 		}
 		else if (fileExtension == "pgn") {
+			
 			OnRestartButtonClicked();
-			auto movesVect = game->parsePGNChessString(fileData.toStdString());
+
+			game->LoadPGNFromFile(fileName.toStdString());
+			auto movesVect = game->GetMovesPGN();
 			game->InitializeGamePGN(movesVect);
+
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();
 			UpdateHistory();
@@ -445,8 +453,8 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 void ChessUIQt::UpdateHistory()
 {
-	auto movesPGN = game->GetMovesPGN();
-	
+	/*auto movesPGN = game->GetMovesPGN();
+
 	if (movesPGN.size())
 	{
 		if (game->GetCurrentPlayer() != EPieceColor::White)
@@ -471,7 +479,7 @@ void ChessUIQt::UpdateHistory()
 			QListWidgetItem* lastItem = m_blackMoveList->item(m_blackMoveList->count() - 1);
 			lastItem->setText(QString::fromStdString(movesPGN[movesPGN.size() - 1].second));
 		}
-	}
+	}*/
 }
 
 void ChessUIQt::UpdateBoard()
@@ -578,7 +586,7 @@ void ChessUIQt::OnPawnUpgrade()
 		// Process the user's selection
 		if (result == QDialog::Accepted) {
 			QString selectedPiece = dialog.textValue(); // Get the selected piece (e.g., "Rook", "Bishop", etc.)
-		
+
 			game->UpgradePawnTo(ConvetItemToEPieceType(selectedPiece));
 			break;
 		}

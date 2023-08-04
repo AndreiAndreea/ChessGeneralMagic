@@ -4,19 +4,8 @@
 #include "Board.h"
 #include "EGameState.h"
 #include "EGameResult.h"
-
-//class PieceInfo : public IPieceInfo
-//{
-//public:
-//	PieceInfo(EPieceType type, EPieceColor color);
-//
-//	EPieceColor GetColor() const override;
-//	EPieceType GetType() const override;
-//
-//private:
-//	EPieceType m_type;
-//	EPieceColor m_color;
-//};
+#include "PGNBuilder.h"
+#include "PGNConverter.h"
 
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
@@ -30,6 +19,9 @@ public:
 	void InitializeGameFEN(ConfigFEN strFEN) override;
 	void InitializeGamePGN(std::vector<std::string> movesPGN) override;
 
+	void LoadPGNFromFile(const std::string& filePath) override;
+	void SavePGNToFile(const std::string& filePath) override;
+
 	Board GetBoard() const;
 	
 	// IGame methods
@@ -40,7 +32,8 @@ public:
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	ConfigPGN GetPGN() const override;
 	ConfigFEN GenerateFEN() override;
-	MovesPGN GetMovesPGN() const override;
+
+	std::vector<ConfigPGN> GetMovesPGN() const override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;
@@ -68,14 +61,15 @@ public:
 
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
 	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
-	std::vector<std::string> parsePGNChessString(const std::string& pgnString) override;
 
 private:
+	// to move in PGNBuilder?
 	ConfigPGN GeneratePGNMove(Position startPos, Position endPos);
 	void UpdatePGN(Position startPos, Position endPos);
 	void UpdatePGNUpgradePawn(EPieceType type);
 	void UpdatePGNDraw();
 	void UpdatePGNCheckOrMate(const Board& board);
+
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;
 	void UpdateState(EGameState state);
@@ -88,4 +82,7 @@ private:
 	MovesPGN m_pgnMovesVect;
 	EGameState m_state;
 	ObserversList m_observers;
+
+	PGNBuilder m_pgnBuilder;
+	PGNConverter m_pgnConverter;
 };
