@@ -26,8 +26,9 @@ public:
 	// Generate the PGN file content as a string
 	std::string GetPGN() const;
 	std::string GetPGNMovesSection() const;
+	std::vector<std::string> GetMoves() const;
 
-	std::vector<std::string> GetMoves(std::string pgnStr) const;
+	std::vector<std::string> GenerateMoves(std::string pgnStr) const;
 
 	void SavePGNToFile(const std::string& filePath);
 	void LoadPGNFromFile(const std::string& filePath);

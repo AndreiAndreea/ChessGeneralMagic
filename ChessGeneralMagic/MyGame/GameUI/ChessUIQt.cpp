@@ -449,7 +449,7 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 void ChessUIQt::UpdateHistory()
 {
-	auto movesPGN = game->GetMovesPGN();
+	auto movesPGN = game->GetMovesPGN(game->GetPGNMovesSection());
 
 	if (movesPGN.size())
 	{

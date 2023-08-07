@@ -116,7 +116,7 @@
     <QtMoc Include="ChessUIQt.h" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="SynchronizedListWidget.h" />
+    <ClInclude Include="SynchronizedListWidget.h" />
     <QtMoc Include="CapturedPiecesCellDisplay.h" />
     <ClInclude Include="Enums.h" />
     <QtMoc Include="GridButton.h" />

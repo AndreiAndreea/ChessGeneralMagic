@@ -463,6 +463,11 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 }
 
 
+std::string Game::GetPGNMovesSection() const
+{
+	return m_pgnBuilder.GetPGNMovesSection();
+}
+
 void Game::LoadFromPGNFile(const std::string& filePath)
 {
 	m_pgnBuilder.LoadPGNFromFile(filePath);
@@ -478,7 +483,7 @@ void Game::InitializeGamePGN(const std::string& pgnStr)
 {
 	ResetGame();
 
-	auto movesPGN = m_pgnBuilder.GetMoves(pgnStr);
+	auto movesPGN = m_pgnBuilder.GenerateMoves(pgnStr);
 	for (int i = 0; i < movesPGN.size(); i++)
 	{
 		std::tuple<Position, Position, EPieceType> movePos = ConvertPGNMoveToInfoMove(movesPGN[i], i % 2);
@@ -532,6 +537,11 @@ std::string Game::GetFEN() const
 	fen += m_turn ? "b " : "w ";
 	fen += m_board.GenerateCastlingPossibleFEN();
 	return fen;
+}
+
+MoveList Game::GetMovesPGN(const std::string& pgnStr) const
+{
+	return m_pgnBuilder.GenerateMoves(pgnStr);
 }
 
 void Game::AddListener(IGameListenerPtr listener)

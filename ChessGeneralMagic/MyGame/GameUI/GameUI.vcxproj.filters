@@ -66,12 +66,12 @@
     <QtMoc Include="CapturedPiecesCellDisplay.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="SynchronizedListWidget.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SynchronizedListWidget.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

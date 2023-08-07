@@ -38,6 +38,9 @@ public:
 
 	virtual std::string GetPGN() const = 0;
 	virtual std::string GetFEN() const = 0;
+	
+	virtual MoveList GetMovesPGN(const std::string& pgnStr) const = 0;
+	virtual std::string GetPGNMovesSection() const = 0;
 
 	virtual void InitializeGameFEN(const std::string& strFEN) = 0;
 	virtual void InitializeGamePGN(const std::string& movesPGN) = 0; // TODO const std::string& pgn

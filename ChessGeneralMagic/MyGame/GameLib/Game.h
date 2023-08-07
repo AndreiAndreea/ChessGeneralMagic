@@ -32,6 +32,9 @@ public:
 	std::string GetPGN() const override;
 	std::string GetFEN() const override;
 
+	MoveList GetMovesPGN(const std::string& pgnStr) const override;
+	std::string GetPGNMovesSection() const override;
+
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;
 	bool IsWaitingForPawnUpgrade() const override;
@@ -58,7 +61,6 @@ public:
 
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
 	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
-
 
 
 private:

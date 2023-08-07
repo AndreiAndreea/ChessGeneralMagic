@@ -81,6 +81,11 @@ std::string PGNBuilder::GetPGNMovesSection() const
 	return m_pgnStr;
 }
 
+std::vector<std::string> PGNBuilder::GetMoves() const
+{
+	return m_moves;
+}
+
 void PGNBuilder::SavePGNToFile(const std::string& filePath)
 {
 	std::ofstream file(filePath);
@@ -104,7 +109,7 @@ void PGNBuilder::Reset()
 	m_moveCount = 1;
 }
 
-std::vector<std::string> PGNBuilder::GetMoves(std::string pgnStr) const
+std::vector<std::string> PGNBuilder::GenerateMoves(std::string pgnStr) const
 {
 	// Vector to store individual moves
 	std::vector<std::string> moves;
@@ -148,7 +153,6 @@ std::vector<std::string> PGNBuilder::GetMoves(std::string pgnStr) const
 
 		moves.push_back(currentMove);
 	}
-
 	return moves;
 }
 
