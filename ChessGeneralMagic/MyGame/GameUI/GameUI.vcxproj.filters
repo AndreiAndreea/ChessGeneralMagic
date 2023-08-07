@@ -52,6 +52,9 @@
     <ClCompile Include="CapturedPiecesCellDisplay.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SynchronizedListWidget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="ChessUIQt.h">
@@ -61,6 +64,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="CapturedPiecesCellDisplay.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="SynchronizedListWidget.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

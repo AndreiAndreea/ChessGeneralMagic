@@ -171,7 +171,6 @@
     <ClInclude Include="OutOfBoundException.h" />
     <ClInclude Include="Pawn.h" />
     <ClInclude Include="PGNBuilder.h" />
-    <ClInclude Include="PGNConverter.h" />
     <ClInclude Include="Piece.h" />
     <ClInclude Include="PieceInfo.h" />
     <ClInclude Include="PieceMovementExceptions.h" />
@@ -199,7 +198,6 @@
     <ClCompile Include="OutOfBoundException.cpp" />
     <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="PGNBuilder.cpp" />
-    <ClCompile Include="PGNConverter.cpp" />
     <ClCompile Include="Piece.cpp" />
     <ClCompile Include="PieceInfo.cpp" />
     <ClCompile Include="PieceMovementExceptions.cpp" />

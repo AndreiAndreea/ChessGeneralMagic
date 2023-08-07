@@ -32,8 +32,6 @@ enum class EPlayer
 
 using IGamePtr = std::shared_ptr<class IGame>;
 
-using IGameListenerWeakPtr = std::weak_ptr<IGameListener>;
-using IGameListenerPtr = std::shared_ptr<IGameListener>;
 using ConfigFEN = std::string;
 using ConfigPGN = std::string;
 using MovesPGN = std::vector<std::pair<ConfigPGN, ConfigPGN>>;
@@ -47,9 +45,11 @@ public:
 	virtual EPieceColor GetCurrentPlayer() const = 0;
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
-	virtual ConfigFEN GenerateFEN() = 0;
 	virtual ConfigPGN GetPGN() const = 0;
+	virtual ConfigFEN GenerateFEN() = 0;
 	virtual std::vector<ConfigPGN> GetMovesPGN() const = 0;
+
+	virtual void SetPGNString(const ConfigPGN strPGN) = 0;
 
 	virtual void InitializeGameFEN(ConfigFEN strFEN) = 0;
 	virtual void InitializeGamePGN(std::vector<ConfigPGN> movesPGN) = 0;

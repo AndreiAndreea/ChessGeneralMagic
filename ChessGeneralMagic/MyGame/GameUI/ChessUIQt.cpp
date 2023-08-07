@@ -345,8 +345,6 @@ void ChessUIQt::OnLoadButtonClicked()
 			OnRestartButtonClicked();
 
 			game->LoadPGNFromFile(fileName.toStdString());
-			auto movesVect = game->GetMovesPGN();
-			game->InitializeGamePGN(movesVect);
 
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();
@@ -368,13 +366,11 @@ void ChessUIQt::ResetHistory()
 void ChessUIQt::ResetCapturedPiecesDisplay()
 {
 	for (int i = 0; i < 8; i++)
-	{
 		for (int j = 0; j < 2; j++)
 		{
 			m_capturedPieces[0][i][j]->Update(PieceType::none, PieceColor::none);
 			m_capturedPieces[1][i][j]->Update(PieceType::none, PieceColor::none);
 		}
-	}
 }
 
 void ChessUIQt::UpdateCapturedPiecesDispay()
@@ -453,7 +449,7 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 void ChessUIQt::UpdateHistory()
 {
-	/*auto movesPGN = game->GetMovesPGN();
+	auto movesPGN = game->GetMovesPGN();
 
 	if (movesPGN.size())
 	{
@@ -464,7 +460,7 @@ void ChessUIQt::UpdateHistory()
 			item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			m_moveNumberList->addItem(item);
 
-			QString moveTextW = QString::fromStdString(movesPGN[movesPGN.size() - 1].first);
+			QString moveTextW = QString::fromStdString(movesPGN[movesPGN.size() - 1]);
 			QListWidgetItem* itemMoveW = new QListWidgetItem(moveTextW);
 			itemMoveW->setFlags(itemMoveW->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			m_whiteMoveList->addItem(itemMoveW);
@@ -477,9 +473,9 @@ void ChessUIQt::UpdateHistory()
 		else
 		{
 			QListWidgetItem* lastItem = m_blackMoveList->item(m_blackMoveList->count() - 1);
-			lastItem->setText(QString::fromStdString(movesPGN[movesPGN.size() - 1].second));
+			lastItem->setText(QString::fromStdString(movesPGN[movesPGN.size() - 1]));
 		}
-	}*/
+	}
 }
 
 void ChessUIQt::UpdateBoard()
@@ -591,6 +587,8 @@ void ChessUIQt::OnPawnUpgrade()
 			break;
 		}
 	}
+	UpdateHistory();
+	UpdateBoard();
 }
 
 void ChessUIQt::OnGameOver(EGameResult result)

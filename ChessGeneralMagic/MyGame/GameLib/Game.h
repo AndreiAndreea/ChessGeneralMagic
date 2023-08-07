@@ -5,7 +5,6 @@
 #include "EGameState.h"
 #include "EGameResult.h"
 #include "PGNBuilder.h"
-#include "PGNConverter.h"
 
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
@@ -32,6 +31,8 @@ public:
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	ConfigPGN GetPGN() const override;
 	ConfigFEN GenerateFEN() override;
+
+	void SetPGNString(const ConfigPGN strPGN) override;
 
 	std::vector<ConfigPGN> GetMovesPGN() const override;
 
@@ -62,13 +63,16 @@ public:
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
 	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
 
+
+
 private:
 	// to move in PGNBuilder?
 	ConfigPGN GeneratePGNMove(Position startPos, Position endPos);
 	void UpdatePGN(Position startPos, Position endPos);
 	void UpdatePGNUpgradePawn(EPieceType type);
 	void UpdatePGNDraw();
-	void UpdatePGNCheckOrMate(const Board& board);
+	void UpdatePGNMate(const Board& board);
+	void UpdatePGNCheck(const Board& board);
 
 	bool CanUpgradePawn(Position pos) const;
 	bool IsState(EGameState state) const;
@@ -84,5 +88,4 @@ private:
 	ObserversList m_observers;
 
 	PGNBuilder m_pgnBuilder;
-	PGNConverter m_pgnConverter;
 };

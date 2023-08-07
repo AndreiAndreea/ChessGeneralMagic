@@ -19,13 +19,12 @@ using ConfigFEN = std::string;
 class Board
 {
 public:
-	Board();
-	Board(int);
+	Board(bool putPieces = true);
 	Board(const Board& ob);
 	Board(ConfigMatrix board);
 
-	void InitializeBoardFEN(ConfigFEN& strFEN);
 	void InitializeBoard();
+	void InitializeBoardFEN(ConfigFEN& strFEN);
 
 	PieceMatrix GetBoard() const;
 	PositionList GetPossibleMoves(Position pos) const;
@@ -51,7 +50,7 @@ public:
 
 	//cant move piece if king is left in check
 	bool IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const;
-	bool IsKingInCheck(const Position& currentPos, EPieceColor color) const;
+	bool IsKingInCheck(Position currentPos, EPieceColor color) const;
 	bool IsCheckmate(EPieceColor color) const;
 	bool IsStaleMate(EPieceColor color) const;
 	bool IsInsufficientMaterial() const;

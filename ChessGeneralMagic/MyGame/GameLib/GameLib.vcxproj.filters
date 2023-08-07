@@ -141,20 +141,17 @@
     <ClInclude Include="EGameResult.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="IPieceInfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="PieceInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PGNBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PGNConverter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="EInfoPGN.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IPieceInfo.h">
+      <Filter>Header Files\API</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -228,9 +225,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PGNBuilder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PGNConverter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -7,10 +7,22 @@
 
 #include <cstring>
 
-Board::Board()
+Board::Board(bool putPieces)
 {
-	InitializeBoard();
+	m_pieceMatrix.resize(8);
+	for (int i = 0; i < 8; i++)
+		m_pieceMatrix[i].resize(8);
+
+	if (putPieces)
+		InitializeBoard();
+	else
+		for (int x = 0; x < 8; x++)
+		{
+			for (int y = 0; y < 8; y++)
+				m_pieceMatrix[x][y] = nullptr;
+		}
 }
+
 
 static EPieceType GetType(char c)
 {
@@ -53,17 +65,6 @@ static char PieceInfoToChar(EPieceType type, EPieceColor color)
 	static std::string letters = "prnbqk";
 	char c = letters[(int)type];
 	return color == EPieceColor::White ? toupper(c) : c;
-}
-
-Board::Board(int)
-{
-	m_pieceMatrix.resize(8);
-	for (int x = 0; x < 8; x++)
-	{
-		m_pieceMatrix[x].resize(8);
-		for (int y = 0; y < 8; y++)
-			m_pieceMatrix[x][y] = nullptr;
-	}
 }
 
 Board::Board(const Board& ob)
@@ -128,10 +129,6 @@ void Board::InitializeBoardFEN(ConfigFEN& strFEN)
 
 void Board::InitializeBoard()
 {
-	m_pieceMatrix.resize(8);
-	for (int i = 0; i < 8; i++)
-		m_pieceMatrix[i].resize(8);
-
 	// initializing the empty spaces on the board
 
 	for (int x = 2; x < 6; x++)
@@ -431,16 +428,23 @@ bool Board::CheckingRookThreat(const Position& kingPos, const Position& startPos
 		i += rowIncrement;
 		j += columnIncrement;
 	}
+
+	//for (int i = initialPos.first; i!= -1 && i !=8; i+= incrementRow)
+	//{
+	//	for (int j = intialPos.second; j != -1 && j !=8; j+= incrementCol)
+	//	{
+
+	//	}
+	//}
+
 }
 
 bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, EPieceColor pieceColor) const
 {
 	Position kingPos = GetKingPos(pieceColor);
 
-	if (kingPos.second == -1)
-		auto ceva = 1;
-
 	//checking Rook
+	 
 	int i = kingPos.first + 1;
 	while (i < 8)
 	{
@@ -457,9 +461,8 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		i++;
 	}
 
-	//std::bitset<2> direction(0);
 	//CheckingRookThreat(kingPos, startPos, endPos, kingPos.first + 1, kingPos.second, direction);
-	//std::bitset<2> direction(1);
+
 
 	i = kingPos.first - 1;
 	while (i >= 0)
@@ -627,7 +630,7 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	return false;
 }
 
-bool Board::IsKingInCheck(const Position& currentPos, EPieceColor color) const
+bool Board::IsKingInCheck(Position currentPos, EPieceColor color) const
 {
 
 	for (int i = 0; i < 8; i++)

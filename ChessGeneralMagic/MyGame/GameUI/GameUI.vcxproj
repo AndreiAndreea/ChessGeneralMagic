@@ -101,6 +101,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="SynchronizedListWidget.cpp" />
     <QtRcc Include="ChessUIQt.qrc" />
     <QtRcc Include="GameUI.qrc" />
     <QtUic Include="GameUI.ui" />
@@ -115,6 +116,7 @@
     <QtMoc Include="ChessUIQt.h" />
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="SynchronizedListWidget.h" />
     <QtMoc Include="CapturedPiecesCellDisplay.h" />
     <ClInclude Include="Enums.h" />
     <QtMoc Include="GridButton.h" />
