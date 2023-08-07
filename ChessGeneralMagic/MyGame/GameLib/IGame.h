@@ -34,20 +34,20 @@ public:
 	virtual EPlayer GetWinner() const = 0;
 	virtual EPieceColor GetCurrentPlayer() const = 0;
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
-	virtual PositionList GetPossibleMoves(Position pos) = 0;
+	virtual PositionList GetPossibleMoves(Position pos) const = 0;
 
 	virtual std::string GetPGN() const = 0;
 	virtual std::string GetFEN() const = 0;
 	
 	virtual MoveList GetMovesPGN() const = 0;
 
-	virtual void SetPGNString(const std::string& strPGN) = 0;
+	virtual void SetPGNString(const std::string& strPGN) = 0; // TODO to remove
 
 	virtual void InitializeGameFEN(const std::string& strFEN) = 0;
 	virtual void InitializeGamePGN(const MoveList& movesPGN) = 0; // TODO const std::string& pgn
 
-	virtual void LoadPGNFromFile(const std::string& filePath) = 0;
-	virtual void SavePGNToFile(const std::string& filePath) = 0;
+	virtual void LoadFromPGNFile(const std::string& filePath) = 0;
+	virtual void SaveToPGNFile(const std::string& filePath) = 0;
 
 	virtual bool IsPlaying() const = 0;
 	virtual bool IsWaitingForPawnUpgrade() const = 0;

@@ -472,14 +472,14 @@ void Game::SetPGNString(const std::string& strPGN)
 	m_pgnBuilder.SetPGNString(strPGN);
 }
 
-void Game::LoadPGNFromFile(const std::string& filePath)
+void Game::LoadFromPGNFile(const std::string& filePath)
 {
 	m_pgnBuilder.LoadPGNFromFile(filePath);
-	auto moves = m_pgnBuilder.GetMoves(true);
+	auto moves = m_pgnBuilder.GetMoves();
 	InitializeGamePGN(moves);
 }
 
-void Game::SavePGNToFile(const std::string& filePath)
+void Game::SaveToPGNFile(const std::string& filePath)
 {
 	m_pgnBuilder.SavePGNToFile(filePath);
 }
@@ -575,7 +575,7 @@ void Game::RemoveListener(IGameListener* listener)
 	}*/
 }
 
-PositionList Game::GetPossibleMoves(Position pos)
+PositionList Game::GetPossibleMoves(Position pos) const
 {
 	return m_board.GetPossibleMoves(pos);
 }

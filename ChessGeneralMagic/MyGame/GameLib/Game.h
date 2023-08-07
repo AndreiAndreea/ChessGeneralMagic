@@ -18,15 +18,15 @@ public:
 	void InitializeGameFEN(const std::string& strFEN) override;
 	void InitializeGamePGN(const MoveList& movesPGN) override;
 
-	void LoadPGNFromFile(const std::string& filePath) override;
-	void SavePGNToFile(const std::string& filePath) override;
+	void LoadFromPGNFile(const std::string& filePath) override;
+	void SaveToPGNFile(const std::string& filePath) override;
 
 	Board GetBoard() const;
 	
 	// IGame methods
 	EPlayer GetWinner() const override;
 	EPieceColor GetCurrentPlayer() const override;
-	PositionList GetPossibleMoves(Position pos) override;
+	PositionList GetPossibleMoves(Position pos) const override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	MoveStr GetPGN() const override;

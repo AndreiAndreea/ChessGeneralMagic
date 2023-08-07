@@ -114,7 +114,7 @@ void PGNBuilder::Reset()
 	m_moveCount = 1;
 }
 
-std::vector<std::string> PGNBuilder::GetMoves(bool isLoading) const
+std::vector<std::string> PGNBuilder::GetMoves() const
 {
 	// Vector to store individual moves
 	std::vector<std::string> moves;

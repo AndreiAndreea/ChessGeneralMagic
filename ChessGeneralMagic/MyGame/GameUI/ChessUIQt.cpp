@@ -309,7 +309,7 @@ void ChessUIQt::OnSaveButtonClicked()
 		if (fileExtension == "pgn")
 		{
 			//data = game->GetPGN();
-			game->SavePGNToFile(fileSave.toStdString());
+			game->SaveToPGNFile(fileSave.toStdString());
 		}
 
 	}
@@ -344,7 +344,7 @@ void ChessUIQt::OnLoadButtonClicked()
 			
 			OnRestartButtonClicked();
 
-			game->LoadPGNFromFile(fileName.toStdString());
+			game->LoadFromPGNFile(fileName.toStdString());
 
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();
