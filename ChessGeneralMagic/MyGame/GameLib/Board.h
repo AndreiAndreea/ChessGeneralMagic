@@ -24,7 +24,7 @@ public:
 	Board(ConfigMatrix board);
 
 	void InitializeBoard();
-	void InitializeBoardFEN(ConfigFEN& strFEN);
+	void InitializeBoardFEN(const std::string& strFEN);
 
 	PieceMatrix GetBoard() const;
 	PositionList GetPossibleMoves(Position pos) const;

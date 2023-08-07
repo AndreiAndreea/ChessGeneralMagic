@@ -15,7 +15,7 @@ public:
 
 	// Set the result of the game (e.g., "1-0" for white wins, "0-1" for black wins, "1/2-1/2" for draw)
 	void SetResult(const std::string& result);
-	void SetPGNString(const std::string pgnStr);
+	void SetPGNString(const std::string& pgnStr);
 
 	// Add a move to the moves vector
 	void AddMove(const std::string& move);

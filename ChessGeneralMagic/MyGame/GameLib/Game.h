@@ -15,8 +15,8 @@ public:
 	Game();
 	Game(int turn, EGameState state, ConfigMatrix m);
 
-	void InitializeGameFEN(ConfigFEN strFEN) override;
-	void InitializeGamePGN(std::vector<std::string> movesPGN) override;
+	void InitializeGameFEN(const std::string& strFEN) override;
+	void InitializeGamePGN(const MoveList& movesPGN) override;
 
 	void LoadPGNFromFile(const std::string& filePath) override;
 	void SavePGNToFile(const std::string& filePath) override;
@@ -29,12 +29,12 @@ public:
 	PositionList GetPossibleMoves(Position pos) override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
-	ConfigPGN GetPGN() const override;
-	ConfigFEN GenerateFEN() override;
+	MoveStr GetPGN() const override;
+	ConfigFEN GetFEN() override;
 
-	void SetPGNString(const ConfigPGN strPGN) override;
+	void SetPGNString(const std::string& strPGN) override;
 
-	std::vector<ConfigPGN> GetMovesPGN() const override;
+	MoveList GetMovesPGN() const override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;
@@ -67,7 +67,7 @@ public:
 
 private:
 	// to move in PGNBuilder?
-	ConfigPGN GeneratePGNMove(Position startPos, Position endPos);
+	MoveStr GeneratePGNMove(Position startPos, Position endPos);
 	void UpdatePGN(Position startPos, Position endPos);
 	void UpdatePGNUpgradePawn(EPieceType type);
 	void UpdatePGNDraw();
@@ -82,8 +82,8 @@ private:
 	Board m_board;
 	int m_turn;
 	int m_moves;
-	ConfigPGN m_pgn;
-	MovesPGN m_pgnMovesVect;
+	MoveStr m_pgn;
+	FullMoveList m_pgnMovesVect;
 	EGameState m_state;
 	ObserversList m_observers;
 

@@ -162,7 +162,7 @@ std::vector<std::string> PGNBuilder::GetMoves(bool isLoading) const
 	return moves;
 }
 
-void PGNBuilder::SetPGNString(const std::string pgnStr)
+void PGNBuilder::SetPGNString(const std::string& pgnStr)
 {
 	m_pgnStr = pgnStr;
 }

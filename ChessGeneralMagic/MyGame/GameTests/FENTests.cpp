@@ -17,9 +17,9 @@ TEST(FEN, Test1)
 	
 	Game g(0, EGameState::Playing, m);
 	
-	auto str = g.GenerateFEN();
+	auto str = g.GetFEN();
 	std::string strFEN = "1k6/8/2B5/4N3/3K4/8/2b5/8 w QKqk";
-	EXPECT_EQ(g.GenerateFEN(), strFEN);
+	EXPECT_EQ(g.GetFEN(), strFEN);
 }
 
 TEST(FEN, Test2)
@@ -39,9 +39,9 @@ TEST(FEN, Test2)
 
 	Game g(0, EGameState::Playing, m);
 
-	auto str = g.GenerateFEN();
+	auto str = g.GetFEN();
 	std::string strFEN = "RN1K3R/PPP1PPPP/3P4/2B1BN2/Q1p1p1pn/r4k2/p1p1ppp1/2bq1bnr w QKqk";
-	EXPECT_EQ(g.GenerateFEN(), strFEN);
+	EXPECT_EQ(g.GetFEN(), strFEN);
 }
 
 TEST(FEN, Test3)
@@ -61,9 +61,9 @@ TEST(FEN, Test3)
 
 	Game g(0, EGameState::Playing, m);
 
-	auto str = g.GenerateFEN();
+	auto str = g.GetFEN();
 	std::string strFEN = "k6K/3r4/6N1/q3P3/1Pp5/3n1b2/8/1R4R1 w QKqk";
-	EXPECT_EQ(g.GenerateFEN(), strFEN);
+	EXPECT_EQ(g.GetFEN(), strFEN);
 }
 
 TEST(FEN, Test4)
@@ -87,7 +87,7 @@ TEST(FEN, Test4)
 	g.MakeMove({ 0,0 }, { 1,0 });
 	
 
-	auto str = g.GenerateFEN();
+	auto str = g.GetFEN();
 	std::string strFEN = "4k2r/r2r4/6N1/q3P3/1Pp5/2n2b2/R7/4K2R w -K-k";
-	EXPECT_EQ(g.GenerateFEN(), strFEN);
+	EXPECT_EQ(g.GetFEN(), strFEN);
 }

@@ -19,22 +19,12 @@ enum class EPlayer
 	None
 };
 
-//class IPieceInfo
-//{
-//public:
-//	virtual EPieceColor GetColor() const = 0;
-//	virtual EPieceType GetType() const = 0;
-//
-//	virtual ~IPieceInfo() = default;
-//};
-
-//using IPieceInfoPtr = std::shared_ptr<IPieceInfo>;
-
 using IGamePtr = std::shared_ptr<class IGame>;
 
-using ConfigFEN = std::string;
-using ConfigPGN = std::string;
-using MovesPGN = std::vector<std::pair<ConfigPGN, ConfigPGN>>;
+using MoveStr = std::string;
+using MoveList = std::vector<MoveStr>;
+using FullMove = std::pair<MoveStr, MoveStr>;
+using FullMoveList = std::vector<FullMove>;
 
 class IGame
 {
@@ -45,14 +35,16 @@ public:
 	virtual EPieceColor GetCurrentPlayer() const = 0;
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
-	virtual ConfigPGN GetPGN() const = 0;
-	virtual ConfigFEN GenerateFEN() = 0;
-	virtual std::vector<ConfigPGN> GetMovesPGN() const = 0;
 
-	virtual void SetPGNString(const ConfigPGN strPGN) = 0;
+	virtual std::string GetPGN() const = 0;
+	virtual std::string GetFEN() = 0;
+	
+	virtual MoveList GetMovesPGN() const = 0;
 
-	virtual void InitializeGameFEN(ConfigFEN strFEN) = 0;
-	virtual void InitializeGamePGN(std::vector<ConfigPGN> movesPGN) = 0;
+	virtual void SetPGNString(const std::string& strPGN) = 0;
+
+	virtual void InitializeGameFEN(const std::string& strFEN) = 0;
+	virtual void InitializeGamePGN(const MoveList& movesPGN) = 0; // TODO const std::string& pgn
 
 	virtual void LoadPGNFromFile(const std::string& filePath) = 0;
 	virtual void SavePGNToFile(const std::string& filePath) = 0;

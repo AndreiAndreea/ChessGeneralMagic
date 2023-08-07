@@ -299,7 +299,7 @@ void ChessUIQt::OnSaveButtonClicked()
 		QString fileExtension = QFileInfo(fileSave).suffix();
 		if (fileExtension == "fen")
 		{
-			data = game->GenerateFEN();
+			data = game->GetFEN();
 			std::ofstream outputFile(fileSave.toStdString());
 			if (outputFile.is_open()) {
 				outputFile << data;

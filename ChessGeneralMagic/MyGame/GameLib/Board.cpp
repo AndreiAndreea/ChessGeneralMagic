@@ -75,16 +75,18 @@ Board::Board(const Board& ob)
 	m_capturedPieces[1] = ob.GetCapturedPieces(EPieceColor::Black);
 }
 
-void Board::InitializeBoardFEN(ConfigFEN& strFEN)
+void Board::InitializeBoardFEN(const std::string& strFEN)
 {
+	int k = 0;
+
 	// pieces on board
-	for (int i = 0; i < 8 && strFEN[0] != ' '; i++)
+	for (int i = 0; i < 8 && strFEN[k] != ' '; i++)
 	{
-		for (int j = 0; j < 8 && strFEN[0] != ' '; j++)
+		for (int j = 0; j < 8 && strFEN[k] != ' '; j++)
 		{
-			if (isdigit(strFEN[0]))
+			if (isdigit(strFEN[k]))
 			{
-				int digit = strFEN[0] - '0';
+				int digit = strFEN[k] - '0';
 				while (digit)
 				{
 					m_pieceMatrix[i][j++] = nullptr;
@@ -92,16 +94,16 @@ void Board::InitializeBoardFEN(ConfigFEN& strFEN)
 				}
 				j--;
 			}
-			else if (strFEN[0] != '/')
+			else if (strFEN[k] != '/')
 			{
-				EPieceColor color = strFEN[0] < 91 ? EPieceColor::White : EPieceColor::Black;
-				EPieceType type = GetType(strFEN[0]);
+				EPieceColor color = strFEN[k] < 91 ? EPieceColor::White : EPieceColor::Black;
+				EPieceType type = GetType(strFEN[k]);
 
 				m_pieceMatrix[i][j] = Piece::Produce(type, color);
 			}
-			strFEN.erase(strFEN.begin());
+			k++;
 		}
-		strFEN.erase(strFEN.begin());
+		k++;
 	}
 
 
@@ -111,17 +113,15 @@ void Board::InitializeBoardFEN(ConfigFEN& strFEN)
 	int i;
 	for (i = strFEN.size() - 1; i > strFEN.size() - 5; i--)
 	{
-		if (strFEN[i] = 'q')
+		if (strFEN[i] == 'q')
 			m_castlingPossible[1][0] = true;
-		if (strFEN[i] = 'k')
+		if (strFEN[i] == 'k')
 			m_castlingPossible[1][1] = true;
-		if (strFEN[i] = 'Q')
+		if (strFEN[i] == 'Q')
 			m_castlingPossible[0][0] = true;
-		if (strFEN[i] = 'K')
+		if (strFEN[i] == 'K')
 			m_castlingPossible[0][1] = true;
-		strFEN.erase(strFEN.begin() + i);
 	}
-	strFEN.erase(strFEN.begin() + i);
 
 	// captured pieces
 	m_capturedPieces = { {}, {} };

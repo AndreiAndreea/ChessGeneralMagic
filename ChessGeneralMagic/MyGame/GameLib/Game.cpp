@@ -65,9 +65,9 @@ static char PieceTypeToChar(EPieceType type)
 	return TYPES[(int)type];
 }
 
-ConfigPGN Game::GeneratePGNMove(Position startPos, Position endPos)
+MoveStr Game::GeneratePGNMove(Position startPos, Position endPos)
 {
-	ConfigPGN pgnMove;
+	MoveStr pgnMove;
 
 	//valid pos of the second rook or knight if it can move the same
 	Position otherPiecePos = m_board.CanTheOtherPieceMove(startPos, endPos);
@@ -362,7 +362,7 @@ void Game::NotifyPawnUpgradePGN()
 	}
 }
 
-std::vector<std::string> Game::GetMovesPGN() const
+MoveList Game::GetMovesPGN() const
 {
 	return m_pgnBuilder.GetMoves();
 }
@@ -467,7 +467,7 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 	return make_tuple(startPos, endPos, upgradeType);
 }
 
-void Game::SetPGNString(const ConfigPGN strPGN)
+void Game::SetPGNString(const std::string& strPGN)
 {
 	m_pgnBuilder.SetPGNString(strPGN);
 }
@@ -484,7 +484,7 @@ void Game::SavePGNToFile(const std::string& filePath)
 	m_pgnBuilder.SavePGNToFile(filePath);
 }
 
-void Game::InitializeGamePGN(std::vector<ConfigPGN> movesPGN)
+void Game::InitializeGamePGN(const MoveList& movesPGN)
 {
 	ResetGame();
 
@@ -508,7 +508,7 @@ void Game::InitializeGamePGN(std::vector<ConfigPGN> movesPGN)
 	}
 }
 
-ConfigPGN Game::GetPGN() const
+std::string Game::GetPGN() const
 {
 	/*ConfigPGN pgn;
 	for (int i = 0; i < m_pgnMovesVect.size(); i++)
@@ -530,28 +530,19 @@ ConfigPGN Game::GetPGN() const
 	return m_pgnBuilder.GetPGN();
 }
 
-void Game::InitializeGameFEN(ConfigFEN strFEN)
+void Game::InitializeGameFEN(const std::string& strFEN)
 {
 	m_board.InitializeBoardFEN(strFEN);
 
-	if (strFEN == "w")
-		m_turn = 0;
-	else
-		m_turn = 1;
+	m_turn = (strFEN.find(" w") != std::string::npos) ? 0 : 1;
 }
 
-ConfigFEN Game::GenerateFEN()
+std::string Game::GetFEN()
 {
-	auto gameFENState = m_board.GenerateBoardFEN();
-
-	gameFENState += m_turn ? 'b' : 'w';
-	gameFENState += ' ';
-
-	auto castlingPossibleFEN = m_board.GenerateCastlingPossibleFEN();
-
-	gameFENState += castlingPossibleFEN;
-
-	return gameFENState;
+	auto fen = m_board.GenerateBoardFEN();
+	fen += m_turn ? "b " : "w ";
+	fen += m_board.GenerateCastlingPossibleFEN();
+	return fen;
 }
 
 void Game::AddListener(IGameListenerPtr listener)
