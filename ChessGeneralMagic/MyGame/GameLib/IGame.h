@@ -37,7 +37,7 @@ public:
 	virtual PositionList GetPossibleMoves(Position pos) = 0;
 
 	virtual std::string GetPGN() const = 0;
-	virtual std::string GetFEN() = 0;
+	virtual std::string GetFEN() const = 0;
 	
 	virtual MoveList GetMovesPGN() const = 0;
 

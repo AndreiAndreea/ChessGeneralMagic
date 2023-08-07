@@ -30,7 +30,7 @@ public:
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	MoveStr GetPGN() const override;
-	ConfigFEN GetFEN() override;
+	std::string GetFEN() const override;
 
 	void SetPGNString(const std::string& strPGN) override;
 

@@ -537,7 +537,7 @@ void Game::InitializeGameFEN(const std::string& strFEN)
 	m_turn = (strFEN.find(" w") != std::string::npos) ? 0 : 1;
 }
 
-std::string Game::GetFEN()
+std::string Game::GetFEN() const
 {
 	auto fen = m_board.GenerateBoardFEN();
 	fen += m_turn ? "b " : "w ";

@@ -176,9 +176,9 @@ IPieceInfoPtr Board::GetPieceInfo(Position pos) const
 	return {};
 }
 
-ConfigFEN Board::GenerateBoardFEN()
+std::string Board::GenerateBoardFEN() const
 {
-	ConfigFEN boardStateFEN;
+	std::string boardStateFEN;
 
 	for (int i = 0; i < 8; i++)
 	{
@@ -209,14 +209,19 @@ ConfigFEN Board::GenerateBoardFEN()
 	return boardStateFEN;
 }
 
-ConfigFEN Board::GenerateCastlingPossibleFEN()
+std::string Board::GenerateCastlingPossibleFEN() const
 {
-	ConfigFEN castlingPossibleFEN;
+	std::string castlingPossibleFEN;
+	castlingPossibleFEN.resize(4, '-');
 
-	castlingPossibleFEN += m_castlingPossible[0][0] ? 'Q' : '-';
-	castlingPossibleFEN += m_castlingPossible[0][1] ? 'K' : '-';
-	castlingPossibleFEN += m_castlingPossible[1][0] ? 'q' : '-';
-	castlingPossibleFEN += m_castlingPossible[1][1] ? 'k' : '-';
+	if (m_castlingPossible[0][0])
+		castlingPossibleFEN[0] = 'Q';
+	if (m_castlingPossible[0][1])
+		castlingPossibleFEN[1] = 'K';
+	if (m_castlingPossible[1][0])
+		castlingPossibleFEN[2] = 'q';
+	if (m_castlingPossible[1][1])
+		castlingPossibleFEN[3] = 'k';
 
 	return castlingPossibleFEN;
 }

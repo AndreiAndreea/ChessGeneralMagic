@@ -14,7 +14,6 @@ using ConfigCastlingPossible = std::vector<std::vector<bool>>;
 using ConfigCapturedPieces = std::vector<IPieceInfoPtrList>;
 using BoardConfig = std::bitset<256>;
 using BoardConfigList = std::vector<BoardConfig>;
-using ConfigFEN = std::string;
 
 class Board
 {
@@ -30,8 +29,8 @@ public:
 	PositionList GetPossibleMoves(Position pos) const;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const;
 	IPieceInfoPtr GetPieceInfo(Position pos) const;
-	ConfigFEN GenerateBoardFEN();
-	ConfigFEN GenerateCastlingPossibleFEN();
+	std::string GenerateBoardFEN() const;
+	std::string GenerateCastlingPossibleFEN() const;
 	Position GetKingPos(EPieceColor color) const;
 
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, EPieceColor color);
