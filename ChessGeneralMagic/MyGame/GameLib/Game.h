@@ -16,7 +16,7 @@ public:
 	Game(int turn, EGameState state, ConfigMatrix m);
 
 	void InitializeGameFEN(const std::string& strFEN) override;
-	void InitializeGamePGN(const MoveList& movesPGN) override;
+	void InitializeGamePGN(const std::string& movesPGN) override;
 
 	void LoadFromPGNFile(const std::string& filePath) override;
 	void SaveToPGNFile(const std::string& filePath) override;
@@ -29,12 +29,8 @@ public:
 	PositionList GetPossibleMoves(Position pos) const override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
-	MoveStr GetPGN() const override;
+	std::string GetPGN() const override;
 	std::string GetFEN() const override;
-
-	void SetPGNString(const std::string& strPGN) override;
-
-	MoveList GetMovesPGN() const override;
 
 	bool IsPlaying() const override;
 	bool IsDrawProposed() const override;

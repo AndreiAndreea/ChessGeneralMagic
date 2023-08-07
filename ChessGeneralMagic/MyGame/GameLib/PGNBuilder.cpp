@@ -73,22 +73,12 @@ std::string PGNBuilder::GetPGN() const
 
 	pgn += m_pgnStr;
 
-	//for (size_t i = 0; i < m_moves.size(); ++i)
-	//{
-	//	if (i % 2 == 0)
-	//	{
-	//		// Add moves section
-	//		int moveNumber = (i/2+1);
-	//		pgn += std::to_string(moveNumber);
-	//		pgn += ". "; // Starting move number
-	//	}
-	//	pgn += m_moves[i];
-	//	if (i != m_moves.size() - 1) {
-	//		pgn += " ";
-	//	}
-	//}
-
 	return pgn;
+}
+
+std::string PGNBuilder::GetPGNMovesSection() const
+{
+	return m_pgnStr;
 }
 
 void PGNBuilder::SavePGNToFile(const std::string& filePath)
@@ -114,7 +104,7 @@ void PGNBuilder::Reset()
 	m_moveCount = 1;
 }
 
-std::vector<std::string> PGNBuilder::GetMoves() const
+std::vector<std::string> PGNBuilder::GetMoves(std::string pgnStr) const
 {
 	// Vector to store individual moves
 	std::vector<std::string> moves;
@@ -123,7 +113,7 @@ std::vector<std::string> PGNBuilder::GetMoves() const
 	std::string currentMove;
 
 	// Iterate through each character in the PGN string
-	for (char c : m_pgnStr) {
+	for (char c : pgnStr) {
 		if (c == '+' || c == '#') {
 			// Skip the '+' sign for check and '#' sign for mate
 			continue;
@@ -179,7 +169,6 @@ void PGNBuilder::LoadPGNFromFile(const std::string& filePath)
 			if (i == 0 && pgnString[0] == '1')
 			{
 				m_pgnStr = pgnString;
-				i = pgnString.size();
 			}
 			if (pgnString[i] == '\n' && pgnString[i + 1] == '\n')
 			{

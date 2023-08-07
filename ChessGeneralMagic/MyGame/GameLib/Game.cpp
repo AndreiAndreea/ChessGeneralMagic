@@ -362,11 +362,6 @@ void Game::NotifyPawnUpgradePGN()
 	}
 }
 
-MoveList Game::GetMovesPGN() const
-{
-	return m_pgnBuilder.GetMoves();
-}
-
 EPieceType CharToType(char c)
 {
 	static const EPieceType TYPES[] = { EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King };
@@ -467,16 +462,11 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 	return make_tuple(startPos, endPos, upgradeType);
 }
 
-void Game::SetPGNString(const std::string& strPGN)
-{
-	m_pgnBuilder.SetPGNString(strPGN);
-}
 
 void Game::LoadFromPGNFile(const std::string& filePath)
 {
 	m_pgnBuilder.LoadPGNFromFile(filePath);
-	auto moves = m_pgnBuilder.GetMoves();
-	InitializeGamePGN(moves);
+	InitializeGamePGN(m_pgnBuilder.GetPGNMovesSection());
 }
 
 void Game::SaveToPGNFile(const std::string& filePath)
@@ -484,14 +474,13 @@ void Game::SaveToPGNFile(const std::string& filePath)
 	m_pgnBuilder.SavePGNToFile(filePath);
 }
 
-void Game::InitializeGamePGN(const MoveList& movesPGN)
+void Game::InitializeGamePGN(const std::string& pgnStr)
 {
 	ResetGame();
 
+	auto movesPGN = m_pgnBuilder.GetMoves(pgnStr);
 	for (int i = 0; i < movesPGN.size(); i++)
 	{
-		if (i == 41)
-			auto ceva = 1;
 		std::tuple<Position, Position, EPieceType> movePos = ConvertPGNMoveToInfoMove(movesPGN[i], i % 2);
 
 		if (std::get<0>(movePos).first != -1)
