@@ -64,7 +64,7 @@ public:
 	ConfigCastlingPossible GetCastlingVect() const;
 
 private:
-	bool CheckingRookThreat(const Position& kingPos, const Position& startPos, const Position& endPos, int i, int j, std::bitset<2> direction);
+	bool CheckingRookThreat(const Position& kingPos, const Position& startPos, const Position& endPos,const Position& increment, EPieceColor pieceColor) const;
 	bool CheckingBishopThreat(const Position& kingPos, const Position& startPos, const Position& endPos, EPieceColor pieceColor);
 	void MoveRookForCastling(int castlingType, EPieceColor color);
 	BoardConfig GenerateBitset();
