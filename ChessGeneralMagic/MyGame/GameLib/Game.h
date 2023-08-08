@@ -9,7 +9,7 @@
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
 
-class Game : public IGame
+class Game : public IGame, public IGameStatus
 {
 public:
 	Game();
@@ -62,6 +62,7 @@ public:
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
 	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
 
+	const IGameStatus* GetStatus() const override;
 
 private:
 	// to move in PGNBuilder?

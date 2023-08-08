@@ -463,6 +463,11 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 }
 
 
+const IGameStatus* Game::GetStatus() const
+{
+	return this;
+}
+
 std::string Game::GetPGNMovesSection() const
 {
 	return m_pgnBuilder.GetPGNMovesSection();
