@@ -24,6 +24,9 @@ TEST_F(RookTest, InvalidMovement)
 	Board board;
 	Position startPos(1, 1);
 	Position endPos(1, 6);
+	board.SetPiece(startPos, EPieceColor::White, EPieceType::Rook);
+
+
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, false, board));
 }
 
@@ -32,6 +35,8 @@ TEST_F(RookTest, ValidMovement1)
 	Board board;
 	Position startPos(2, 1);
 	Position endPos(6, 2);
+	board.SetPiece(startPos, EPieceColor::White, EPieceType::Rook);
+
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, false, board));
 }
 
@@ -40,6 +45,8 @@ TEST_F(RookTest, ValidMovement2)
 	Board board;
 	Position startPos(6, 3);
 	Position endPos(2, 3);
+	board.SetPiece(startPos, EPieceColor::White, EPieceType::Rook);
+
 	EXPECT_TRUE(rok->CanMove(startPos, endPos, false, board));
 }
 
@@ -49,6 +56,8 @@ TEST_F(RookTest, InvalidMovement2)
 	Board board;
 	Position startPos(2, 3);
 	Position endPos(2, 3);
+	board.SetPiece(startPos, EPieceColor::White, EPieceType::Rook);
+
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, false, board));
 }
 
@@ -57,6 +66,8 @@ TEST_F(RookTest, InvalidMovement1)
 	Board board;
 	Position startPos(5, 7);
 	Position endPos(7,7);
+	board.SetPiece(startPos, EPieceColor::White, EPieceType::Rook);
+
 	EXPECT_FALSE(rok->CanMove(startPos, endPos, false, board));
 }
 

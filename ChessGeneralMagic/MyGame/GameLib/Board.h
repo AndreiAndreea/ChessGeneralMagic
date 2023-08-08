@@ -15,6 +15,15 @@ using ConfigCapturedPieces = std::vector<IPieceInfoPtrList>;
 using BoardConfig = std::bitset<256>;
 using BoardConfigList = std::vector<BoardConfig>;
 
+struct PiecePosition
+{
+	Position startPos, endPos;
+	PiecePosition(Position x, Position y)
+		: startPos(x)
+		, endPos(y)
+	{}
+};
+
 class Board
 {
 public:
@@ -64,8 +73,8 @@ public:
 	ConfigCastlingPossible GetCastlingVect() const;
 
 private:
-	bool CheckingRookThreat(const Position& kingPos, const Position& startPos, const Position& endPos,const Position& increment, EPieceColor pieceColor) const;
-	bool CheckingBishopThreat(const Position& kingPos, const Position& startPos, const Position& endPos, EPieceColor pieceColor);
+	bool CheckingRookThreat(const Position& initialPos, const PiecePosition& piecePos, const Position& increment) const;
+	bool CheckingBishopThreat(const Position& initialPos, const PiecePosition& piecePos, const Position& increment) const;
 	void MoveRookForCastling(int castlingType, EPieceColor color);
 	BoardConfig GenerateBitset();
 
