@@ -54,11 +54,6 @@ bool Game::IsGameOver() const
 	return m_state == EGameState::WhiteWon || m_state == EGameState::BlackWon || m_state == EGameState::Draw;
 }
 
-static bool IsPositionValid(Position p)
-{
-	return p.first >= 0 && p.first < 8 && p.second >= 0 && p.second < 8;
-}
-
 static char PieceTypeToChar(EPieceType type)
 {
 	std::string TYPES = "PRNBQK";
@@ -81,12 +76,12 @@ MoveStr Game::GeneratePGNMove(Position startPos, Position endPos)
 	if (piece->GetType() == EPieceType::King)
 	{
 		// symbol for castling
-		if (startPos.second - endPos.second == 2)
+		if (startPos.y - endPos.y == 2)
 		{
 			pgnMove += "O-O-O";
 			return pgnMove;
 		}
-		if (startPos.second - endPos.second == -2)
+		if (startPos.y - endPos.y == -2)
 		{
 			pgnMove += "O-O";
 			return pgnMove;
@@ -96,10 +91,10 @@ MoveStr Game::GeneratePGNMove(Position startPos, Position endPos)
 	{
 		pgnMove += PieceTypeToChar(piece->GetType());
 		//verify if the second rook or knight can make the same move, add specifications
-		if (otherPiecePos.second == startPos.second)
-			pgnMove += '0' + (8 - startPos.first);
-		else if (otherPiecePos.second != -1)
-			pgnMove += 'a' + startPos.second;
+		if (otherPiecePos.y == startPos.y)
+			pgnMove += '0' + (8 - startPos.x);
+		else if (otherPiecePos.y != -1)
+			pgnMove += 'a' + startPos.y;
 
 		if (endPosPiece)
 			pgnMove += 'x';
@@ -109,13 +104,13 @@ MoveStr Game::GeneratePGNMove(Position startPos, Position endPos)
 		// pawn move representation
 		if (endPosPiece)
 		{
-			pgnMove += 'a' + startPos.second;
+			pgnMove += 'a' + startPos.y;
 			pgnMove += 'x';
 		}
 	}
 	// end position representation
-	pgnMove += 'a' + endPos.second;
-	pgnMove += '0' + (8 - endPos.first);
+	pgnMove += 'a' + endPos.y;
+	pgnMove += '0' + (8 - endPos.x);
 
 
 	return pgnMove;
@@ -213,7 +208,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 {
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
 
-	if (!IsPositionValid(startPos) || !IsPositionValid(endPos))
+	if (!startPos.IsValid() || !endPos.IsValid())
 		throw OutOfBoundException();
 
 	if (!m_board.IsPieceColor(startPos, color))
@@ -384,20 +379,20 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 
 	if (move[0] == 'O')
 	{
-		startPos.first = turn ? 0 : 7;
-		startPos.second = 4;
-		endPos.first = turn ? 0 : 7;
+		startPos.x = turn ? 0 : 7;
+		startPos.y = 4;
+		endPos.x = turn ? 0 : 7;
 
 		if (move.size() == 3)
-			endPos.second = 6;
+			endPos.y = 6;
 		else
-			endPos.second = 2;
+			endPos.y = 2;
 	}
 	else
 	{
 		// verif if it is game result
 		if (move[1] == '-')
-			return make_tuple(startPos, endPos, upgradeType);
+			return std::make_tuple(startPos, endPos, upgradeType);
 
 		//verif upgrade
 		if (move[move.size() - 2] == '=')
@@ -407,8 +402,8 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 		}
 
 		//take end position
-		endPos.first = 8 - (move[move.size() - 1] - '0');
-		endPos.second = move[move.size() - 2] - 'a';
+		endPos.x = 8 - (move[move.size() - 1] - '0');
+		endPos.y = move[move.size() - 2] - 'a';
 
 		move.erase(move.end() - 2, move.end());
 
@@ -420,46 +415,46 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 
 			if (move.size() == 3)
 			{
-				startPos.first = 8 - (move[1] - '0');
-				startPos.second = move[0] - 'a';
+				startPos.x = 8 - (move[1] - '0');
+				startPos.y = move[0] - 'a';
 			}
 			else if (move.size() == 2)
 			{
 				if (move[move.size() - 1] != 'x')
 				{
-					startPos.first = 8 - (move[1] - '0');
-					startPos.second = move[0] - 'a';
+					startPos.x = 8 - (move[1] - '0');
+					startPos.y = move[0] - 'a';
 				}
 				else if (isdigit(move[0]))
-					startPos.first = 8 - (move[0] - '0');
+					startPos.x = 8 - (move[0] - '0');
 				else
-					startPos.second = move[0] - 'a';
+					startPos.y = move[0] - 'a';
 			}
 			else if (move.size() == 1)
 				if (isdigit(move[0]))
-					startPos.first = 8 - (move[0] - '0');
+					startPos.x = 8 - (move[0] - '0');
 				else if (move[0] != 'x')
-					startPos.second = move[0] - 'a';
+					startPos.y = move[0] - 'a';
 		}
 		else
 		{
 			type = EPieceType::Pawn;
 			if (move.size())
-				startPos.second = move[0] - 'a';
+				startPos.y = move[0] - 'a';
 		}
 	}
 
-	if (startPos.first == -1)
+	if (startPos.x == -1)
 	{
-		if (startPos.second == -1)
+		if (startPos.y == -1)
 			startPos = FindPieceStartPos(-1, -1, endPos, type, turn);
 		else
-			startPos = FindPieceStartPos(-1, startPos.second, endPos, type, turn);
+			startPos = FindPieceStartPos(-1, startPos.y, endPos, type, turn);
 	}
-	else if (startPos.second == -1)
-		startPos = FindPieceStartPos(startPos.first, -1, endPos, type, turn);
+	else if (startPos.y == -1)
+		startPos = FindPieceStartPos(startPos.x, -1, endPos, type, turn);
 
-	return make_tuple(startPos, endPos, upgradeType);
+	return std::make_tuple(startPos, endPos, upgradeType);
 }
 
 
@@ -493,7 +488,7 @@ void Game::InitializeGamePGN(const std::string& pgnStr)
 	{
 		std::tuple<Position, Position, EPieceType> movePos = ConvertPGNMoveToInfoMove(movesPGN[i], i % 2);
 
-		if (std::get<0>(movePos).first != -1)
+		if (std::get<0>(movePos).x != -1)
 			MakeMove(std::get<0>(movePos), std::get<1>(movePos), true);
 		if (std::get<2>(movePos) != EPieceType::None)
 		{

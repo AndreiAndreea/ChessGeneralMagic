@@ -59,7 +59,7 @@ void GridButton::updatePiece()
 
 void GridButton::updateBackgroundColor()
 {
-	bool defaultColorBlack = (m_Position.first + m_Position.second) % 2;
+	bool defaultColorBlack = (m_Position.x + m_Position.y) % 2;
 	QString backColor = "";
 
 	if (defaultColorBlack && !m_Highlighted)
@@ -126,10 +126,10 @@ void GridButton::paintEvent(QPaintEvent* event)
 	painter.setRenderHint(QPainter::TextAntialiasing, true);
 	painter.setPen(penColor);
 
-	if (m_Position.first == 7)
-		painter.drawText(textXletters, textY, width() - 2 * textXletters, height() - 2 * textY, Qt::AlignBottom | Qt::AlignRight, QChar((char)'a' + m_Position.second));
-	if (m_Position.second == 0)
-		painter.drawText(textXnumbers, textY, width() - 2 * textXnumbers, height() - 2 * textY, Qt::AlignTop | Qt::AlignLeft, QString::number(8 - m_Position.first));
+	if (m_Position.x == 7)
+		painter.drawText(textXletters, textY, width() - 2 * textXletters, height() - 2 * textY, Qt::AlignBottom | Qt::AlignRight, QChar((char)'a' + m_Position.y));
+	if (m_Position.y == 0)
+		painter.drawText(textXnumbers, textY, width() - 2 * textXnumbers, height() - 2 * textY, Qt::AlignTop | Qt::AlignLeft, QString::number(8 - m_Position.x));
 }
 
 GridButton::GridButton(const Position& boardPosition, PieceType pieceType /*= PieceType::none*/, PieceColor pieceColor /*= PieceColor::none*/, QWidget* parent /*= nullptr*/) :

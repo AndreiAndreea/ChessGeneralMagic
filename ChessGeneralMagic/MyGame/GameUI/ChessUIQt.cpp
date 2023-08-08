@@ -251,10 +251,10 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 	if (m_selectedCell.has_value())
 	{
 		//TODO COMPLETE ME...
-		if (m_selectedCell->first == position.first && m_selectedCell->second == position.second)
+		if (m_selectedCell->x == position.x && m_selectedCell->y == position.y)
 		{
 			//deselect cells
-			m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+			m_grid[m_selectedCell.value().x][m_selectedCell.value().y]->setSelected(false);
 			m_selectedCell.reset();
 			auto possibleMoves = status->GetPossibleMoves(position);
 			UnhighlightPossibleMoves(possibleMoves);
@@ -263,7 +263,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 		{
 			try
 			{
-				game->MakeMove(Position(m_selectedCell->first, m_selectedCell->second), position, false);
+				game->MakeMove(Position(m_selectedCell->x, m_selectedCell->y), position, false);
 			}
 			catch (ChessExceptions e)
 			{
@@ -273,17 +273,17 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 			}
 
 			//Unselect prev. pressed button and  unhighlight board
-			m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
+			m_grid[m_selectedCell.value().x][m_selectedCell.value().y]->setSelected(false);
 			m_selectedCell.reset();
 			UpdateBoard();
 		}
 	}
 	//At first click
 	else {
-		if (ConvertColorEnum(status->GetCurrentPlayer()) == m_grid[position.first][position.second]->GetPieceColor())
+		if (ConvertColorEnum(status->GetCurrentPlayer()) == m_grid[position.x][position.y]->GetPieceColor())
 		{
 			m_selectedCell = position;
-			m_grid[position.first][position.second]->setSelected(true);
+			m_grid[position.x][position.y]->setSelected(true);
 
 			//TODO Show possible moves here
 			HighlightPossibleMoves(status->GetPossibleMoves(position));
@@ -510,14 +510,14 @@ void ChessUIQt::UpdateBoard()
 void ChessUIQt::HighlightPossibleMoves(const PositionList& possibleMoves)
 {
 	for (const auto& position : possibleMoves) {
-		m_grid[position.first][position.second]->setHighlighted(true);
+		m_grid[position.x][position.y]->setHighlighted(true);
 	}
 }
 
 void ChessUIQt::UnhighlightPossibleMoves(const PositionList& possibleMoves)
 {
 	for (const auto& position : possibleMoves) {
-		m_grid[position.first][position.second]->setHighlighted(false);
+		m_grid[position.x][position.y]->setHighlighted(false);
 	}
 }
 
@@ -550,13 +550,13 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 	auto type = ConvertTypeEnum(status->GetPieceInfo(endPos)->GetType());
 	auto color = ConvertColorEnum(status->GetPieceInfo(endPos)->GetColor());
 
-	m_grid[endPos.first][endPos.second]->setPiece({ type, color });
-	m_grid[endPos.first][endPos.second]->setSelected(false);
-	m_grid[endPos.first][endPos.second]->setHighlighted(false);
+	m_grid[endPos.x][endPos.y]->setPiece({ type, color });
+	m_grid[endPos.x][endPos.y]->setSelected(false);
+	m_grid[endPos.x][endPos.y]->setHighlighted(false);
 
-	m_grid[startPos.first][startPos.second]->setPiece({ PieceType::none, PieceColor::none });
-	m_grid[startPos.first][startPos.second]->setSelected(false);
-	m_grid[startPos.first][startPos.second]->setHighlighted(false);
+	m_grid[startPos.x][startPos.y]->setPiece({ PieceType::none, PieceColor::none });
+	m_grid[startPos.x][startPos.y]->setSelected(false);
+	m_grid[startPos.x][startPos.y]->setHighlighted(false);
 
 	auto bol = status->GetCurrentPlayer() == EPieceColor::Black;
 	m_MessageLabel->setText(status->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");

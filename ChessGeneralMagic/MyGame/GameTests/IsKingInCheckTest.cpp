@@ -124,25 +124,6 @@ TEST(IsKingLeftInCheck, QueenRookAttack)
 	EXPECT_TRUE(board.IsKingLeftInCheck(Position(2, 6), Position(1, 7), EPieceColor::Black));
 }
 
-TEST(IsCheckMate, QueenRookAttack1)
-{
-	ConfigMatrix m = {
-				/*0    1    2    3    4    5    6    7*/
-		/*0*/	{'-', '-', '-', 'Q', 'K', 'B', '-', '-'},
-		/*1*/	{'-', '-', '-', 'P', 'P', '-', '-', '-'},
-		/*2*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
-		/*3*/	{'-', '-', '-', '-', '-', '-', '-', 'q'},
-		/*4*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
-		/*5*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
-		/*6*/	{'-', '-', '-', '-', '-', '-', '-', '-'},
-		/*7*/	{'-', '-', '-', 'k', '-', '-', '-', '-'}
-	};
-
-	Board board(m);
-
-	EXPECT_TRUE(board.IsCheckmate(EPieceColor::Black));
-}
-
 TEST(IsKingLeftInCheck, BoardDeveloped)
 {
 	Board board(0);

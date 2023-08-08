@@ -23,79 +23,79 @@ PositionList Rook::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 	EPieceColor pieceColor = GetColor();
 	auto localBoard = board.GetBoard();
 
-	int i = piecePos.first + 1;
+	int i = piecePos.x + 1;
 	while (i < 8)
 	{
-		if (!board.IsKingLeftInCheck(piecePos, { i, piecePos.second }, GetColor()))
+		if (!board.IsKingLeftInCheck(piecePos, { i, piecePos.y }, GetColor()))
 		{
-			if (localBoard[i][piecePos.second] != nullptr)
+			if (localBoard[i][piecePos.y] != nullptr)
 			{
-				if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-					possibleMoves.push_back(Position(i, piecePos.second));
+				if (localBoard[i][piecePos.y]->GetColor() != pieceColor)
+					possibleMoves.push_back(Position(i, piecePos.y));
 				break;
 			}
 			else
-				possibleMoves.push_back(Position(i, piecePos.second));
+				possibleMoves.push_back(Position(i, piecePos.y));
 
 		}
-		else if(localBoard[i][piecePos.second] != nullptr && localBoard[i][piecePos.second] != nullptr)
+		else if(localBoard[i][piecePos.y] != nullptr && localBoard[i][piecePos.y] != nullptr)
 			break;
 		i++;
 	}
 
-	i = piecePos.second - 1;
+	i = piecePos.y - 1;
 	while (i >= 0)
 	{
-		if (!board.IsKingLeftInCheck(piecePos, { piecePos.first, i }, GetColor()))
+		if (!board.IsKingLeftInCheck(piecePos, { piecePos.x, i }, GetColor()))
 		{
-			if (localBoard[piecePos.first][i] != nullptr)
+			if (localBoard[piecePos.x][i] != nullptr)
 			{
-				if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-					possibleMoves.push_back(Position(piecePos.first, i));
+				if (localBoard[piecePos.x][i]->GetColor() != pieceColor)
+					possibleMoves.push_back(Position(piecePos.x, i));
 				break;
 			}
 			else
-				possibleMoves.push_back(Position(piecePos.first, i));
+				possibleMoves.push_back(Position(piecePos.x, i));
 		}
-		else if (localBoard[piecePos.first][i] != nullptr && localBoard[piecePos.first][i] != nullptr)
+		else if (localBoard[piecePos.x][i] != nullptr && localBoard[piecePos.x][i] != nullptr)
 			break;
 		i--;
 	}
 
-	i = piecePos.first - 1;
+	i = piecePos.x - 1;
 	while (i >= 0)
 	{
-		if (!board.IsKingLeftInCheck(piecePos, { i, piecePos.second }, GetColor()))
+		if (!board.IsKingLeftInCheck(piecePos, { i, piecePos.y }, GetColor()))
 		{
-			if (localBoard[i][piecePos.second] != nullptr)
+			if (localBoard[i][piecePos.y] != nullptr)
 			{
-				if (localBoard[i][piecePos.second]->GetColor() != pieceColor)
-					possibleMoves.push_back(Position(i, piecePos.second));
+				if (localBoard[i][piecePos.y]->GetColor() != pieceColor)
+					possibleMoves.push_back(Position(i, piecePos.y));
 				break;
 			}
 			else
-				possibleMoves.push_back(Position(i, piecePos.second));
+				possibleMoves.push_back(Position(i, piecePos.y));
 		}
-		else if (localBoard[i][piecePos.second] != nullptr && localBoard[i][piecePos.second] != nullptr)
+		else if (localBoard[i][piecePos.y] != nullptr && localBoard[i][piecePos.y] != nullptr)
 			break;
 		i--;
 	}
 
-	i = piecePos.second + 1;
+	i = piecePos.y + 1;
 	while (i < 8)
 	{
-		if (!board.IsKingLeftInCheck(piecePos, { piecePos.first, i }, GetColor()))
+		if (!board.IsKingLeftInCheck(piecePos, { piecePos.x, i }, GetColor()))
 		{
-		if (localBoard[piecePos.first][i] != nullptr)
+		if (localBoard[piecePos.x][i] != nullptr)
 		{
-			if (localBoard[piecePos.first][i]->GetColor() != pieceColor)
-				possibleMoves.push_back(Position(piecePos.first, i));
+			if (localBoard[piecePos.x][i]->GetColor() != pieceColor)
+				possibleMoves.push_back(Position(piecePos.x, i));
 			break;
 		}
 		else
-			possibleMoves.push_back(Position(piecePos.first, i));
+			possibleMoves.push_back(Position(piecePos.x, i));
 		}
-		else if (localBoard[piecePos.first][i] != nullptr && localBoard[piecePos.first][i] != nullptr)
+		else if (localBoard[piecePos.x][i] != nullptr && localBoard[piecePos.x][i] != nullptr)
 			break;
 		i++;
 	}

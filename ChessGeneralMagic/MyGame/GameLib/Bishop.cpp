@@ -20,8 +20,8 @@ bool Bishop::CanMove(Position startPos, Position endPos, bool isKingAttacking, c
 PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, const Board& board)
 {
 	PositionList possibleMoves;
-	int currentRow = piecePos.first - 1;
-	int currentCol = piecePos.second + 1;
+	int currentRow = piecePos.x - 1;
+	int currentCol = piecePos.y + 1;
 
 	while (currentCol < 8 && currentRow >= 0)
 	{
@@ -41,8 +41,8 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 		currentCol++;
 	}
 
-	currentRow = piecePos.first + 1;
-	currentCol = piecePos.second + 1;
+	currentRow = piecePos.x + 1;
+	currentCol = piecePos.y + 1;
 
 	while (currentCol < 8 && currentRow < 8)
 	{
@@ -63,8 +63,8 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 		currentCol++;
 	}
 
-	currentRow = piecePos.first + 1;
-	currentCol = piecePos.second - 1;
+	currentRow = piecePos.x + 1;
+	currentCol = piecePos.y - 1;
 
 	while (currentCol >= 0 && currentRow < 8)
 	{
@@ -86,8 +86,8 @@ PositionList Bishop::GetPossibleMoves(Position piecePos, bool isKingAttacking, c
 		currentCol--;
 	}
 
-	currentRow = piecePos.first - 1;
-	currentCol = piecePos.second - 1;
+	currentRow = piecePos.x - 1;
+	currentCol = piecePos.y - 1;
 
 	while (currentCol >= 0 && currentRow >= 0)
 	{

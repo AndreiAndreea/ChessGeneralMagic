@@ -4,7 +4,7 @@
 #include "IGameListener.h"
 #include "EPieceType.h"
 #include "EDrawComand.h"
-#include "PositionList.h"
+#include "Position.h"
 
 #include <memory>
 #include <string>

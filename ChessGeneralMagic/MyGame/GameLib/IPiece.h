@@ -2,7 +2,7 @@
 
 #include "EPieceColor.h"
 #include "EPieceType.h"
-#include "PositionList.h"
+#include "Position.h"
 
 class Board;
 

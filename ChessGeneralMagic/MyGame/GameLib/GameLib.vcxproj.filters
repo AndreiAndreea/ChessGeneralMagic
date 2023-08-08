@@ -132,7 +132,7 @@
     <ClInclude Include="IGameListener.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PositionList.h">
+    <ClInclude Include="Position.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="EDrawComand.h">
@@ -237,6 +237,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChessTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Position.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

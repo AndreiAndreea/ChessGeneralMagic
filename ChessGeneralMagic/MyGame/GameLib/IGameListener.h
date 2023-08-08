@@ -2,7 +2,7 @@
 
 #include "IPieceInfo.h"
 #include "EGameResult.h"
-#include "PositionList.h"
+#include "Position.h"
 
 class IGameListener
 {

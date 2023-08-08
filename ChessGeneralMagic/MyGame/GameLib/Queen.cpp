@@ -13,9 +13,9 @@ Queen::Queen(EPieceColor color)
 
 bool Queen::CanMove(Position startPos, Position endPos, bool isKingAttacking, const Board& board)
 {
-	auto ceva = board.GetBoard()[startPos.first][startPos.second]->GetColor();
+	auto ceva = board.GetBoard()[startPos.x][startPos.y]->GetColor();
 	Bishop bishop(ceva);
-	Rook rook(board.GetBoard()[startPos.first][startPos.second]->GetColor());
+	Rook rook(board.GetBoard()[startPos.x][startPos.y]->GetColor());
 
 	if (bishop.CanMove(startPos, endPos, isKingAttacking, board) == false && rook.CanMove(startPos, endPos,isKingAttacking, board) == false)
 		return false;

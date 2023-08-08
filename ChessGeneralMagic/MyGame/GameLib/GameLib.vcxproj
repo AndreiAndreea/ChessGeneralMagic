@@ -178,7 +178,7 @@
     <ClInclude Include="PieceInfo.h" />
     <ClInclude Include="PieceMovementExceptions.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PositionList.h" />
+    <ClInclude Include="Position.h" />
     <ClInclude Include="Queen.h" />
     <ClInclude Include="Rook.h" />
   </ItemGroup>
@@ -206,6 +206,7 @@
     <ClCompile Include="PieceInfo.cpp" />
     <ClCompile Include="PieceMovementExceptions.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Position.cpp" />
     <ClCompile Include="Queen.cpp" />
     <ClCompile Include="Rook.cpp" />
   </ItemGroup>

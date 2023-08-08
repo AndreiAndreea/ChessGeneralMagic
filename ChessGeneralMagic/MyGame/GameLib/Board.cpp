@@ -159,8 +159,8 @@ PieceMatrix Board::GetBoard() const
 
 PositionList Board::GetPossibleMoves(Position pos) const
 {
-	if (m_pieceMatrix[pos.first][pos.second])
-		return m_pieceMatrix[pos.first][pos.second]->GetPossibleMoves(pos, false, *this);
+	if (m_pieceMatrix[pos.x][pos.y])
+		return m_pieceMatrix[pos.x][pos.y]->GetPossibleMoves(pos, false, *this);
 	return {};
 }
 
@@ -171,7 +171,7 @@ IPieceInfoPtrList Board::GetCapturedPieces(EPieceColor color) const
 
 IPieceInfoPtr Board::GetPieceInfo(Position pos) const
 {
-	if (auto piece = m_pieceMatrix[pos.first][pos.second])
+	if (auto piece = m_pieceMatrix[pos.x][pos.y])
 		return std::make_shared<PieceInfo>(piece->GetType(), piece->GetColor());
 	return {};
 }
@@ -228,12 +228,12 @@ std::string Board::GenerateCastlingPossibleFEN() const
 
 void Board::SetPiece(const Position& pos, EPieceColor color, EPieceType type)
 {
-	m_pieceMatrix[pos.first][pos.second] = Piece::Produce(type, color);
+	m_pieceMatrix[pos.x][pos.y] = Piece::Produce(type, color);
 }
 
 void Board::SetPieceToNullptr(const Position& pos)
 {
-	m_pieceMatrix[pos.first][pos.second] = nullptr;
+	m_pieceMatrix[pos.x][pos.y] = nullptr;
 }
 
 void Board::MoveRookForCastling(int castlingType, EPieceColor color)
@@ -283,7 +283,7 @@ BoardConfig Board::GenerateBitset()
 
 bool Board::MakeMove(const Position& startPos, const Position& endPos)
 {
-	auto piece = m_pieceMatrix[startPos.first][startPos.second];
+	auto piece = m_pieceMatrix[startPos.x][startPos.y];
 	auto color = piece->GetColor();
 	auto type = piece->GetType();
 
@@ -303,8 +303,8 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 		// CASTLING
 		if (type == EPieceType::King)
 		{
-			if (abs(startPos.second - endPos.second) == 2)
-				MoveRookForCastling(startPos.second - endPos.second, color);
+			if (abs(startPos.y - endPos.y) == 2)
+				MoveRookForCastling(startPos.y - endPos.y, color);
 
 			//king move for castling
 			m_castlingPossible[(int)color] = { false, false };
@@ -312,9 +312,9 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 
 		if (type == EPieceType::Rook)
 		{
-			if (startPos.second == 0)
+			if (startPos.y == 0)
 				m_castlingPossible[(int)color][0] = false;
-			if (startPos.second == 7)
+			if (startPos.y == 7)
 				m_castlingPossible[(int)color][1] = false;
 		}
 
@@ -325,14 +325,14 @@ bool Board::MakeMove(const Position& startPos, const Position& endPos)
 
 bool Board::IsPieceColor(Position pos, EPieceColor color) const
 {
-	auto piece = m_pieceMatrix[pos.first][pos.second];
+	auto piece = m_pieceMatrix[pos.x][pos.y];
 
 	return piece && piece->GetColor() == color;
 }
 
 bool Board::IsPieceColorType(Position pos, EPieceColor color, EPieceType type) const
 {
-	auto piece = m_pieceMatrix[pos.first][pos.second];
+	auto piece = m_pieceMatrix[pos.x][pos.y];
 	return piece && piece->Is(type, color);
 }
 
@@ -384,7 +384,7 @@ Position Board::CanTheOtherPieceMove(Position startPos, Position endPos)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			auto initialPiece = m_pieceMatrix[startPos.first][startPos.second];
+			auto initialPiece = m_pieceMatrix[startPos.x][startPos.y];
 			auto currentPiece = m_pieceMatrix[i][j];
 
 			if (currentPiece && Position(i, j) != startPos && currentPiece->Is(initialPiece->GetType(), initialPiece->GetColor())
@@ -400,30 +400,26 @@ Position Board::CanTheOtherPieceMove(Position startPos, Position endPos)
 
 bool Board::CheckingRookThreat(const Position& initialPos, const PiecePosition& piecePos, const Position& increment) const
 {
-	if (initialPos.first == -1 || initialPos.first == 8 || initialPos.second == -1 || initialPos.second == 8)
+	if (initialPos.x == -1 || initialPos.x == 8 || initialPos.y == -1 || initialPos.y == 8)
 		return false;
 
-	auto pieceColor = m_pieceMatrix[piecePos.startPos.first][piecePos.startPos.second]->GetColor();
+	auto pieceColor = m_pieceMatrix[piecePos.startPos.x][piecePos.startPos.y]->GetColor();
 	std::vector<EPieceType> TYPES = { EPieceType::Queen, EPieceType::Rook };
 
-	for (int i = initialPos.first; i != -1 && i != 8; i += increment.first)
+	for (int i = initialPos.x; i != -1 && i != 8; i += increment.x)
 	{
-		for (int j = initialPos.second; j != -1 && j != 8; j += increment.second)
+		for (int j = initialPos.y; j != -1 && j != 8; j += increment.y)
 		{
-			if (i == piecePos.endPos.first && j == piecePos.endPos.second)
+			if (piecePos.endPos == Position(i, j))
 				return false;
-			auto piece = m_pieceMatrix[i][j];
-			if (!(i == piecePos.startPos.first && j == piecePos.startPos.second))
-				if (piece)
-				{
-					if (piece->IsOpposite(pieceColor, TYPES))
-						return true;
-					return false;
-				}
-			if (increment.second == 0)
+
+			if (auto piece = m_pieceMatrix[i][j])
+				if (piecePos.startPos != Position(i, j))
+					return piece->IsOpposite(pieceColor, TYPES);
+			if (increment.y == 0)
 				break;
 		}
-		if (increment.first == 0)
+		if (increment.x == 0)
 			break;
 	}
 	return false;
@@ -431,27 +427,23 @@ bool Board::CheckingRookThreat(const Position& initialPos, const PiecePosition& 
 
 bool Board::CheckingBishopThreat(const Position& initialPos, const PiecePosition& piecePos, const Position& increment) const
 {
-	if (initialPos.first == -1 || initialPos.first == 8 || initialPos.second == -1 || initialPos.second == 8)
+	if (!initialPos.IsValid())
 		return false;
 
-	auto pieceColor = m_pieceMatrix[piecePos.startPos.first][piecePos.startPos.second]->GetColor();
+	auto pieceColor = m_pieceMatrix[piecePos.startPos.x][piecePos.startPos.y]->GetColor();
+	//auto pieceColor = at(piecePos.startPos)->GetColor();
 	std::vector<EPieceType> TYPES = { EPieceType::Queen, EPieceType::Bishop };
 
-	for (int i = initialPos.first; i != -1 && i != 8; i += increment.first)
+	for (int i = initialPos.x; i != -1 && i != 8; i += increment.x)
 	{
-		for (int j = initialPos.second; j != -1 && j != 8; j += increment.second)
+		for (int j = initialPos.y; j != -1 && j != 8; j += increment.y)
 		{
-			if (i == piecePos.endPos.first && j == piecePos.endPos.second)
+			if (piecePos.endPos == Position(i, j))
 				return false;
 
-			auto piece = m_pieceMatrix[i][j];
-			if (!(i == piecePos.startPos.first && j == piecePos.startPos.second))
-				if (piece)
-				{
-					if (piece->IsOpposite(pieceColor, TYPES))
-						return true;
-					return false;
-				}
+			if (auto piece = m_pieceMatrix[i][j])
+				if (piecePos.startPos != Position(i, j))
+					return piece->IsOpposite(pieceColor, TYPES);
 		}
 	}
 	return false;
@@ -464,94 +456,30 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 
 	//checking Rook
 
-	if (CheckingRookThreat({ kingPos.first + 1, kingPos.second }, piecePos, { +1, 0 }))
+	if (CheckingRookThreat({ kingPos.x + 1, kingPos.y }, piecePos, { +1, 0 }))
 		return true;
-	if (CheckingRookThreat({ kingPos.first - 1, kingPos.second }, piecePos, { -1, 0 }))
+	if (CheckingRookThreat({ kingPos.x - 1, kingPos.y }, piecePos, { -1, 0 }))
 		return true;
-	if (CheckingRookThreat({ kingPos.first, kingPos.second + 1 }, piecePos, { 0, +1 }))
+	if (CheckingRookThreat({ kingPos.x, kingPos.y + 1 }, piecePos, { 0, +1 }))
 		return true;
-	if (CheckingRookThreat({ kingPos.first, kingPos.second - 1 }, piecePos, { 0, -1 }))
+	if (CheckingRookThreat({ kingPos.x, kingPos.y - 1 }, piecePos, { 0, -1 }))
 		return true;
-
-	/*int i = kingPos.first + 1;
-	while (i < 8)
-	{
-		if (i == endPos.first && kingPos.second == endPos.second)
-			break;
-		auto piece = m_pieceMatrix[i][kingPos.second];
-		if (!(i == startPos.first && kingPos.second == startPos.second))
-			if (piece)
-			{
-				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
-					return true;
-				break;
-			}
-		i++;
-	}
-	i = kingPos.first - 1;
-	while (i >= 0)
-	{
-
-		if (i == endPos.first && kingPos.second == endPos.second)
-			break;
-		auto piece = m_pieceMatrix[i][kingPos.second];
-		if (!(i == startPos.first && kingPos.second == startPos.second))
-			if (piece)
-			{
-				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
-					return true;
-				break;
-			}
-		i--;
-	}
-	i = kingPos.second + 1;
-	while (i < 8)
-	{
-		if (i == endPos.second && kingPos.first == endPos.first)
-			break;
-		auto piece = m_pieceMatrix[kingPos.first][i];
-		if (!(i == startPos.second && kingPos.first == startPos.first))
-			if (piece)
-			{
-				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
-					return true;
-				break;
-			}
-		i++;
-	}
-
-
-	i = kingPos.second - 1;
-	while (i >= 0)
-	{
-		if (i == endPos.second && kingPos.first == endPos.first)
-			break;
-		auto piece = m_pieceMatrix[kingPos.first][i];
-		if (!(i == startPos.second && kingPos.first == startPos.first))
-			if (piece)
-			{
-				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
-					return true;
-				break;
-			}
-		i--;
-	}*/
 
 	//checking Bishop threat
 
-/*	if (CheckingBishopThreat({ kingPos.first - 1, kingPos.second + 1 }, piecePos, { -1, +1 }))
-		return true*/
-	
-	int currentRow = kingPos.first - 1;
-	int currentCol = kingPos.second + 1;
+	//if (CheckingBishopThreat({ kingPos.x - 1, kingPos.y + 1 }, piecePos, { -1, +1 }))
+	//	return true;
+
+	int currentRow = kingPos.x - 1;
+	int currentCol = kingPos.y + 1;
 
 	while (currentCol < 8 && currentRow >= 0)
 	{
-		if (currentCol == endPos.second && currentRow == endPos.first)
+		if (currentCol == endPos.y && currentRow == endPos.x)
 			break;
 
 		auto piece = m_pieceMatrix[currentRow][currentCol];
-		if (!(currentRow == startPos.first && currentCol == startPos.second))
+		if (!(currentRow == startPos.x && currentCol == startPos.y))
 			if (piece)
 				if (piece->IsOpposite(pieceColor, { EPieceType::Bishop, EPieceType::Queen }))
 					return true;
@@ -562,18 +490,18 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		currentCol++;
 	}
 
-	//if (CheckingBishopThreat({ kingPos.first + 1, kingPos.second + 1 }, piecePos, { +1, +1 }))
+	//if (CheckingBishopThreat({ kingPos.x + 1, kingPos.y + 1 }, piecePos, { +1, +1 }))
 	//	return true;
 
-	currentRow = kingPos.first + 1;
-	currentCol = kingPos.second + 1;
+	currentRow = kingPos.x + 1;
+	currentCol = kingPos.y + 1;
 
 	while (currentCol < 8 && currentRow < 8)
 	{
-		if (currentCol == endPos.second && currentRow == endPos.first)
+		if (currentCol == endPos.y && currentRow == endPos.x)
 			break;
 		auto piece = m_pieceMatrix[currentRow][currentCol];
-		if (!(currentCol == startPos.second && currentRow == startPos.first))
+		if (!(currentCol == startPos.y && currentRow == startPos.x))
 			if (piece)
 				if (piece->IsOpposite(pieceColor, { EPieceType::Bishop, EPieceType::Queen }))
 					return true;
@@ -587,15 +515,15 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	//if (CheckingBishopThreat({ kingPos.first + 1, kingPos.second - 1 }, piecePos, { +1, -1 }))
 	//	return true;
 
-	currentRow = kingPos.first + 1;
-	currentCol = kingPos.second - 1;
+	currentRow = kingPos.x + 1;
+	currentCol = kingPos.y - 1;
 
 	while (currentCol >= 0 && currentRow < 8)
 	{
-		if (currentCol == endPos.second && currentRow == endPos.first)
+		if (currentCol == endPos.y && currentRow == endPos.x)
 			break;
 		auto piece = m_pieceMatrix[currentRow][currentCol];
-		if (!(currentCol == startPos.second && currentRow == startPos.first))
+		if (!(currentCol == startPos.y && currentRow == startPos.x))
 			if (piece)
 				if (piece->IsOpposite(pieceColor, { EPieceType::Bishop, EPieceType::Queen }))
 					return true;
@@ -609,15 +537,15 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	//if (CheckingBishopThreat({ kingPos.first - 1, kingPos.second - 1 }, piecePos, { -1, -1 }))
 	//	return true;
 
-	currentRow = kingPos.first - 1;
-	currentCol = kingPos.second - 1;
+	currentRow = kingPos.x - 1;
+	currentCol = kingPos.y - 1;
 
 	while (currentCol >= 0 && currentRow >= 0)
 	{
-		if (currentCol == endPos.second && currentRow == endPos.first)
+		if (currentCol == endPos.y && currentRow == endPos.x)
 			break;
 		auto piece = m_pieceMatrix[currentRow][currentCol];
-		if (!(currentCol == startPos.second && currentRow == startPos.first))
+		if (!(currentCol == startPos.y && currentRow == startPos.x))
 			if (piece)
 				if (piece->IsOpposite(pieceColor, { EPieceType::Bishop, EPieceType::Queen }))
 					return true;
@@ -631,37 +559,37 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	//check pawn threat
 	if (pieceColor == EPieceColor::Black)
 	{
-		if (kingPos.first < 7 && kingPos.second > 0)
-			if (auto piece = m_pieceMatrix[kingPos.first + 1][kingPos.second - 1])
-				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second))
+		if (kingPos.x < 7 && kingPos.y > 0)
+			if (auto piece = m_pieceMatrix[kingPos.x + 1][kingPos.y - 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.x + 1 != endPos.x || kingPos.y - 1 != endPos.y))
 					return true;
 
-		if (kingPos.first < 7 && kingPos.second < 7)
-			if (auto piece = m_pieceMatrix[kingPos.first + 1][kingPos.second + 1])
-				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second))
+		if (kingPos.x < 7 && kingPos.y < 7)
+			if (auto piece = m_pieceMatrix[kingPos.x + 1][kingPos.y + 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.x + 1 != endPos.x || kingPos.y + 1 != endPos.y))
 					return true;
 	}
 
 	if (pieceColor == EPieceColor::White)
 	{
-		if (kingPos.first > 0 && kingPos.second > 0)
-			if (auto piece = m_pieceMatrix[kingPos.first - 1][kingPos.second - 1])
-				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first - 1 != endPos.first || kingPos.second - 1 != endPos.second))
+		if (kingPos.x > 0 && kingPos.y > 0)
+			if (auto piece = m_pieceMatrix[kingPos.x - 1][kingPos.y - 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.x - 1 != endPos.x || kingPos.y - 1 != endPos.y))
 					return true;
 
-		if (kingPos.first > 1 && kingPos.second < 7)
-			if (auto piece = m_pieceMatrix[kingPos.first - 1][kingPos.second + 1])
-				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second))
+		if (kingPos.x > 1 && kingPos.y < 7)
+			if (auto piece = m_pieceMatrix[kingPos.x - 1][kingPos.y + 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.x - 1 != endPos.x || kingPos.y + 1 != endPos.y))
 					return true;
 	}
 
 	//check knight threat
-	for (int i = kingPos.first - 2; i <= kingPos.first + 2; i++)
-		for (int j = kingPos.second - 2; j <= kingPos.second + 2; j++)
+	for (int i = kingPos.x - 2; i <= kingPos.x + 2; i++)
+		for (int j = kingPos.y - 2; j <= kingPos.y + 2; j++)
 		{
 			if (i < 8 && i >= 0 && j < 8 && j >= 0)
-				if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
-					if (m_pieceMatrix[i][j] && m_pieceMatrix[i][j]->IsOpposite(pieceColor, { EPieceType::Knight }) && (i != endPos.first || j != endPos.second))
+				if (abs(kingPos.x - i) == 2 && abs(kingPos.y - j) == 1 || abs(kingPos.x - i) == 1 && abs(kingPos.y - j) == 2)
+					if (m_pieceMatrix[i][j] && m_pieceMatrix[i][j]->IsOpposite(pieceColor, { EPieceType::Knight }) && (i != endPos.x || j != endPos.y))
 						return true;
 		}
 
@@ -807,9 +735,9 @@ bool Board::IsThreefoldRepetitionDraw()
 
 bool Board::IsUpgradeablePawn(Position pos) const
 {
-	auto piece = m_pieceMatrix[pos.first][pos.second];
-	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.first == 0)
-		|| (piece->GetColor() == EPieceColor::Black && pos.first == 7));
+	auto piece = m_pieceMatrix[pos.x][pos.y];
+	return piece->GetType() == EPieceType::Pawn && ((piece->GetColor() == EPieceColor::White && pos.x == 0)
+		|| (piece->GetColor() == EPieceColor::Black && pos.x == 7));
 }
 
 void Board::ResetBoard()

@@ -23,7 +23,7 @@ bool King::VerifyKingMovmentCheck(Position startPos, Position endPos, const Boar
 				return true;
 		}
 	}
-	localBoard.GetBoard()[endPos.first][endPos.second] = nullptr;
+	localBoard.GetBoard()[endPos.x][endPos.y] = nullptr;
 	localBoard.SetPiece(startPos, kingColor, EPieceType::King);
 	return false;
 }
@@ -133,9 +133,9 @@ PositionList King::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 {
 	PositionList possibleMoves;
 
-	for (int i = piecePos.first - 1; i <= piecePos.first + 1; i++)
+	for (int i = piecePos.x - 1; i <= piecePos.x + 1; i++)
 	{
-		for (int j = piecePos.second - 1; j <= piecePos.second + 1; j++)
+		for (int j = piecePos.y - 1; j <= piecePos.y + 1; j++)
 		{
 			if (i >= 0 && i < 8 && j < 8 && j >= 0)
 			{
@@ -150,12 +150,12 @@ PositionList King::GetPossibleMoves(Position piecePos, bool isKingAttacking, con
 
 	if (!isKingAttacking)
 	{
-		auto piece = board.GetBoard()[piecePos.first][piecePos.second];
+		auto piece = board.GetBoard()[piecePos.x][piecePos.y];
 		auto color = piece->GetColor();
 		if (CanMakeBigCastling(color, board))
-			possibleMoves.push_back(Position(piecePos.first ,piecePos.second -2));
+			possibleMoves.push_back(Position(piecePos.x ,piecePos.y -2));
 		if (CanMakeSmallCastling(color, board))
-			possibleMoves.push_back(Position(piecePos.first, piecePos.second + 2));
+			possibleMoves.push_back(Position(piecePos.x, piecePos.y + 2));
 	}
 
 	return possibleMoves;
