@@ -476,8 +476,8 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 	//checking Bishop threat
 
 /*	if (CheckingBishopThreat({ kingPos.first - 1, kingPos.second + 1 }, piecePos, { -1, +1 }))
-		return true*/;
-
+		return true*/
+	
 	int currentRow = kingPos.first - 1;
 	int currentCol = kingPos.second + 1;
 
@@ -500,7 +500,7 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 
 	//if (CheckingBishopThreat({ kingPos.first + 1, kingPos.second + 1 }, piecePos, { +1, +1 }))
 	//	return true;
-	
+
 	currentRow = kingPos.first + 1;
 	currentCol = kingPos.second + 1;
 
@@ -522,7 +522,7 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 
 	//if (CheckingBishopThreat({ kingPos.first + 1, kingPos.second - 1 }, piecePos, { +1, -1 }))
 	//	return true;
-	
+
 	currentRow = kingPos.first + 1;
 	currentCol = kingPos.second - 1;
 
@@ -564,35 +564,31 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		currentCol--;
 	}
 
-
-
 	//check pawn threat
 	if (pieceColor == EPieceColor::Black)
 	{
-		if (kingPos.first + 1 < 8)
-		{
-			if (kingPos.second - 1 >= 0 && m_pieceMatrix[kingPos.first + 1][kingPos.second - 1] != nullptr && m_pieceMatrix[kingPos.first + 1][kingPos.second - 1]->IsOpposite(pieceColor, { EPieceType::Pawn })
-				&& (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second))
-				return true;
+		if (kingPos.first < 7 && kingPos.second > 0)
+			if (auto piece = m_pieceMatrix[kingPos.first + 1][kingPos.second - 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first + 1 != endPos.first || kingPos.second - 1 != endPos.second))
+					return true;
 
-			if (kingPos.second + 1 < 8 && m_pieceMatrix[kingPos.first + 1][kingPos.second + 1] != nullptr && m_pieceMatrix[kingPos.first + 1][kingPos.second + 1]->IsOpposite(pieceColor, { EPieceType::Pawn })
-				&& (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second))
-				return true;
-		}
+		if (kingPos.first < 7 && kingPos.second < 7)
+			if (auto piece = m_pieceMatrix[kingPos.first + 1][kingPos.second + 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first + 1 != endPos.first || kingPos.second + 1 != endPos.second))
+					return true;
 	}
 
 	if (pieceColor == EPieceColor::White)
 	{
-		if (kingPos.first - 1 >= 0)
-		{
-			if (kingPos.second - 1 >= 0 && m_pieceMatrix[kingPos.first - 1][kingPos.second - 1] != nullptr && m_pieceMatrix[kingPos.first - 1][kingPos.second - 1]->IsOpposite(pieceColor, {EPieceType::Pawn})
-				&& (kingPos.first - 1 != endPos.first || kingPos.second - 1 != endPos.second))
-				return true;
+		if (kingPos.first > 0 && kingPos.second > 0)
+			if (auto piece = m_pieceMatrix[kingPos.first - 1][kingPos.second - 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first - 1 != endPos.first || kingPos.second - 1 != endPos.second))
+					return true;
 
-			if (kingPos.second + 1 < 8 && m_pieceMatrix[kingPos.first - 1][kingPos.second + 1] != nullptr && m_pieceMatrix[kingPos.first - 1][kingPos.second + 1]->IsOpposite(pieceColor, { EPieceType::Pawn })
-				&& (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second))
-				return true;
-		}
+		if (kingPos.first > 1 && kingPos.second < 7)
+			if (auto piece = m_pieceMatrix[kingPos.first - 1][kingPos.second + 1])
+				if (piece->IsOpposite(pieceColor, { EPieceType::Pawn }) && (kingPos.first - 1 != endPos.first || kingPos.second + 1 != endPos.second))
+					return true;
 	}
 
 	//check knight threat
@@ -601,7 +597,7 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		{
 			if (i < 8 && i >= 0 && j < 8 && j >= 0)
 				if (abs(kingPos.first - i) == 2 && abs(kingPos.second - j) == 1 || abs(kingPos.first - i) == 1 && abs(kingPos.second - j) == 2)
-					if (m_pieceMatrix[i][j] != nullptr && m_pieceMatrix[i][j]->IsOpposite(pieceColor, { EPieceType::Knight }) && (i != endPos.first || j != endPos.second))
+					if (m_pieceMatrix[i][j] && m_pieceMatrix[i][j]->IsOpposite(pieceColor, { EPieceType::Knight }) && (i != endPos.first || j != endPos.second))
 						return true;
 		}
 
