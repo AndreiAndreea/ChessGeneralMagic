@@ -124,7 +124,7 @@ TEST(IsKingLeftInCheck, QueenRookAttack)
 	EXPECT_TRUE(board.IsKingLeftInCheck(Position(2, 6), Position(1, 7), EPieceColor::Black));
 }
 
-TEST(IsKingLeftInCheck, QueenRookAttack1)
+TEST(IsCheckMate, QueenRookAttack1)
 {
 	ConfigMatrix m = {
 				/*0    1    2    3    4    5    6    7*/
@@ -193,3 +193,119 @@ TEST(IsKingLeftInCheck, BoardDeveloped2)
 
 	EXPECT_FALSE(board.IsKingLeftInCheck(Position(7, 1), Position(6, 1), EPieceColor::White));
 }
+
+TEST(IsKingLeftInCheck, PawnMoveInBiRookCheck)
+{
+	ConfigMatrix m = {
+		     /*0    1    2    3    4    5    6    7*/
+		/*0*/{'R', '-', '-', 'q', 'K', 'B', 'N', 'R'},
+		/*1*/{ 'P', 'B', '-', 'P', 'P', 'P', 'P', 'P' },
+		/*2*/{ 'N', '-', '-', '-', '-', '-', '-', '-' },
+		/*3*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*4*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*5*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*6*/{ 'p', 'p', '-', 'p', 'p', 'p', 'p', 'p' },
+		/*7*/{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }
+	};
+
+	Board board(m);
+
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(1,3), Position(3,3), EPieceColor::Black));
+}
+
+TEST(IsKingLeftInCheck, BishopMoveInRookCheck)
+{
+	ConfigMatrix m = {
+			 /*0    1    2    3    4    5    6    7*/
+		/*0*/{'R', '-', '-', 'q', 'K', 'B', 'N', 'R'},
+		/*1*/{ 'P', 'B', '-', 'P', 'P', 'P', 'P', 'P' },
+		/*2*/{ 'N', '-', '-', '-', '-', '-', '-', '-' },
+		/*3*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*4*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*5*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*6*/{ 'p', 'p', '-', 'p', 'p', 'p', 'p', 'p' },
+		/*7*/{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }
+	};
+
+	Board board(m);
+
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(1, 1), Position(3, 3), EPieceColor::Black));
+}
+
+TEST(IsKingLeftInCheck, NightMoveInRookCheck)
+{
+	ConfigMatrix m = {
+			 /*0    1    2    3    4    5    6    7*/
+		/*0*/{'R', '-', '-', 'q', 'K', 'B', 'N', 'R'},
+		/*1*/{ 'P', 'B', '-', 'P', 'P', 'P', 'P', 'P' },
+		/*2*/{ 'N', '-', '-', '-', '-', '-', '-', '-' },
+		/*3*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*4*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*5*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*6*/{ 'p', 'p', '-', 'p', 'p', 'p', 'p', 'p' },
+		/*7*/{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }
+	};
+
+	Board board(m);
+
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(2,0), Position(1, 2), EPieceColor::Black));
+}
+
+TEST(IsKingLeftInCheck, RookMoveInRookCheck)
+{
+	ConfigMatrix m = {
+			 /*0    1    2    3    4    5    6    7*/
+		/*0*/{'R', '-', '-', 'q', 'K', 'B', 'N', 'R'},
+		/*1*/{ 'P', 'B', '-', 'P', 'P', 'P', 'P', 'P' },
+		/*2*/{ 'N', '-', '-', '-', '-', '-', '-', '-' },
+		/*3*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*4*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*5*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*6*/{ 'p', 'p', '-', 'p', 'p', 'p', 'p', 'p' },
+		/*7*/{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }
+	};
+
+	Board board(m);
+
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(0, 0), Position(0, 2), EPieceColor::Black));
+}
+
+TEST(IsKingLeftInCheck, RookMoveInRookCheckValid)
+{
+	ConfigMatrix m = {
+		/*0    1    2    3    4    5    6    7*/
+		/*0*/{'R', '-', '-', 'q', 'K', 'B', 'N', 'R'},
+		/*1*/{ 'P', 'B', '-', 'P', 'P', 'P', 'P', 'P' },
+		/*2*/{ 'N', '-', '-', '-', '-', '-', '-', '-' },
+		/*3*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*4*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*5*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*6*/{ 'p', 'p', '-', 'p', 'p', 'p', 'p', 'p' },
+		/*7*/{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }
+	};
+
+	Board board(m);
+
+	EXPECT_FALSE(board.IsKingLeftInCheck(Position(0, 0), Position(0, 3), EPieceColor::Black));
+}
+
+TEST(IsKingLeftInCheck, RookMoveInBishopCheckValid)
+{
+	ConfigMatrix m = {
+		/*0    1    2    3    4    5    6    7*/
+		/*0*/{'R', '-', '-', '-', 'K', 'B', 'N', 'R'},
+		/*1*/{ 'P', 'B', '-', 'q', 'P', 'P', 'P', 'P' },
+		/*2*/{ 'N', '-', '-', '-', '-', '-', '-', '-' },
+		/*3*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*4*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*5*/{ '-', '-', '-', '-', '-', '-', '-', '-' },
+		/*6*/{ 'p', 'p', '-', 'p', 'p', 'p', 'p', 'p' },
+		/*7*/{ 'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r' }
+	};
+
+	Board board(m);
+
+	EXPECT_TRUE(board.IsKingLeftInCheck(Position(0, 0), Position(0, 3), EPieceColor::Black));
+}
+
+

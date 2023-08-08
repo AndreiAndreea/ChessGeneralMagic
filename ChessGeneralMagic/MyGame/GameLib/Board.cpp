@@ -400,7 +400,7 @@ Position Board::CanTheOtherPieceMove(Position startPos, Position endPos)
 
 bool Board::CheckingRookThreat(const Position& initialPos, const PiecePosition& piecePos, const Position& increment) const
 {
-	if (initialPos.first == 0 || initialPos.first == 8 || initialPos.second == 0 || initialPos.second == 8)
+	if (initialPos.first == -1 || initialPos.first == 8 || initialPos.second == -1 || initialPos.second == 8)
 		return false;
 
 	auto pieceColor = m_pieceMatrix[piecePos.startPos.first][piecePos.startPos.second]->GetColor();
@@ -431,7 +431,7 @@ bool Board::CheckingRookThreat(const Position& initialPos, const PiecePosition& 
 
 bool Board::CheckingBishopThreat(const Position& initialPos, const PiecePosition& piecePos, const Position& increment) const
 {
-	if (initialPos.first == 0 || initialPos.first == 8 || initialPos.second == 0 || initialPos.second == 8)
+	if (initialPos.first == -1 || initialPos.first == 8 || initialPos.second == -1 || initialPos.second == 8)
 		return false;
 
 	auto pieceColor = m_pieceMatrix[piecePos.startPos.first][piecePos.startPos.second]->GetColor();
@@ -472,6 +472,70 @@ bool Board::IsKingLeftInCheck(const Position& startPos, const Position& endPos, 
 		return true;
 	if (CheckingRookThreat({ kingPos.first, kingPos.second - 1 }, piecePos, { 0, -1 }))
 		return true;
+
+	/*int i = kingPos.first + 1;
+	while (i < 8)
+	{
+		if (i == endPos.first && kingPos.second == endPos.second)
+			break;
+		auto piece = m_pieceMatrix[i][kingPos.second];
+		if (!(i == startPos.first && kingPos.second == startPos.second))
+			if (piece)
+			{
+				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
+					return true;
+				break;
+			}
+		i++;
+	}
+	i = kingPos.first - 1;
+	while (i >= 0)
+	{
+
+		if (i == endPos.first && kingPos.second == endPos.second)
+			break;
+		auto piece = m_pieceMatrix[i][kingPos.second];
+		if (!(i == startPos.first && kingPos.second == startPos.second))
+			if (piece)
+			{
+				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
+					return true;
+				break;
+			}
+		i--;
+	}
+	i = kingPos.second + 1;
+	while (i < 8)
+	{
+		if (i == endPos.second && kingPos.first == endPos.first)
+			break;
+		auto piece = m_pieceMatrix[kingPos.first][i];
+		if (!(i == startPos.second && kingPos.first == startPos.first))
+			if (piece)
+			{
+				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
+					return true;
+				break;
+			}
+		i++;
+	}
+
+
+	i = kingPos.second - 1;
+	while (i >= 0)
+	{
+		if (i == endPos.second && kingPos.first == endPos.first)
+			break;
+		auto piece = m_pieceMatrix[kingPos.first][i];
+		if (!(i == startPos.second && kingPos.first == startPos.first))
+			if (piece)
+			{
+				if (piece->IsOpposite(pieceColor, { EPieceType::Rook, EPieceType::Queen }))
+					return true;
+				break;
+			}
+		i--;
+	}*/
 
 	//checking Bishop threat
 

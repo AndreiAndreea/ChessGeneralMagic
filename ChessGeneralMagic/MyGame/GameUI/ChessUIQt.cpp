@@ -246,6 +246,7 @@ static QString ConvertEGameResultToQStr(EGameResult result)
 
 void ChessUIQt::OnButtonClicked(const Position& position)
 {
+	auto status = game->GetStatus();
 	//At second click
 	if (m_selectedCell.has_value())
 	{
@@ -255,7 +256,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 			//deselect cells
 			m_grid[m_selectedCell.value().first][m_selectedCell.value().second]->setSelected(false);
 			m_selectedCell.reset();
-			auto possibleMoves = game->GetPossibleMoves(position);
+			auto possibleMoves = status->GetPossibleMoves(position);
 			UnhighlightPossibleMoves(possibleMoves);
 		}
 		else
@@ -279,13 +280,13 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 	}
 	//At first click
 	else {
-		if (ConvertColorEnum(game->GetCurrentPlayer()) == m_grid[position.first][position.second]->GetPieceColor())
+		if (ConvertColorEnum(status->GetCurrentPlayer()) == m_grid[position.first][position.second]->GetPieceColor())
 		{
 			m_selectedCell = position;
 			m_grid[position.first][position.second]->setSelected(true);
 
 			//TODO Show possible moves here
-			HighlightPossibleMoves(game->GetPossibleMoves(position));
+			HighlightPossibleMoves(status->GetPossibleMoves(position));
 		}
 	}
 }
@@ -299,7 +300,7 @@ void ChessUIQt::OnSaveButtonClicked()
 		QString fileExtension = QFileInfo(fileSave).suffix();
 		if (fileExtension == "fen")
 		{
-			data = game->GetFEN();
+			data = game->GetStatus()->GetFEN();
 			std::ofstream outputFile(fileSave.toStdString());
 			if (outputFile.is_open()) {
 				outputFile << data;
@@ -311,7 +312,6 @@ void ChessUIQt::OnSaveButtonClicked()
 			//data = game->GetPGN();
 			game->SaveToPGNFile(fileSave.toStdString());
 		}
-
 	}
 }
 
@@ -336,7 +336,7 @@ void ChessUIQt::OnLoadButtonClicked()
 			OnRestartButtonClicked();
 			game->InitializeGameFEN(fileData.toStdString());
 
-			m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+			m_MessageLabel->setText(game->GetStatus()->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();
 		}
@@ -375,8 +375,9 @@ void ChessUIQt::ResetCapturedPiecesDisplay()
 
 void ChessUIQt::UpdateCapturedPiecesDispay()
 {
-	OnCaptureMade(EPieceColor::Black, game->GetCapturedPieces(EPieceColor::Black));
-	OnCaptureMade(EPieceColor::White, game->GetCapturedPieces(EPieceColor::White));
+	auto status = game->GetStatus();
+	OnCaptureMade(EPieceColor::Black, status->GetCapturedPieces(EPieceColor::Black));
+	OnCaptureMade(EPieceColor::White, status->GetCapturedPieces(EPieceColor::White));
 }
 
 void ChessUIQt::OnRestartButtonClicked()
@@ -449,11 +450,12 @@ void ChessUIQt::OnHistoryClicked(QListWidgetItem* item)
 
 void ChessUIQt::UpdateHistory()
 {
-	auto movesPGN = game->GetMovesPGN(game->GetPGNMovesSection());
+	auto status = game->GetStatus();
+	auto movesPGN = status->GetMovesPGN(status->GetPGNMovesSection());
 
 	if (movesPGN.size())
 	{
-		if (game->GetCurrentPlayer() != EPieceColor::White)
+		if (status->GetCurrentPlayer() != EPieceColor::White)
 		{
 			QString itemText = QString::number(movesPGN.size());
 			QListWidgetItem* item = new QListWidgetItem(itemText);
@@ -480,16 +482,17 @@ void ChessUIQt::UpdateHistory()
 
 void ChessUIQt::UpdateBoard()
 {
+	auto status = game->GetStatus();
 	PieceColor color;
 	PieceType type;
 
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 
-			if (game->GetPieceInfo(Position(i, j)))
+			if (status->GetPieceInfo(Position(i, j)))
 			{
-				type = ConvertTypeEnum(game->GetPieceInfo(Position(i, j))->GetType());
-				color = ConvertColorEnum(game->GetPieceInfo(Position(i, j))->GetColor());
+				type = ConvertTypeEnum(status->GetPieceInfo(Position(i, j))->GetType());
+				color = ConvertColorEnum(status->GetPieceInfo(Position(i, j))->GetColor());
 			}
 			else
 			{
@@ -543,8 +546,9 @@ void ChessUIQt::SetGame(IGamePtr game)
 
 void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
 {
-	auto type = ConvertTypeEnum(game->GetPieceInfo(endPos)->GetType());
-	auto color = ConvertColorEnum(game->GetPieceInfo(endPos)->GetColor());
+	auto status = game->GetStatus();
+	auto type = ConvertTypeEnum(status->GetPieceInfo(endPos)->GetType());
+	auto color = ConvertColorEnum(status->GetPieceInfo(endPos)->GetColor());
 
 	m_grid[endPos.first][endPos.second]->setPiece({ type, color });
 	m_grid[endPos.first][endPos.second]->setSelected(false);
@@ -554,8 +558,8 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 	m_grid[startPos.first][startPos.second]->setSelected(false);
 	m_grid[startPos.first][startPos.second]->setHighlighted(false);
 
-	auto bol = game->GetCurrentPlayer() == EPieceColor::Black;
-	m_MessageLabel->setText(game->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+	auto bol = status->GetCurrentPlayer() == EPieceColor::Black;
+	m_MessageLabel->setText(status->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
 
 	//update history
 	UpdateHistory();

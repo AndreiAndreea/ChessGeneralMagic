@@ -146,6 +146,7 @@
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
     <ClInclude Include="ChessExceptions.h" />
+    <ClInclude Include="ChessTime.h" />
     <ClInclude Include="EDrawComand.h" />
     <ClInclude Include="EGameResult.h" />
     <ClInclude Include="EGameState.h" />
@@ -185,6 +186,7 @@
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
     <ClCompile Include="ChessExceptions.cpp" />
+    <ClCompile Include="ChessTime.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InvalidDrawResponseException.cpp" />
     <ClCompile Include="InvalidMovingPatternException.cpp" />
