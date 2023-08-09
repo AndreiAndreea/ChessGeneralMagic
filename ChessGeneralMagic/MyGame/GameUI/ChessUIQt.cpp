@@ -38,7 +38,7 @@ ChessUIQt::ChessUIQt(QWidget* parent)
 
 ChessUIQt::~ChessUIQt()
 {
-	
+
 	//No delete?
 	//https://doc.qt.io/qt-6/objecttrees.html
 }
@@ -87,13 +87,13 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	QGridLayout* timerGrid = new QGridLayout();
 
 	QLabel* blackTimerLbl = new QLabel("Black timer: ");
-	m_BlackTimer = new QLabel("00:00");
+	m_BlackTimer = new QLabel("10:00");
 
 	QPushButton* pauseTimerBtn = new QPushButton(" Pause | Resume");
 	//TODO Create slot and connect button
 
 	QLabel* whiteTimerLbl = new QLabel("    White timer: ");
-	m_WhiteTimer = new QLabel("00:00");
+	m_WhiteTimer = new QLabel("10:00");
 
 	timerContainer->setFixedWidth(400);
 
@@ -215,7 +215,7 @@ static PieceColor ConvertPlayerToColor(EPlayer player)
 
 static PieceType ConvertTypeEnum(EPieceType type)
 {
-	std::vector<PieceType> TYPES = {PieceType::pawn, PieceType::rook, PieceType::knight,PieceType::bishop, PieceType::queen, PieceType::king, PieceType::none, };
+	std::vector<PieceType> TYPES = { PieceType::pawn, PieceType::rook, PieceType::knight,PieceType::bishop, PieceType::queen, PieceType::king, PieceType::none, };
 	return TYPES[(int)type];
 }
 
@@ -332,7 +332,7 @@ void ChessUIQt::OnLoadButtonClicked()
 			UpdateBoard();
 		}
 		else if (fileExtension == "pgn") {
-			
+
 			OnRestartButtonClicked();
 
 			game->LoadFromPGNFile(fileName.toStdString());
@@ -381,6 +381,7 @@ void ChessUIQt::OnRestartButtonClicked()
 	m_MessageLabel->setText("Waiting for white player");
 
 	UpdateBoard();
+	UpdateTimers();
 }
 
 void ChessUIQt::OnDrawButtonClicked()
@@ -477,41 +478,17 @@ void ChessUIQt::UpdateTimers()
 	auto currentPlayer = status->GetCurrentPlayer();
 	auto timeInfo = status->GetTime(currentPlayer);
 
-	QTimer timer;
+
+	// Convert minutes and seconds to a nicely formatted string
+	QString timeStr = QString("%1:%2").arg(timeInfo.minutes, 2, 10, QChar('0'))
+		.arg(timeInfo.seconds, 2, 10, QChar('0'));
+
+	// Update the QLabel text
 	if ((int)currentPlayer)
-	{
-		QObject::connect(&timer, &QTimer::timeout, [&]() {
-			// Get the elapsed time from your GameLib's timer
-			// Assuming your GameLib instance is named 'game'
-			int minutes = timeInfo.minutes;
-			int seconds = timeInfo.seconds;
-
-			// Convert minutes and seconds to a nicely formatted string
-			QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
-				.arg(seconds, 2, 10, QChar('0'));
-
-			// Update the QLabel text
-			m_BlackTimer->setText(timeStr);
-			});
-	}
+		m_BlackTimer->setText(timeStr);
 	else
-	{
-		QObject::connect(&timer, &QTimer::timeout, [&]() {
-			// Get the elapsed time from your GameLib's timer
-			// Assuming your GameLib instance is named 'game'
-			int minutes = timeInfo.minutes;
-			int seconds = timeInfo.seconds;
+		m_WhiteTimer->setText(timeStr);
 
-			// Convert minutes and seconds to a nicely formatted string
-			QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
-				.arg(seconds, 2, 10, QChar('0'));
-
-			// Update the QLabel text
-			m_WhiteTimer->setText(timeStr);
-			});
-	}
-
-	timer.start(1000);
 }
 
 void ChessUIQt::UpdateBoard()
@@ -576,6 +553,7 @@ EPieceType ConvetItemToEPieceType(QString item)
 void ChessUIQt::SetGame(IGamePtr game)
 {
 	this->game = game;
+	UpdateTimers();
 }
 
 void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
@@ -684,5 +662,10 @@ void ChessUIQt::OnDraw()
 void ChessUIQt::OnPawnUpgradePGN()
 {
 	UpdateHistory();
+}
+
+void ChessUIQt::OnTimerStart()
+{
+	UpdateTimers();
 }
 

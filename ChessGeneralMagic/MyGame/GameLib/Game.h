@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IGame.h"
+#include "IChessTimerListener.h"
 #include "Board.h"
 #include "EGameState.h"
 #include "EGameResult.h"
@@ -10,7 +11,7 @@
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
 
-class Game : public IGame, public IGameStatus
+class Game : public IGame, public IGameStatus, public IChessTimerListener
 {
 public:
 	Game();
@@ -62,13 +63,14 @@ public:
 	void NotifyGameOver(EGameResult result);
 	void NotifyDraw();
 	void NotifyPawnUpgradePGN();
+	void NotifyUITimer();
+
+	void OnTimerStart() override;
 
 	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
 	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
 
 	const IGameStatus* GetStatus() const override;
-
-
 
 private:
 	// to move in PGNBuilder?

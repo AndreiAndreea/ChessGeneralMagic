@@ -3,6 +3,7 @@
 #include "IPieceInfo.h"
 #include "EGameResult.h"
 #include "Position.h"
+#include "EPlayer.h"
 
 class IGameListener
 {
@@ -13,6 +14,7 @@ public:
 	virtual void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) = 0;
 	virtual void OnDraw() = 0;
 	virtual void OnPawnUpgradePGN() = 0;
+	virtual void OnTimerStart() = 0;
 
 	virtual ~IGameListener() = default;
 };

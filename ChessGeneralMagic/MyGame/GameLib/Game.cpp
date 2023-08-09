@@ -19,6 +19,7 @@ Game::Game()
 	, m_moves(1)
 	, m_timer()
 {
+	m_timer.SetCallback(std::bind(&Game::NotifyUITimer, this));
 	m_timer.StartTimer();
 }
 
@@ -275,6 +276,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 
 void Game::ResetGame()
 {
+	m_timer.StopTimer();
 	m_turn = 0;
 	m_pgn = {};
 	m_pgnBuilder.Reset();
@@ -282,6 +284,8 @@ void Game::ResetGame()
 	m_moves = 1;
 	UpdateState(EGameState::Playing);
 	m_board.ResetBoard();
+	m_timer.Reset();
+	m_timer.StartTimer();
 }
 
 void Game::NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
@@ -361,6 +365,20 @@ void Game::NotifyPawnUpgradePGN()
 		if (auto sp = it->lock())
 		{
 			sp->OnPawnUpgradePGN();
+			++it;
+		}
+		else
+			it = m_observers.erase(it);
+	}
+}
+
+void Game::NotifyUITimer()
+{
+	for (auto it = m_observers.begin(); it != m_observers.end();)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnTimerStart();
 			++it;
 		}
 		else
@@ -468,6 +486,10 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 	return std::make_tuple(startPos, endPos, upgradeType);
 }
 
+void Game::OnTimerStart()
+{
+	NotifyUITimer();
+}
 
 const IGameStatus* Game::GetStatus() const
 {

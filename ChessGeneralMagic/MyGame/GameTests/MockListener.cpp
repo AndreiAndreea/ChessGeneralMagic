@@ -15,8 +15,8 @@ public:
 	MOCK_METHOD(void, OnCaptureMade, (EPieceColor color, IPieceInfoPtrList capturedPieces));
 	MOCK_METHOD(void, OnDraw, ());
 	MOCK_METHOD(void, OnPawnUpgradePGN, ());
+	MOCK_METHOD(void, OnTimerStart, ());
 };
-
 
 class MockGameListener : public testing::Test
 {
@@ -32,7 +32,6 @@ protected:
 
 using ::testing::_;
 using ::testing::AtLeast;
-
 
 TEST(ListenreMockTest, OnMoveMade)
 {

@@ -55,6 +55,7 @@ public:
     void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) override;
     void OnDraw() override;
     void OnPawnUpgradePGN() override;
+    void OnTimerStart() override;
 
 private:
     void ResetHistory();

@@ -165,6 +165,9 @@
     <ClInclude Include="ChessTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IChessTimerListener.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">

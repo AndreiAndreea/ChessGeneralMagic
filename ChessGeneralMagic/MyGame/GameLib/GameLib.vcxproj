@@ -155,6 +155,7 @@
     <ClInclude Include="EPieceType.h" />
     <ClInclude Include="EPlayer.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IChessTimerListener.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="IGameListener.h" />
     <ClInclude Include="IGameStatus.h" />
