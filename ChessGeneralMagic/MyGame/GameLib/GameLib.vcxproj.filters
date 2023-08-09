@@ -159,7 +159,10 @@
     <ClInclude Include="EPlayer.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="ChessTime.h">
+    <ClInclude Include="TimeInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChessTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -236,10 +239,10 @@
     <ClCompile Include="PGNBuilder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChessTime.cpp">
+    <ClCompile Include="Position.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Position.cpp">
+    <ClCompile Include="ChessTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

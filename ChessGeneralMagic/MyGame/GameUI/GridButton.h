@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include "Enums.h"
 
-#include "PositionList.h"
+#include "Position.h"
 
 class GridButton : public QPushButton
 {

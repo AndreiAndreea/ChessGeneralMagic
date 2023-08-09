@@ -5,6 +5,7 @@
 #include "Position.h"
 #include "EPlayer.h"
 #include "IPieceInfo.h"
+#include "TimeInfo.h"
 
 #include <string>
 
@@ -23,9 +24,11 @@ public:
 	virtual bool IsGameOver() const = 0;
 
 	virtual EPlayer GetWinner() const = 0;
-	virtual EPieceColor GetCurrentPlayer() const = 0;
+	virtual EPlayer GetCurrentPlayer() const = 0;
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) const = 0;
+
+	virtual TimeInfo GetTime(EPlayer player) const = 0; 
 
 	virtual std::string GetPGN() const = 0;
 	virtual std::string GetFEN() const = 0;

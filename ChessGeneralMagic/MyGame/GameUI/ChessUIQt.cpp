@@ -8,7 +8,10 @@
 #include <QApplication>
 #include <QGroupBox>
 #include <QVBoxLayout>
+#include <QTimer>
 #include <fstream>
+#include <iostream>
+#include <iomanip>
 
 #include "ChessExceptions.h"
 
@@ -35,6 +38,7 @@ ChessUIQt::ChessUIQt(QWidget* parent)
 
 ChessUIQt::~ChessUIQt()
 {
+	
 	//No delete?
 	//https://doc.qt.io/qt-6/objecttrees.html
 }
@@ -83,13 +87,13 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	QGridLayout* timerGrid = new QGridLayout();
 
 	QLabel* blackTimerLbl = new QLabel("Black timer: ");
-	m_BlackTimer = new QLabel("00:00:00");
+	m_BlackTimer = new QLabel("00:00");
 
 	QPushButton* pauseTimerBtn = new QPushButton(" Pause | Resume");
 	//TODO Create slot and connect button
 
 	QLabel* whiteTimerLbl = new QLabel("    White timer: ");
-	m_WhiteTimer = new QLabel("00:00:00");
+	m_WhiteTimer = new QLabel("00:00");
 
 	timerContainer->setFixedWidth(400);
 
@@ -191,7 +195,7 @@ void ChessUIQt::InitializeCapturedPiecesDisplay(QGridLayout* mainGridLayout)
 	mainGridLayout->addWidget(rightCapturedPieces, 1, 3, 1, 1);
 }
 
-PieceColor ConvertColorEnum(EPieceColor color)
+static PieceColor ConvertColorEnum(EPieceColor color)
 {
 	if ((int)color)
 		return PieceColor::black;
@@ -200,32 +204,19 @@ PieceColor ConvertColorEnum(EPieceColor color)
 	return PieceColor::none;
 }
 
-PieceType ConvertTypeEnum(EPieceType type)
+static PieceColor ConvertPlayerToColor(EPlayer player)
 {
-	switch (type)
-	{
-	case EPieceType::Rook:
-		return PieceType::rook;
-		break;
-	case EPieceType::Bishop:
-		return PieceType::bishop;
-		break;
-	case EPieceType::Knight:
-		return PieceType::knight;
-		break;
-	case EPieceType::King:
-		return PieceType::king;
-		break;
-	case EPieceType::Queen:
-		return PieceType::queen;
-		break;
-	case EPieceType::Pawn:
-		return PieceType::pawn;
-		break;
-	case EPieceType::None:
-		return PieceType::none;
-		break;
-	}
+	if ((int)player)
+		return PieceColor::black;
+	if (!(int)player)
+		return PieceColor::white;
+	return PieceColor::none;
+}
+
+static PieceType ConvertTypeEnum(EPieceType type)
+{
+	std::vector<PieceType> TYPES = {PieceType::pawn, PieceType::rook, PieceType::knight,PieceType::bishop, PieceType::queen, PieceType::king, PieceType::none, };
+	return TYPES[(int)type];
 }
 
 static QString ConvertEGameResultToQStr(EGameResult result)
@@ -280,7 +271,7 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 	}
 	//At first click
 	else {
-		if (ConvertColorEnum(status->GetCurrentPlayer()) == m_grid[position.x][position.y]->GetPieceColor())
+		if (ConvertPlayerToColor(status->GetCurrentPlayer()) == m_grid[position.x][position.y]->GetPieceColor())
 		{
 			m_selectedCell = position;
 			m_grid[position.x][position.y]->setSelected(true);
@@ -336,7 +327,7 @@ void ChessUIQt::OnLoadButtonClicked()
 			OnRestartButtonClicked();
 			game->InitializeGameFEN(fileData.toStdString());
 
-			m_MessageLabel->setText(game->GetStatus()->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+			m_MessageLabel->setText(game->GetStatus()->GetCurrentPlayer() == EPlayer::Black ? "Waiting for black player" : "Waiting for white player");
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();
 		}
@@ -455,7 +446,7 @@ void ChessUIQt::UpdateHistory()
 
 	if (movesPGN.size())
 	{
-		if (status->GetCurrentPlayer() != EPieceColor::White)
+		if (status->GetCurrentPlayer() != EPlayer::White)
 		{
 			QString itemText = QString::number(movesPGN.size());
 			QListWidgetItem* item = new QListWidgetItem(itemText);
@@ -478,6 +469,49 @@ void ChessUIQt::UpdateHistory()
 			lastItem->setText(QString::fromStdString(movesPGN[movesPGN.size() - 1]));
 		}
 	}
+}
+
+void ChessUIQt::UpdateTimers()
+{
+	auto status = game->GetStatus();
+	auto currentPlayer = status->GetCurrentPlayer();
+	auto timeInfo = status->GetTime(currentPlayer);
+
+	QTimer timer;
+	if ((int)currentPlayer)
+	{
+		QObject::connect(&timer, &QTimer::timeout, [&]() {
+			// Get the elapsed time from your GameLib's timer
+			// Assuming your GameLib instance is named 'game'
+			int minutes = timeInfo.minutes;
+			int seconds = timeInfo.seconds;
+
+			// Convert minutes and seconds to a nicely formatted string
+			QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
+				.arg(seconds, 2, 10, QChar('0'));
+
+			// Update the QLabel text
+			m_BlackTimer->setText(timeStr);
+			});
+	}
+	else
+	{
+		QObject::connect(&timer, &QTimer::timeout, [&]() {
+			// Get the elapsed time from your GameLib's timer
+			// Assuming your GameLib instance is named 'game'
+			int minutes = timeInfo.minutes;
+			int seconds = timeInfo.seconds;
+
+			// Convert minutes and seconds to a nicely formatted string
+			QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
+				.arg(seconds, 2, 10, QChar('0'));
+
+			// Update the QLabel text
+			m_WhiteTimer->setText(timeStr);
+			});
+	}
+
+	timer.start(1000);
 }
 
 void ChessUIQt::UpdateBoard()
@@ -558,8 +592,8 @@ void ChessUIQt::OnMoveMade(Position startPos, Position endPos, PositionList prev
 	m_grid[startPos.x][startPos.y]->setSelected(false);
 	m_grid[startPos.x][startPos.y]->setHighlighted(false);
 
-	auto bol = status->GetCurrentPlayer() == EPieceColor::Black;
-	m_MessageLabel->setText(status->GetCurrentPlayer() == EPieceColor::Black ? "Waiting for black player" : "Waiting for white player");
+	auto bol = status->GetCurrentPlayer() == EPlayer::Black;
+	m_MessageLabel->setText(status->GetCurrentPlayer() == EPlayer::Black ? "Waiting for black player" : "Waiting for white player");
 
 	//update history
 	UpdateHistory();

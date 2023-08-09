@@ -5,6 +5,7 @@
 #include "EGameState.h"
 #include "EGameResult.h"
 #include "PGNBuilder.h"
+#include "ChessTimer.h"
 
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
@@ -14,6 +15,8 @@ class Game : public IGame, public IGameStatus
 public:
 	Game();
 	Game(int turn, EGameState state, ConfigMatrix m);
+
+	~Game();
 
 	void InitializeGameFEN(const std::string& strFEN) override;
 	void InitializeGamePGN(const std::string& movesPGN) override;
@@ -25,12 +28,13 @@ public:
 	
 	// IGame methods
 	EPlayer GetWinner() const override;
-	EPieceColor GetCurrentPlayer() const override;
+	EPlayer GetCurrentPlayer() const override;
 	PositionList GetPossibleMoves(Position pos) const override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
-	std::string GetPGN() const override;
+	TimeInfo GetTime(EPlayer player) const override;
 	std::string GetFEN() const override;
+	std::string GetPGN() const override;
 
 	MoveList GetMovesPGN(const std::string& pgnStr) const override;
 	std::string GetPGNMovesSection() const override;
@@ -64,6 +68,8 @@ public:
 
 	const IGameStatus* GetStatus() const override;
 
+
+
 private:
 	// to move in PGNBuilder?
 	MoveStr GeneratePGNMove(Position startPos, Position endPos);
@@ -85,6 +91,6 @@ private:
 	FullMoveList m_pgnMovesVect;
 	EGameState m_state;
 	ObserversList m_observers;
-
+	ChessTimer m_timer;
 	PGNBuilder m_pgnBuilder;
 };

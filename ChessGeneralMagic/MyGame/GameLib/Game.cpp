@@ -17,7 +17,10 @@ Game::Game()
 	: m_turn(0)
 	, m_state(EGameState::Playing)
 	, m_moves(1)
-{}
+	, m_timer()
+{
+	m_timer.StartTimer();
+}
 
 Game::Game(int turn, EGameState state, ConfigMatrix m)
 	: m_state(state)
@@ -27,6 +30,11 @@ Game::Game(int turn, EGameState state, ConfigMatrix m)
 {
 	if (m_turn)
 		m_pgnMovesVect.push_back({ "-", "-" });
+}
+
+Game::~Game()
+{
+	m_timer.StopTimer();
 }
 
 IGamePtr IGame::Produce()
@@ -238,6 +246,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 	else
 	{
 		m_turn = 1 - m_turn;
+		m_timer.UpdateTurn();
 		NotifyMoveMade(startPos, endPos, prevPossibleMoves);
 	}
 
@@ -245,6 +254,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw() || m_board.IsInsufficientMaterial())
 	{
 		UpdateState(EGameState::Draw);
+		m_timer.StopTimer();
 		UpdatePGNDraw();
 		NotifyGameOver(EGameResult::Draw);
 	}
@@ -255,6 +265,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 	if (m_board.IsCheckmate(colorUpdated))
 	{
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
+		m_timer.StopTimer();
 		UpdatePGNMate(m_board);
 		NotifyGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
 	}
@@ -463,6 +474,11 @@ const IGameStatus* Game::GetStatus() const
 	return this;
 }
 
+TimeInfo Game::GetTime(EPlayer player) const
+{
+	return m_timer.GetTimerDuration(player);
+}
+
 std::string Game::GetPGNMovesSection() const
 {
 	return m_pgnBuilder.GetPGNMovesSection();
@@ -639,6 +655,7 @@ void Game::UpgradePawnTo(EPieceType type)
 	UpdatePGNUpgradePawn(type);
 
 	m_turn = 1 - m_turn;
+	m_timer.UpdateTurn();
 	UpdateState(EGameState::Playing);
 }
 
@@ -657,9 +674,9 @@ bool Game::IsDraw() const
 	return m_state == EGameState::Draw;
 }
 
-EPieceColor Game::GetCurrentPlayer() const
+EPlayer Game::GetCurrentPlayer() const 
 {
-	return m_turn ? EPieceColor::Black : EPieceColor::White;
+	return m_turn ? EPlayer::Black : EPlayer::White;
 }
 
 bool Game::IsState(EGameState state) const

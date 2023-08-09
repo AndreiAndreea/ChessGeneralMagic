@@ -37,6 +37,7 @@ public:
 
     //Modify if necessary with your history representation
     void UpdateHistory();
+    void UpdateTimers();
     //Modify if necessary with your board representation
     void UpdateBoard();
     //Modify if necessary with your possible moves representation
