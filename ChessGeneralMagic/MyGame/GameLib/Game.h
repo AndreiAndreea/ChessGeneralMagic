@@ -33,7 +33,7 @@ public:
 	PositionList GetPossibleMoves(Position pos) const override;
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
-	TimeInfo GetTime(EPlayer player) const override;
+	int GetTime(EPlayer player) const override;
 	std::string GetFEN() const override;
 	std::string GetPGN() const override;
 

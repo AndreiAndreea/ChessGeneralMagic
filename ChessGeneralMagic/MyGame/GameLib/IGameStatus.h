@@ -28,7 +28,7 @@ public:
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) const = 0;
 
-	virtual TimeInfo GetTime(EPlayer player) const = 0; 
+	virtual int GetTime(EPlayer player) const = 0; 
 
 	virtual std::string GetPGN() const = 0;
 	virtual std::string GetFEN() const = 0;

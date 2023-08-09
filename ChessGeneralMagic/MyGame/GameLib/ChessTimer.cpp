@@ -6,13 +6,13 @@ using namespace std::chrono_literals;
 ChessTimer::ChessTimer()
 	: isTimerRunning(false)
 	, currentPlayerTurn(0)
-	, whiteTimerDuration{ { 0, 15 } } 
-	, blackTimerDuration{ { 1, 0 } }
+	, whiteTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(10min))
+	, blackTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(10min))
 {}
 
 void ChessTimer::StartTimer()
 {
-	if (!isTimerRunning) 
+	if (!isTimerRunning)
 	{
 		isTimerRunning = true;
 		m_timerThread = std::thread(&ChessTimer::TimerThread, this);
@@ -21,10 +21,12 @@ void ChessTimer::StartTimer()
 
 void ChessTimer::StopTimer()
 {
-	if (isTimerRunning) 
+	if (isTimerRunning)
 	{
 		isTimerRunning = false;
-		m_timerThread.join();
+		m_condition.notify_one();
+		if (m_timerThread.joinable())
+			m_timerThread.join();
 	}
 }
 
@@ -52,70 +54,66 @@ bool ChessTimer::IsTimerRunning()
 
 void ChessTimer::Reset()
 {
-	whiteTimerDuration = TimeInfo{10, 0};
-	blackTimerDuration = TimeInfo{10, 0};
+	whiteTimerDuration = std::chrono::duration_cast<std::chrono::milliseconds>(10min);
+	blackTimerDuration = std::chrono::duration_cast<std::chrono::milliseconds>(10min);
 	isTimerRunning = false;
+	m_condition.notify_one();
 	currentPlayerTurn = 0;
 }
 
-TimeInfo ChessTimer::GetTimerDuration(EPlayer player) const
+int ChessTimer::GetTimerDuration(EPlayer player) const
 {
-	return (int)player ? blackTimerDuration : whiteTimerDuration;
-}
-
-TimeInfo ChessTimer::PlayerCountDown(TimeInfo duration)
-{
-	auto currentTurn = currentPlayerTurn.load();
-	auto startTime = std::chrono::steady_clock::now();
-
-	while (isTimerRunning && currentTurn == currentPlayerTurn.load())
-	{
-		if (duration.minutes == 0 && duration.seconds == 0) 
-		{
-			isTimerRunning = false;
-			auto currentTime = std::chrono::steady_clock::now();
-			auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
-			NotifyTimer();
-		}
-		else 
-		{
-			std::unique_lock<std::mutex> lock(m_mutex);
-			m_condition.wait_for(lock, 100ms, [this, currentTurn] { return currentTurn != currentPlayerTurn.load(); });
-
-			//std::this_thread::sleep_for(std::chrono::seconds(1));
-			if (duration.seconds == 0) {
-				duration.minutes--;
-				duration.seconds = 59;
-
-				/*auto currentTime = std::chrono::steady_clock::now();
-				auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();*/
-
-				NotifyTimer();
-			}
-			else {
-				duration.seconds--;
-				NotifyTimer();
-			}
-		}
-		//PerformAction();
-
-		return duration;
-	}
-
+	return (int)player ? blackTimerDuration.load().count() / 1000 : whiteTimerDuration.load().count() / 1000;
 }
 
 void ChessTimer::TimerThread()
 {
+	auto currentTurn = currentPlayerTurn.load();
+	auto startTime = std::chrono::steady_clock::now();
+
 	while (isTimerRunning)
 	{
-		if (currentPlayerTurn.load())
-		{
-			blackTimerDuration = PlayerCountDown(blackTimerDuration);
-		}
-		else
-		{
-			whiteTimerDuration = PlayerCountDown(whiteTimerDuration);
-		}
+		std::unique_lock<std::mutex> lock(m_mutex);
+		m_condition.wait_for(lock, 100ms, [this, currentTurn] { return (currentTurn != currentPlayerTurn.load()) || isTimerRunning; });
+
+		auto currentTime = std::chrono::steady_clock::now();
+		auto elapsedTime = std::chrono::milliseconds(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime));
+
+		if (currentTurn)
+			whiteTimerDuration.store(whiteTimerDuration.load() - elapsedTime);
+
+		//if (duration.minutes == 0 && duration.seconds == 0)
+		//{
+		//	isTimerRunning = false;
+		//	m_condition.notify_one();
+		//	auto currentTime = std::chrono::steady_clock::now();
+		//	auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+		//	NotifyTimer();
+		//}
+		//else
+		//{
+
+		//	//std::this_thread::sleep_for(std::chrono::seconds(1));
+		//	if (duration.seconds == 0) {
+
+		//		auto currentTime = std::chrono::steady_clock::now();
+		//		auto elapsedTime = std::chrono::duration_cast<std::chrono::seconds>(currentTime - startTime).count();
+
+		//		if (elapsedTime == 1)
+		//		{
+		//			duration.minutes--;
+		//			duration.seconds = 59;
+		//			NotifyTimer();
+		//		}
+		//	}
+		//	else {
+
+		//		if (elapsedTime == 1)
+		//		{
+		//			duration.seconds--;
+		//			NotifyTimer();
+		//		}
+		//	}
+		//}
 	}
-	
 }

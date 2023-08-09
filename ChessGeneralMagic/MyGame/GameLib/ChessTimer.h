@@ -32,7 +32,7 @@ public:
 
 	void Reset();
 
-	TimeInfo GetTimerDuration(EPlayer player) const;
+	int GetTimerDuration(EPlayer player) const;
 
 	//void AddObservers(IChessTimerListenerWeakPtr obs);
 	//void RemoveObservers(IChessTimerListener* obs);
@@ -41,16 +41,15 @@ public:
 
 private:
 	void TimerThread();
-	TimeInfo PlayerCountDown(TimeInfo duration);
 
 private:
 	std::thread m_timerThread;
 
 	std::atomic<bool> isTimerRunning;
-	std::atomic<int> currentPlayerTurn;
+	std::atomic<bool> currentPlayerTurn;
 
-	std::atomic<TimeInfo> whiteTimerDuration;
-	std::atomic<TimeInfo> blackTimerDuration;
+	std::atomic<std::chrono::milliseconds> whiteTimerDuration;
+	std::atomic<std::chrono::milliseconds> blackTimerDuration;
 
 	Callback notify;
 	std::mutex m_mutex;

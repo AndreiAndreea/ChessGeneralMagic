@@ -496,7 +496,7 @@ const IGameStatus* Game::GetStatus() const
 	return this;
 }
 
-TimeInfo Game::GetTime(EPlayer player) const
+int Game::GetTime(EPlayer player) const
 {
 	return m_timer.GetTimerDuration(player);
 }
