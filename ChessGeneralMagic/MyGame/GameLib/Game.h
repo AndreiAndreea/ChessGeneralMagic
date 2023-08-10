@@ -21,7 +21,6 @@ public:
 	void RemoveListener(IGameListener* listener) override;
 
 	void ResetGame() override;
-	~Game();
 
 	void InitializeGameFEN(const std::string& strFEN) override;
 	void InitializeGamePGN(const std::string& movesPGN) override;
@@ -57,7 +56,7 @@ public:
 	void NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves);
 	void NotifyCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces);
 	void NotifyPawnUpgrade();
-	void NotifyGameOver(EGameResult result);
+	void NotifyGameOver();
 	void NotifyDraw();
 	void NotifyPawnUpgradePGN();
 	void NotifyUITimer();

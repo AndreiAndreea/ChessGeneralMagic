@@ -20,7 +20,8 @@ Game::Game()
 	, m_moves(1)
 	, m_timer()
 {
-	m_timer.SetCallback(std::bind(&Game::NotifyUITimer, this));
+	m_timer.SetCallbackNotifyUI(std::bind(&Game::NotifyUITimer, this));
+	m_timer.SetCallbackNotifyGameOver(std::bind(&Game::NotifyGameOver, this));
 	m_timer.StartTimer();
 }
 
@@ -32,11 +33,6 @@ Game::Game(int turn, EGameState state, ConfigMatrix m)
 {
 	if (m_turn)
 		m_pgnMovesVect.push_back({ "-", "-" });
-}
-
-Game::~Game()
-{
-	m_timer.StopTimer();
 }
 
 IGamePtr IGame::Produce()
@@ -216,6 +212,9 @@ bool Game::CanUpgradePawn(Position pos) const
 
 void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 {
+	if (m_state != EGameState::Playing)
+		throw NotStatePlayingException();
+
 	auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
 
 	if (!startPos.IsValid() || !endPos.IsValid())
@@ -258,7 +257,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 		UpdateState(EGameState::Draw);
 		m_timer.StopTimer();
 		UpdatePGNDraw();
-		NotifyGameOver(EGameResult::Draw);
+		NotifyGameOver();
 	}
 
 	auto colorUpdated = m_turn ? EPieceColor::Black : EPieceColor::White;
@@ -269,7 +268,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
 		m_timer.StopTimer();
 		UpdatePGNMate(m_board);
-		NotifyGameOver(colorUpdated == EPieceColor::White ? EGameResult::BlackWon : EGameResult::WhiteWon);
+		NotifyGameOver();
 	}
 	else if (m_board.IsKingInCheck(kingPos, colorUpdated))
 		UpdatePGNCheck(m_board);
@@ -331,13 +330,13 @@ void Game::NotifyPawnUpgrade()
 	}
 }
 
-void Game::NotifyGameOver(EGameResult result)
+void Game::NotifyGameOver()
 {
 	for (auto it = m_observers.begin(); it != m_observers.end();)
 	{
 		if (auto sp = it->lock())
 		{
-			sp->OnGameOver(result);
+			sp->OnGameOver();
 			++it;
 		}
 		else
@@ -562,23 +561,6 @@ void Game::InitializeGamePGN(const std::string& pgnStr)
 
 std::string Game::GetPGN() const
 {
-	/*ConfigPGN pgn;
-	for (int i = 0; i < m_pgnMovesVect.size(); i++)
-	{
-		if (m_pgnMovesVect[i].first != "1-0" && m_pgnMovesVect[i].first != "0-1" && m_pgnMovesVect[i].first != "1/2-1/2")
-		{
-			pgn += std::to_string(i + 1);
-			pgn += ". ";
-		}
-		pgn += m_pgnMovesVect[i].first;
-		pgn += ' ';
-		pgn += m_pgnMovesVect[i].second;
-
-		pgn += ' ';
-	}
-
-	return pgn;*/
-
 	return m_pgnBuilder.GetPGN();
 }
 
@@ -655,6 +637,7 @@ void Game::PlayerComand(EComand camand)
 		if (!IsState(EGameState::Playing))
 			throw NotStatePlayingException();
 		UpdateState(EGameState::DrawProposed);
+		PauseGame();
 		m_turn = 1 - m_turn;
 		break;
 	case EComand::Accept:
@@ -668,6 +651,7 @@ void Game::PlayerComand(EComand camand)
 		if (!IsState(EGameState::DrawProposed))
 			throw NotStateDrawProposedException();
 		UpdateState(EGameState::Playing);
+		ResumeGame();
 		m_turn = 1 - m_turn;
 		break;
 	case EComand::Pause:

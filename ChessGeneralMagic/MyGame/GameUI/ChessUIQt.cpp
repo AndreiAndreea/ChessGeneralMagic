@@ -220,17 +220,17 @@ static PieceType ConvertTypeEnum(EPieceType type)
 	return TYPES[(int)type];
 }
 
-static QString ConvertEGameResultToQStr(EGameResult result)
+static QString ConvertEGameResultToQStr(EPlayer result)
 {
 	switch (result)
 	{
-	case EGameResult::WhiteWon:
+	case EPlayer::White:
 		return "The winner is: Player white";
 		break;
-	case EGameResult::BlackWon:
+	case EPlayer::Black:
 		return "The winner is: Player black";
 		break;
-	case EGameResult::Draw:
+	case EPlayer::None:
 		return "The winner is: None";
 		break;
 	}
@@ -350,6 +350,11 @@ void ChessUIQt::OnLoadButtonClicked()
 			QMessageBox::critical(this, "Error", "Unsupported file extension: " + fileExtension, QMessageBox::Ok);
 		}
 	}
+}
+
+void ChessUIQt::RunMethod(std::function<void(void)> func)
+{
+	QMetaObject::invokeMethod(this, func, Qt::QueuedConnection);
 }
 
 void ChessUIQt::ResetTimerDisplay()
@@ -523,11 +528,13 @@ void ChessUIQt::UpdateTimers()
 		.arg(seconds, 2, 10, QChar('0'));
 
 	// Update the QLabel text
-	if ((int)currentPlayer)
-		m_BlackTimer->setText(timeStr);
-	else
-		m_WhiteTimer->setText(timeStr);
-
+	RunMethod([&, timeStr]()
+		{
+			if ((int)currentPlayer)
+				m_BlackTimer->setText(timeStr);
+			else
+				m_WhiteTimer->setText(timeStr);
+		});
 }
 
 void ChessUIQt::UpdateBoard()
@@ -646,33 +653,35 @@ void ChessUIQt::OnPawnUpgrade()
 	UpdateBoard();
 }
 
-void ChessUIQt::OnGameOver(EGameResult result)
+void ChessUIQt::OnGameOver()
 {
-	QMessageBox msgBox;
-	msgBox.setWindowTitle("Game Over");
-	QString str;
-	str = ConvertEGameResultToQStr(result);
-	msgBox.setText(str);
+	RunMethod([this]()
+		{
+			auto status = game->GetStatus();
+			QMessageBox msgBox;
+			msgBox.setWindowTitle("Game Over");
+			QString str;
+			str = ConvertEGameResultToQStr(status->GetWinner());
+			msgBox.setText(str);
 
-	// Add custom buttons
-	QPushButton* Save = msgBox.addButton("Save", QMessageBox::AcceptRole);
-	QPushButton* close = msgBox.addButton("Close", QMessageBox::AcceptRole);
-	QPushButton* newGame = msgBox.addButton("New Game", QMessageBox::AcceptRole);
+			QPushButton* Save = msgBox.addButton("Save", QMessageBox::AcceptRole);
+			QPushButton* close = msgBox.addButton("Close", QMessageBox::AcceptRole);
+			QPushButton* newGame = msgBox.addButton("New Game", QMessageBox::AcceptRole);
 
-	QObject::connect(Save, &QPushButton::clicked, [&]() {
-		OnSaveButtonClicked();
+			QObject::connect(Save, &QPushButton::clicked, [this]() {
+				OnSaveButtonClicked();
+				});
+
+			QObject::connect(close, &QPushButton::clicked, [&]() {
+				});
+
+			QObject::connect(newGame, &QPushButton::clicked, [this]() {
+				OnRestartButtonClicked();
+				});
+
+			msgBox.exec();
+
 		});
-
-	QObject::connect(close, &QPushButton::clicked, [&]() {
-		});
-
-	QObject::connect(newGame, &QPushButton::clicked, [&]() {
-		OnRestartButtonClicked();
-		});
-
-
-	// Show the custom popup
-	msgBox.exec();
 }
 
 void ChessUIQt::OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces)
@@ -710,47 +719,56 @@ void ChessUIQt::OnTimerStart()
 
 void ChessUIQt::OnPaused()
 {
-	QDialog dialog(this);
-	dialog.setWindowTitle("Game Paused");
-	dialog.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
-	dialog.setModal(true);
+	RunMethod([this]() {
+		QDialog dialog(this);
+		dialog.setWindowTitle("Game Paused");
+		dialog.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+		dialog.setModal(true);
 
-	QGraphicsBlurEffect* p_blur = new QGraphicsBlurEffect;
-	p_blur->setBlurRadius(10);
-	p_blur->setBlurHints(QGraphicsBlurEffect::QualityHint);
-	this->setGraphicsEffect(p_blur);
+		QGraphicsBlurEffect* p_blur = new QGraphicsBlurEffect;
+		p_blur->setBlurRadius(10);
+		p_blur->setBlurHints(QGraphicsBlurEffect::QualityHint);
+		this->setGraphicsEffect(p_blur);
 
-	// Create a layout for the dialog
-	QVBoxLayout* layout = new QVBoxLayout(&dialog);
+		// Create a layout for the dialog
+		QVBoxLayout* layout = new QVBoxLayout(&dialog);
+		// Create a label for the message
+		QLabel* label = new QLabel("Game Paused");
+		QFont font = label->font();
+		font.setPointSize(20); // Adjust the font size
+		label->setFont(font);
+		label->setAlignment(Qt::AlignCenter);
+		layout->addWidget(label);
 
-	// Create a label for the message
-	QLabel* label = new QLabel("Game Paused");
-	label->setAlignment(Qt::AlignCenter);
-	layout->addWidget(label);
+		// Create a "Resume" button
+		QPushButton* resumeButton = new QPushButton("Resume");
+		layout->addWidget(resumeButton);
 
-	// Create a "Resume" button
-	QPushButton* resumeButton = new QPushButton("Resume");
-	layout->addWidget(resumeButton);
+		// Connect the "Resume" button's clicked signal to close the dialog
+		QObject::connect(resumeButton, &QPushButton::clicked, &dialog, [&dialog, this]() {
+			try
+			{
+				game->PlayerComand(EComand::Resume);
+			}
+			catch (ChessExceptions e)
+			{
+				QMessageBox msgBox;
+				msgBox.setText(e.what());
+				msgBox.exec();
+			}
+			dialog.accept();
+			});
 
-	// Connect the "Resume" button's clicked signal to close the dialog
-	QObject::connect(resumeButton, &QPushButton::clicked, &dialog, [&dialog, this]() {
-		try
-		{
-			game->PlayerComand(EComand::Resume);
-		}
-		catch (ChessExceptions e)
-		{
-			QMessageBox msgBox;
-			msgBox.setText(e.what());
-			msgBox.exec();
-		}
-		dialog.accept();
+		int x = this->width() / 2;
+		int y = this->height() / 5.1;
+		dialog.move(this->mapToGlobal(QPoint(x, y)));
+
+		dialog.resize(420, 420);
+		dialog.exec();
+
+		// Remove the blur effect from the main window
+		this->setGraphicsEffect(nullptr);
+
 		});
-
-	dialog.resize(300, 200);
-	dialog.exec();
-
-	// Remove the blur effect from the main window
-	this->setGraphicsEffect(nullptr);
 }
 

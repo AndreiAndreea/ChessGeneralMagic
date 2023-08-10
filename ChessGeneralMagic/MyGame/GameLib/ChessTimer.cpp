@@ -5,10 +5,16 @@ using namespace std::chrono_literals;
 
 ChessTimer::ChessTimer()
 	: isTimerRunning(false)
+	, isPaused(false)
 	, currentPlayerTurn(0)
-	, whiteTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(1min))
+	, whiteTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(5s))
 	, blackTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(1min))
 {}
+
+ChessTimer::~ChessTimer()
+{
+	StopTimer();
+}
 
 void ChessTimer::StartTimer()
 {
@@ -33,26 +39,36 @@ void ChessTimer::StopTimer()
 
 void ChessTimer::PauseTimer()
 {
-	isTimerRunning = false;
+	isPaused = true;
 	m_condition.notify_one();
 }
 
 void ChessTimer::ResumeTimer()
 {
-	isTimerRunning = true;
+	isPaused = false;
 	m_condition.notify_one();
 }
 
-void ChessTimer::SetCallback(Callback cb)
+void ChessTimer::SetCallbackNotifyUI(Callback cb)
 {
-	notify = cb;
+	notifyUI = cb;
+}
+
+void ChessTimer::SetCallbackNotifyGameOver(Callback cb)
+{
+	notifyGameOver = cb;
 }
 
 void ChessTimer::NotifyTimer()
 {
-	if (notify) {
-		notify();
-	}
+	if (notifyUI)
+		notifyUI();
+}
+
+void ChessTimer::NotifyGameOver()
+{
+	if (notifyGameOver)
+		notifyGameOver();
 }
 
 void ChessTimer::UpdateTurn()
@@ -60,7 +76,7 @@ void ChessTimer::UpdateTurn()
 	currentPlayerTurn = !currentPlayerTurn;
 }
 
-bool ChessTimer::IsTimerRunning()
+bool ChessTimer::IsTimerRunning() const
 {
 	return isTimerRunning;
 }
@@ -79,6 +95,11 @@ int ChessTimer::GetTimerDuration(EPlayer player) const
 	return (int)player ? blackTimerDuration.load().count() / 1000 : whiteTimerDuration.load().count() / 1000;
 }
 
+bool ChessTimer::IsTimeOut() const
+{
+	return whiteTimerDuration.load().count() <= 0 || blackTimerDuration.load().count() <= 0;
+}
+
 void ChessTimer::TimerThread()
 {
 	auto currentTurn = currentPlayerTurn.load();
@@ -87,22 +108,26 @@ void ChessTimer::TimerThread()
 	while (isTimerRunning)
 	{
 		std::unique_lock<std::mutex> lock(m_mutex);
-		m_condition.wait_for(lock, 1ms, [this, currentTurn] { return (currentTurn != currentPlayerTurn.load()) || !isTimerRunning.load(); });
+		m_condition.wait_for(lock, 1ms, [this, currentTurn]
+			{
+				return (currentTurn != currentPlayerTurn.load()) || isPaused.load() || !isTimerRunning.load() || IsTimeOut();
+			});
+
+		if (IsTimeOut())
+		{
+			NotifyGameOver();
+			return;
+		}
+
 		currentTurn = currentPlayerTurn.load();
 
 		auto currentTime = std::chrono::steady_clock::now();
 		auto elapsedTime = std::chrono::milliseconds(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime));
+
 		startTime = std::chrono::steady_clock::now();
 
-		if (currentTurn)
-		{
-			blackTimerDuration.store(blackTimerDuration.load() - elapsedTime);
-			NotifyTimer();
-		}
-		else
-		{
-			whiteTimerDuration.store(whiteTimerDuration.load() - elapsedTime);
-			NotifyTimer();
-		}
+		auto& duration = currentTurn ? blackTimerDuration : whiteTimerDuration;
+		duration.store(duration.load() - elapsedTime);
+		NotifyTimer();
 	}
 }

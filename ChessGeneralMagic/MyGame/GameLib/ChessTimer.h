@@ -16,24 +16,28 @@ class ChessTimer
 {
 public:
 	ChessTimer();
+	~ChessTimer();
 
 	void StartTimer();
 	void StopTimer();
 	void PauseTimer();
 	void ResumeTimer();
 
-	void SetCallback(Callback cb);
+	void SetCallbackNotifyUI(Callback cb);
+	void SetCallbackNotifyGameOver(Callback cb);
 	void NotifyTimer();
+	void NotifyGameOver();
 
 	void UpdateTurn();
 
-	bool IsTimerRunning();
+	bool IsTimerRunning() const;
 
 	void Reset();
 
 	int GetTimerDuration(EPlayer player) const;
 
 private:
+	bool IsTimeOut() const;
 	void TimerThread();
 
 private:
@@ -41,11 +45,13 @@ private:
 
 	std::atomic<bool> isTimerRunning;
 	std::atomic<bool> currentPlayerTurn;
+	std::atomic<bool> isPaused;
 
 	std::atomic<std::chrono::milliseconds> whiteTimerDuration;
 	std::atomic<std::chrono::milliseconds> blackTimerDuration;
 
-	Callback notify;
+	Callback notifyUI;
+	Callback notifyGameOver;
 	std::mutex m_mutex;
 	std::condition_variable m_condition;
 };

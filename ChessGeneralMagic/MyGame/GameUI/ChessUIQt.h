@@ -51,14 +51,16 @@ public:
     // listener methods
     void OnMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves) override;
     void OnPawnUpgrade() override;
-    void OnGameOver(EGameResult result) override;
+    void OnGameOver() override;
     void OnCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces) override;
     void OnDraw() override;
     void OnPawnUpgradePGN() override;
     void OnTimerStart() override;
     void OnPaused() override;
 
+
 private:
+	void RunMethod(std::function<void(void)> func);
     void ResetTimerDisplay();
     void ResetHistory();
     void ResetCapturedPiecesDisplay();

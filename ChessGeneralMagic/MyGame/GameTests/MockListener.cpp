@@ -11,7 +11,7 @@ class MockListener : public IGameListener
 public:
 	MOCK_METHOD(void, OnMoveMade, (Position startPos, Position endPos, PositionList prevPossibleMoves));
 	MOCK_METHOD(void, OnPawnUpgrade, ());
-	MOCK_METHOD(void, OnGameOver, (EGameResult result));
+	MOCK_METHOD(void, OnGameOver, ());
 	MOCK_METHOD(void, OnCaptureMade, (EPieceColor color, IPieceInfoPtrList capturedPieces));
 	MOCK_METHOD(void, OnDraw, ());
 	MOCK_METHOD(void, OnPawnUpgradePGN, ());
