@@ -88,13 +88,13 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	QGridLayout* timerGrid = new QGridLayout();
 
 	QLabel* blackTimerLbl = new QLabel("Black timer: ");
-	m_BlackTimer = new QLabel("10:00");
+	m_BlackTimer = new QLabel("10:00:00");
 
 	QPushButton* pauseTimerBtn = new QPushButton(" Pause ");
 	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
 
 	QLabel* whiteTimerLbl = new QLabel("    White timer: ");
-	m_WhiteTimer = new QLabel("10:00");
+	m_WhiteTimer = new QLabel("10:00:00");
 
 	timerContainer->setFixedWidth(400);
 
@@ -520,12 +520,13 @@ void ChessUIQt::UpdateTimers()
 	auto currentPlayer = status->GetCurrentPlayer();
 	auto time = status->GetTime(currentPlayer);
 
-	int minutes = time / 60;
-	int seconds = time % 60;
+	int minutes = (time / 1000) / 60;
+	int seconds = (time / 1000) % 60;
+	int remainingMilliseconds = time % 1000;
 
 	// Convert minutes and seconds to a nicely formatted string
-	QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
-		.arg(seconds, 2, 10, QChar('0'));
+	QString timeStr = QString("%1:%2:%3").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds, 2, 10, QChar('0'));
 
 	// Update the QLabel text
 	RunMethod([&, timeStr]()

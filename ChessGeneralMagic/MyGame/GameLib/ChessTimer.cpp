@@ -92,7 +92,7 @@ void ChessTimer::Reset()
 
 int ChessTimer::GetTimerDuration(EPlayer player) const
 {
-	return (int)player ? blackTimerDuration.load().count() / 1000 : whiteTimerDuration.load().count() / 1000;
+	return (int)player ? blackTimerDuration.load().count() : whiteTimerDuration.load().count();
 }
 
 bool ChessTimer::IsTimeOut() const
