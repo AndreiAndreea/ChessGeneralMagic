@@ -8,7 +8,8 @@
 #include <QApplication>
 #include <QGroupBox>
 #include <QVBoxLayout>
-#include <QTimer>
+#include <QGraphicsBlurEffect>
+#include <QGraphicsEffect>
 #include <fstream>
 #include <iostream>
 #include <iomanip>
@@ -89,8 +90,8 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 	QLabel* blackTimerLbl = new QLabel("Black timer: ");
 	m_BlackTimer = new QLabel("10:00");
 
-	QPushButton* pauseTimerBtn = new QPushButton(" Pause | Resume");
-	//TODO Create slot and connect button
+	QPushButton* pauseTimerBtn = new QPushButton(" Pause ");
+	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
 
 	QLabel* whiteTimerLbl = new QLabel("    White timer: ");
 	m_WhiteTimer = new QLabel("10:00");
@@ -241,7 +242,6 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 	//At second click
 	if (m_selectedCell.has_value())
 	{
-		//TODO COMPLETE ME...
 		if (m_selectedCell->x == position.x && m_selectedCell->y == position.y)
 		{
 			//deselect cells
@@ -280,6 +280,11 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 			HighlightPossibleMoves(status->GetPossibleMoves(position));
 		}
 	}
+}
+
+void ChessUIQt::OnPauseButtonClicked()
+{
+	game->PlayerComand(EComand::Pause);
 }
 
 void ChessUIQt::OnSaveButtonClicked()
@@ -347,6 +352,29 @@ void ChessUIQt::OnLoadButtonClicked()
 	}
 }
 
+void ChessUIQt::ResetTimerDisplay()
+{
+	int time = game->GetStatus()->GetTime(EPlayer::White);
+	int minutes = time / 60;
+	int seconds = time % 60;
+
+	// Convert minutes and seconds to a nicely formatted string
+	QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0'));
+
+	m_WhiteTimer->setText(timeStr);
+
+
+	time = game->GetStatus()->GetTime(EPlayer::Black);
+	minutes = time / 60;
+	seconds = time % 60;
+
+	timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0'));
+
+	m_BlackTimer->setText(timeStr);
+}
+
 void ChessUIQt::ResetHistory()
 {
 	m_moveNumberList->clear();
@@ -381,6 +409,7 @@ void ChessUIQt::OnRestartButtonClicked()
 	m_MessageLabel->setText("Waiting for white player");
 
 	UpdateBoard();
+	ResetTimerDisplay();
 	UpdateTimers();
 }
 
@@ -388,16 +417,24 @@ void ChessUIQt::OnDrawButtonClicked()
 {
 	QMessageBox::StandardButton reply;
 	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
-	game->PlayerDrawComand(EDrawComand::Draw);
-
-	if (reply == QMessageBox::Yes) {
-		QMessageBox msgBox;
-		msgBox.setText("Draw Accepted. Winner is: None.");
-		msgBox.exec();
-		game->PlayerDrawComand(EDrawComand::Accept);
+	try
+	{
+		game->PlayerComand(EComand::Draw);
+		if (reply == QMessageBox::Yes) {
+			QMessageBox msgBox;
+			msgBox.setText("Draw Accepted. Winner is: None.");
+			msgBox.exec();
+			game->PlayerComand(EComand::Accept);
+		}
+		else
+			game->PlayerComand(EComand::Decline);
 	}
-	else
-		game->PlayerDrawComand(EDrawComand::Decline);
+	catch (ChessExceptions e)
+	{
+		QMessageBox msgBox;
+		msgBox.setText(e.what());
+		msgBox.exec();
+	}
 }
 
 static char PieceInfoToChar(PieceType type, PieceColor color)
@@ -476,12 +513,14 @@ void ChessUIQt::UpdateTimers()
 {
 	auto status = game->GetStatus();
 	auto currentPlayer = status->GetCurrentPlayer();
-	auto timeInfo = status->GetTime(currentPlayer);
+	auto time = status->GetTime(currentPlayer);
 
+	int minutes = time / 60;
+	int seconds = time % 60;
 
 	// Convert minutes and seconds to a nicely formatted string
-	QString timeStr = QString("%1:%2").arg(timeInfo.minutes, 2, 10, QChar('0'))
-		.arg(timeInfo.seconds, 2, 10, QChar('0'));
+	QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0'));
 
 	// Update the QLabel text
 	if ((int)currentPlayer)
@@ -667,5 +706,51 @@ void ChessUIQt::OnPawnUpgradePGN()
 void ChessUIQt::OnTimerStart()
 {
 	UpdateTimers();
+}
+
+void ChessUIQt::OnPaused()
+{
+	QDialog dialog(this);
+	dialog.setWindowTitle("Game Paused");
+	dialog.setWindowFlags(Qt::FramelessWindowHint | Qt::Dialog);
+	dialog.setModal(true);
+
+	QGraphicsBlurEffect* p_blur = new QGraphicsBlurEffect;
+	p_blur->setBlurRadius(10);
+	p_blur->setBlurHints(QGraphicsBlurEffect::QualityHint);
+	this->setGraphicsEffect(p_blur);
+
+	// Create a layout for the dialog
+	QVBoxLayout* layout = new QVBoxLayout(&dialog);
+
+	// Create a label for the message
+	QLabel* label = new QLabel("Game Paused");
+	label->setAlignment(Qt::AlignCenter);
+	layout->addWidget(label);
+
+	// Create a "Resume" button
+	QPushButton* resumeButton = new QPushButton("Resume");
+	layout->addWidget(resumeButton);
+
+	// Connect the "Resume" button's clicked signal to close the dialog
+	QObject::connect(resumeButton, &QPushButton::clicked, &dialog, [&dialog, this]() {
+		try
+		{
+			game->PlayerComand(EComand::Resume);
+		}
+		catch (ChessExceptions e)
+		{
+			QMessageBox msgBox;
+			msgBox.setText(e.what());
+			msgBox.exec();
+		}
+		dialog.accept();
+		});
+
+	dialog.resize(300, 200);
+	dialog.exec();
+
+	// Remove the blur effect from the main window
+	this->setGraphicsEffect(nullptr);
 }
 

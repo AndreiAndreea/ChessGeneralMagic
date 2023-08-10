@@ -3,7 +3,7 @@
 #include "IGameStatus.h"
 #include "IGameListener.h"
 #include "EPieceType.h"
-#include "EDrawComand.h"
+#include "EComand.h"
 #include "Position.h"
 
 #include <memory>
@@ -30,7 +30,7 @@ public:
 	virtual ~IGame() = default;
 
 	//Game Actions
-	virtual void PlayerDrawComand(EDrawComand respons) = 0;
+	virtual void PlayerComand(EComand respons) = 0;
 	virtual void MakeMove(Position startPos, Position endPos, bool isLoadingPGN = 0) = 0;
 	virtual void UpgradePawnTo(EPieceType type) = 0;
 

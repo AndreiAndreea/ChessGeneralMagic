@@ -42,7 +42,7 @@ public:
 	std::string GenerateCastlingPossibleFEN() const;
 	Position GetKingPos(EPieceColor color) const;
 
-	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, EPieceColor color);
+	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, EPieceColor color) const;
 
 	bool MakeMove(const Position& startPos, const Position& endPos);
 

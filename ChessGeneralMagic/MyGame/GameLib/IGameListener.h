@@ -15,6 +15,7 @@ public:
 	virtual void OnDraw() = 0;
 	virtual void OnPawnUpgradePGN() = 0;
 	virtual void OnTimerStart() = 0;
+	virtual void OnPaused() = 0;
 
 	virtual ~IGameListener() = default;
 };

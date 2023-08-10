@@ -1,7 +1,6 @@
 #pragma once
 
 #include "IGame.h"
-#include "IChessTimerListener.h"
 #include "Board.h"
 #include "EGameState.h"
 #include "EGameResult.h"
@@ -11,12 +10,17 @@
 using ConfigMatrix = std::vector<std::vector<char>>;
 using ObserversList = std::vector<IGameListenerWeakPtr>;
 
-class Game : public IGame, public IGameStatus, public IChessTimerListener
+class Game : public IGame, public IGameStatus 
 {
 public:
 	Game();
 	Game(int turn, EGameState state, ConfigMatrix m);
+	
+	// subject methods
+	void AddListener(IGameListenerPtr listener) override;
+	void RemoveListener(IGameListener* listener) override;
 
+	void ResetGame() override;
 	~Game();
 
 	void InitializeGameFEN(const std::string& strFEN) override;
@@ -46,16 +50,9 @@ public:
 	bool IsDraw() const override;
 	bool IsGameOver() const override;
 	
-	void PlayerDrawComand(EDrawComand respons) override;
+	void PlayerComand(EComand respons) override;
 	void MakeMove(Position startPos, Position endPos, bool isLoadingPGN = false) override;
 	void UpgradePawnTo(EPieceType type) override;
-
-	void ResetGame() override;
-
-	// subject methods
-
-	void AddListener(IGameListenerPtr listener) override;
-	void RemoveListener(IGameListener* listener) override;
 
 	void NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves);
 	void NotifyCaptureMade(EPieceColor color, IPieceInfoPtrList capturedPieces);
@@ -64,10 +61,11 @@ public:
 	void NotifyDraw();
 	void NotifyPawnUpgradePGN();
 	void NotifyUITimer();
+	void NotifyPaused();
 
-	void OnTimerStart() override;
-
-	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn);
+	void PauseGame();
+	void ResumeGame();
+	Position FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn) const;
 	std::tuple<Position, Position, EPieceType> ConvertPGNMoveToInfoMove(std::string move, bool turn);
 
 	const IGameStatus* GetStatus() const override;

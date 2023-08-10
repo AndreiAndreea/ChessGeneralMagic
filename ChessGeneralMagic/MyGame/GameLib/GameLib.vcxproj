@@ -147,7 +147,7 @@
     <ClInclude Include="Board.h" />
     <ClInclude Include="ChessExceptions.h" />
     <ClInclude Include="ChessTimer.h" />
-    <ClInclude Include="EDrawComand.h" />
+    <ClInclude Include="EComand.h" />
     <ClInclude Include="EGameResult.h" />
     <ClInclude Include="EGameState.h" />
     <ClInclude Include="EInfoPGN.h" />
@@ -155,7 +155,6 @@
     <ClInclude Include="EPieceType.h" />
     <ClInclude Include="EPlayer.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="IChessTimerListener.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="IGameListener.h" />
     <ClInclude Include="IGameStatus.h" />
@@ -170,6 +169,7 @@
     <ClInclude Include="Knight.h" />
     <ClInclude Include="MethodException.h" />
     <ClInclude Include="NotStateDrawProposedException.h" />
+    <ClInclude Include="NotStatePausedException.h" />
     <ClInclude Include="NotStatePlayingException.h" />
     <ClInclude Include="NotStateWaitingForPawnUpdate.h" />
     <ClInclude Include="OutOfBoundException.h" />
@@ -199,6 +199,7 @@
     <ClCompile Include="Knight.cpp" />
     <ClCompile Include="MethodException.cpp" />
     <ClCompile Include="NotStateDrawProposedException.cpp" />
+    <ClCompile Include="NotStatePausedException.cpp" />
     <ClCompile Include="NotStatePlayingException.cpp" />
     <ClCompile Include="NotStateWaitingForPawnUpdate.cpp" />
     <ClCompile Include="OutOfBoundException.cpp" />

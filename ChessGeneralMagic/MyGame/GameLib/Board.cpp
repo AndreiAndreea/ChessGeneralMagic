@@ -350,7 +350,7 @@ Position Board::GetKingPos(EPieceColor color) const
 	return Position(-1, -1);
 }
 
-Position Board::FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, EPieceColor color)
+Position Board::FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, EPieceColor color) const
 {
 	if (startRow != -1)
 		for (int i = 0; i < 8; i++)

@@ -56,8 +56,10 @@ public:
     void OnDraw() override;
     void OnPawnUpgradePGN() override;
     void OnTimerStart() override;
+    void OnPaused() override;
 
 private:
+    void ResetTimerDisplay();
     void ResetHistory();
     void ResetCapturedPiecesDisplay();
     void UpdateCapturedPiecesDispay();
@@ -65,6 +67,7 @@ private:
 public slots:
     void OnButtonClicked(const Position& position);
 
+    void OnPauseButtonClicked();
     void OnSaveButtonClicked();
     void OnLoadButtonClicked();
     void OnRestartButtonClicked();

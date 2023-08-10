@@ -7,5 +7,6 @@ enum class EGameState
 	WhiteWon,
 	BlackWon,
 	Draw,
-	WaitingForPawnUpgrade
+	WaitingForPawnUpgrade,
+	Paused
 };

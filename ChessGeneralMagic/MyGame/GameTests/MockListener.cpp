@@ -16,6 +16,7 @@ public:
 	MOCK_METHOD(void, OnDraw, ());
 	MOCK_METHOD(void, OnPawnUpgradePGN, ());
 	MOCK_METHOD(void, OnTimerStart, ());
+	MOCK_METHOD(void, OnPaused, ());
 };
 
 class MockGameListener : public testing::Test

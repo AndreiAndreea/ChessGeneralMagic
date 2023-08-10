@@ -10,6 +10,7 @@
 #include "NotStateDrawProposedException.h"
 #include "NotStateWaitingForPawnUpdate.h"
 #include "NotStatePlayingException.h"
+#include "NotStatePausedException.h"
 
 #include <tuple>
 
@@ -372,6 +373,20 @@ void Game::NotifyPawnUpgradePGN()
 	}
 }
 
+void Game::NotifyPaused()
+{
+	for (auto it = m_observers.begin(); it != m_observers.end();)
+	{
+		if (auto sp = it->lock())
+		{
+			sp->OnPaused();
+			++it;
+		}
+		else
+			it = m_observers.erase(it);
+	}
+}
+
 void Game::NotifyUITimer()
 {
 	for (auto it = m_observers.begin(); it != m_observers.end();)
@@ -386,6 +401,16 @@ void Game::NotifyUITimer()
 	}
 }
 
+void Game::PauseGame()
+{
+	m_timer.PauseTimer();
+}
+
+void Game::ResumeGame()
+{
+	m_timer.ResumeTimer();
+}
+
 EPieceType CharToType(char c)
 {
 	static const EPieceType TYPES[] = { EPieceType::Rook, EPieceType::Knight, EPieceType::Bishop, EPieceType::Queen, EPieceType::King };
@@ -395,7 +420,7 @@ EPieceType CharToType(char c)
 	return TYPES[p - str];
 }
 
-Position Game::FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn)
+Position Game::FindPieceStartPos(int startRow, int startCol, Position endPos, EPieceType type, bool turn) const
 {
 	EPieceColor	color = turn ? EPieceColor::Black : EPieceColor::White;
 	return m_board.FindPieceStartPos(startRow, startCol, endPos, type, color);
@@ -484,11 +509,6 @@ std::tuple<Position, Position, EPieceType> Game::ConvertPGNMoveToInfoMove(std::s
 		startPos = FindPieceStartPos(startPos.x, -1, endPos, type, turn);
 
 	return std::make_tuple(startPos, endPos, upgradeType);
-}
-
-void Game::OnTimerStart()
-{
-	NotifyUITimer();
 }
 
 const IGameStatus* Game::GetStatus() const
@@ -627,28 +647,41 @@ bool Game::IsPlaying() const
 	return m_state == EGameState::Playing;
 }
 
-void Game::PlayerDrawComand(EDrawComand respons)
+void Game::PlayerComand(EComand camand)
 {
-	switch (respons)
+	switch (camand)
 	{
-	case EDrawComand::Draw:
+	case EComand::Draw:
 		if (!IsState(EGameState::Playing))
 			throw NotStatePlayingException();
 		UpdateState(EGameState::DrawProposed);
 		m_turn = 1 - m_turn;
 		break;
-	case EDrawComand::Accept:
+	case EComand::Accept:
 		if (!IsState(EGameState::DrawProposed))
 			throw NotStateDrawProposedException();
 		UpdateState(EGameState::Draw);
 		UpdatePGNDraw();
 		NotifyDraw();
 		break;
-	case EDrawComand::Decline:
+	case EComand::Decline:
 		if (!IsState(EGameState::DrawProposed))
 			throw NotStateDrawProposedException();
 		UpdateState(EGameState::Playing);
 		m_turn = 1 - m_turn;
+		break;
+	case EComand::Pause:
+		if (!IsState(EGameState::Playing))
+			throw NotStatePlayingException();
+		UpdateState(EGameState::Paused);
+		PauseGame();
+		NotifyPaused();
+		break;
+	case EComand::Resume:
+		if (!IsState(EGameState::Paused))
+			throw NotStatePausedException();
+		UpdateState(EGameState::Playing);
+		ResumeGame();
 		break;
 	}
 }

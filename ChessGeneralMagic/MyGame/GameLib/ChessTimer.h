@@ -3,14 +3,12 @@
 #include <atomic>
 #include "EPlayer.h"
 #include "TimeInfo.h"
-#include "IChessTimerListener.h"
 
 #include <vector>
 #include <functional>
 #include <mutex>
 #include <memory>
 
-using Observers = std::vector<IChessTimerListenerWeakPtr>;
 
 using Callback = std::function<void()>;
 
@@ -20,8 +18,9 @@ public:
 	ChessTimer();
 
 	void StartTimer();
-
 	void StopTimer();
+	void PauseTimer();
+	void ResumeTimer();
 
 	void SetCallback(Callback cb);
 	void NotifyTimer();
@@ -33,11 +32,6 @@ public:
 	void Reset();
 
 	int GetTimerDuration(EPlayer player) const;
-
-	//void AddObservers(IChessTimerListenerWeakPtr obs);
-	//void RemoveObservers(IChessTimerListener* obs);
-
-	//void NotifyTimerStart();
 
 private:
 	void TimerThread();
@@ -54,6 +48,4 @@ private:
 	Callback notify;
 	std::mutex m_mutex;
 	std::condition_variable m_condition;
-
-	//Observers m_observers;
 };

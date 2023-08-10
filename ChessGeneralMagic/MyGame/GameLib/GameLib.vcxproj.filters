@@ -135,7 +135,7 @@
     <ClInclude Include="Position.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
-    <ClInclude Include="EDrawComand.h">
+    <ClInclude Include="EComand.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
     <ClInclude Include="EGameResult.h">
@@ -165,8 +165,8 @@
     <ClInclude Include="ChessTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IChessTimerListener.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="NotStatePausedException.h">
+      <Filter>Header Files\API\Exceptions\MethodExceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="ChessTimer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NotStatePausedException.cpp">
+      <Filter>Source Files\Exceptions\MethodExceptions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
