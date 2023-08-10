@@ -284,7 +284,16 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 
 void ChessUIQt::OnPauseButtonClicked()
 {
-	game->PlayerComand(EComand::Pause);
+	try
+	{
+		game->PlayerComand(EComand::Pause);
+	}
+	catch (ChessExceptions e)
+	{
+		/*QMessageBox msgBox;
+		msgBox.setText(e.what());
+		msgBox.exec();*/
+	}
 }
 
 void ChessUIQt::OnSaveButtonClicked()
@@ -529,13 +538,13 @@ void ChessUIQt::UpdateTimers()
 		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds, 2, 10, QChar('0'));
 
 	// Update the QLabel text
-	RunMethod([&, timeStr]()
-		{
-			if ((int)currentPlayer)
-				m_BlackTimer->setText(timeStr);
-			else
-				m_WhiteTimer->setText(timeStr);
-		});
+	//RunMethod([&, timeStr]()
+	//	{
+	if ((int)currentPlayer)
+		m_BlackTimer->setText(timeStr);
+	else
+		m_WhiteTimer->setText(timeStr);
+	//	});
 }
 
 void ChessUIQt::UpdateBoard()
