@@ -342,11 +342,13 @@ void Game::NotifyPawnUpgrade()
 void Game::NotifyGameOver()
 {
 	if (m_timer.IsTimeOut())
+	{
 		if (m_timer.GetTimerDuration(EPlayer::White) <= 0)
 			UpdateState(EGameState::BlackWon);
 		else
 			UpdateState(EGameState::BlackWon);
-
+		m_timer.PauseTimer();
+	}
 
 	for (auto it = m_observers.begin(); it != m_observers.end();)
 	{

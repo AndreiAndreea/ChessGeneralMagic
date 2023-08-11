@@ -56,7 +56,7 @@ void ChessTimer::InitializeTimerDuration()
 		blackTimerDuration = std::chrono::duration_cast<TimeConfig>(10min);
 		break;
 	case EGameType::Bullet:
-		whiteTimerDuration = std::chrono::duration_cast<TimeConfig>(3min);
+		whiteTimerDuration = std::chrono::duration_cast<TimeConfig>(15s);
 		blackTimerDuration = std::chrono::duration_cast<TimeConfig>(3min);
 		break;
 	case EGameType::NoTimer:
@@ -148,8 +148,8 @@ void ChessTimer::TimerThread()
 
 		if (IsTimeOut())
 		{
-			isPaused = true;
-			m_condition.notify_one();
+			/*isPaused = true;
+			m_condition.notify_one();*/
 			NotifyGameOver();
 		}
 
