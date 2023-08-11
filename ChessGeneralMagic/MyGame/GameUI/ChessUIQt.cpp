@@ -243,7 +243,7 @@ void ChessUIQt::CenterOnScreen()
 	int y = (screenGeometry.height() - height()) / 2;
 
 	// Move the main widget to the center
-	move(x-300, y-120);
+	move(x - 300, y - 120);
 }
 
 static PieceColor ConvertColorEnum(EPieceColor color)
@@ -308,9 +308,9 @@ void ChessUIQt::OnButtonClicked(const Position& position)
 			}
 			catch (ChessExceptions e)
 			{
-				QMessageBox msgBox;
+				/*QMessageBox msgBox;
 				msgBox.setText(e.what());
-				msgBox.exec();
+				msgBox.exec();*/
 			}
 
 			//Unselect prev. pressed button and  unhighlight board
@@ -364,8 +364,16 @@ void ChessUIQt::OnSaveButtonClicked()
 		}
 		if (fileExtension == "pgn")
 		{
-			//data = game->GetPGN();
-			game->SaveToPGNFile(fileSave.toStdString());
+			try
+			{
+				game->SaveToPGNFile(fileSave.toStdString());
+			}
+			catch (ChessExceptions e)
+			{
+				QMessageBox msgBox;
+				msgBox.setText(e.what());
+				msgBox.exec();
+			}
 		}
 	}
 }
@@ -398,8 +406,17 @@ void ChessUIQt::OnLoadButtonClicked()
 		else if (fileExtension == "pgn") {
 
 			OnRestartButtonClicked();
+			try
+			{
+				game->LoadFromPGNFile(fileName.toStdString());
 
-			game->LoadFromPGNFile(fileName.toStdString());
+			}
+			catch (ChessExceptions e)
+			{
+				QMessageBox msgBox;
+				msgBox.setText(e.what());
+				msgBox.exec();
+			}
 
 			UpdateCapturedPiecesDispay();
 			UpdateBoard();

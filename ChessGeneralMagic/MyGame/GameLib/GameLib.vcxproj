@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="Bishop.h" />
     <ClInclude Include="Board.h" />
+    <ClInclude Include="CanNotOpenFileException.h" />
     <ClInclude Include="ChessExceptions.h" />
     <ClInclude Include="ChessTimer.h" />
     <ClInclude Include="EComand.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="EPieceColor.h" />
     <ClInclude Include="EPieceType.h" />
     <ClInclude Include="EPlayer.h" />
+    <ClInclude Include="FileException.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IGame.h" />
     <ClInclude Include="IGameListener.h" />
@@ -188,8 +190,10 @@
   <ItemGroup>
     <ClCompile Include="Bishop.cpp" />
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="CanNotOpenFileException.cpp" />
     <ClCompile Include="ChessExceptions.cpp" />
     <ClCompile Include="ChessTimer.cpp" />
+    <ClCompile Include="FileException.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="InvalidDrawResponseException.cpp" />
     <ClCompile Include="InvalidMovingPatternException.cpp" />

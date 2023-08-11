@@ -46,6 +46,12 @@
     <Filter Include="Header Files\API\Exceptions\InvalidInputExceptions">
       <UniqueIdentifier>{08f19af7-1c92-4593-ad69-8fc872dfe654}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\API\Exceptions\FilesExceptions">
+      <UniqueIdentifier>{ade06e10-0ffa-4654-a996-3970750be130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Exceptions\FileExceptions">
+      <UniqueIdentifier>{de0e7653-35da-4443-a169-11cd73932e8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -171,6 +177,12 @@
     <ClInclude Include="EGameType.h">
       <Filter>Header Files\API</Filter>
     </ClInclude>
+    <ClInclude Include="FileException.h">
+      <Filter>Header Files\API\Exceptions\FilesExceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="CanNotOpenFileException.h">
+      <Filter>Header Files\API\Exceptions\FilesExceptions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -253,6 +265,12 @@
     </ClCompile>
     <ClCompile Include="NotStatePausedException.cpp">
       <Filter>Source Files\Exceptions\MethodExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="FileException.cpp">
+      <Filter>Source Files\Exceptions\FileExceptions</Filter>
+    </ClCompile>
+    <ClCompile Include="CanNotOpenFileException.cpp">
+      <Filter>Source Files\Exceptions\FileExceptions</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

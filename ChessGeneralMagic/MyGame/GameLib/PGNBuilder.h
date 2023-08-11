@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#include "CanNotOpenFileException.h"
+
 #include "EInfoPGN.h"
 #include "EPieceType.h"
 

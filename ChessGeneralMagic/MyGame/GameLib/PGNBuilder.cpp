@@ -94,7 +94,7 @@ void PGNBuilder::SavePGNToFile(const std::string& filePath)
 		file.close();
 	}
 	else {
-		//exception
+		throw CanNotOpenFileException();
 	}
 }
 
@@ -182,9 +182,7 @@ void PGNBuilder::LoadPGNFromFile(const std::string& filePath)
 		}
 	}
 	else {
-		//exception
-
-		//std::cerr << "Error: Unable to open file for reading: " << filePath << std::endl;
 		m_pgnStr = "";
+		throw CanNotOpenFileException();
 	}
 }
