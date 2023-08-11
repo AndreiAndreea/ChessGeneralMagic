@@ -133,6 +133,8 @@ void Game::UpdatePGN(Position startPos, Position endPos)
 {
 	if (m_turn)
 	{
+		if (!m_pgnMovesVect.size())
+			m_pgnMovesVect.push_back({ {" "}, {}});
 		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second = GeneratePGNMove(startPos, endPos);
 	}
 	else
@@ -558,6 +560,7 @@ void Game::SaveToPGNFile(const std::string& filePath)
 void Game::InitializeGamePGN(const std::string& pgnStr)
 {
 	ResetGame();
+	m_timer.PauseTimer();
 
 	auto movesPGN = m_pgnBuilder.GenerateMoves(pgnStr);
 	for (int i = 0; i < movesPGN.size(); i++)
@@ -585,6 +588,8 @@ std::string Game::GetPGN() const
 
 void Game::InitializeGameFEN(const std::string& strFEN)
 {
+	ResetGame();
+	m_timer.PauseTimer();
 	m_board.InitializeBoardFEN(strFEN);
 
 	m_turn = (strFEN.find(" w") != std::string::npos) ? 0 : 1;

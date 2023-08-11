@@ -582,14 +582,22 @@ void ChessUIQt::UpdateHistory()
 			itemMoveW->setFlags(itemMoveW->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			m_whiteMoveList->addItem(itemMoveW);
 
-			QString moveTextB = QString::fromStdString("  ");
-			QListWidgetItem* itemMoveB = new QListWidgetItem(moveTextB);
+			//QString moveTextB = QString::fromStdString("  ");
+			QListWidgetItem* itemMoveB = new QListWidgetItem(" ");
 			itemMoveB->setFlags(itemMoveB->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			m_blackMoveList->addItem(itemMoveB);
 		}
 		else
 		{
+			
 			QListWidgetItem* lastItem = m_blackMoveList->item(m_blackMoveList->count() - 1);
+			if (!lastItem)
+			{
+				QListWidgetItem* itemMoveB = new QListWidgetItem(" ");
+				itemMoveB->setFlags(itemMoveB->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+				m_blackMoveList->addItem(itemMoveB);
+			}
+			lastItem = m_blackMoveList->item(m_blackMoveList->count() - 1);
 			lastItem->setText(QString::fromStdString(movesPGN[movesPGN.size() - 1]));
 		}
 	}
