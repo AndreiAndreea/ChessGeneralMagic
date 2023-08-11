@@ -14,7 +14,7 @@ EGameType ConvertToGameType(QString item)
 		return EGameType::Blitz;
 	if (item == "Bullet")
 		return EGameType::Bullet;
-	if (item == "timer")
+	if (item == "No timer")
 		return EGameType::NoTimer;
 }
 
