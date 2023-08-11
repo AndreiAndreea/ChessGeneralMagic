@@ -35,6 +35,7 @@ ChessUIQt::ChessUIQt(QWidget* parent)
 	mainWidget->setLayout(mainGridLayout);
 	this->setCentralWidget(mainWidget);
 
+	CenterOnScreen();
 }
 
 ChessUIQt::~ChessUIQt()
@@ -82,19 +83,48 @@ void ChessUIQt::InitializeButtons(QGridLayout* mainGridLayout)
 	mainGridLayout->addWidget(buttonContainer, 0, 0, 1, 1);
 }
 
+static QString GetInitialTime(EGameType type)
+{
+	int time;
+	switch (type)
+	{
+	case EGameType::Rapid:
+		time = 30 * 60000;
+		break;
+	case EGameType::Blitz:
+		time = 10 * 60000;
+		break;
+	case EGameType::Bullet:
+		time = 3 * 60000;
+		break;
+	case EGameType::NoTimer:
+		time = 0;
+		break;
+	}
+
+	int minutes = (time / 1000) / 60;
+	int seconds = (time / 1000) % 60;
+	int remainingMilliseconds = time % 1000;
+
+	QString timeStr = QString("%1:%2:%3").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds / 10, 2, 10, QChar('0'));
+
+	return timeStr;
+}
+
 void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 {
 	QWidget* timerContainer = new QWidget();
 	QGridLayout* timerGrid = new QGridLayout();
 
 	QLabel* blackTimerLbl = new QLabel("Black timer: ");
-	m_BlackTimer = new QLabel("10:00:00");
+	m_BlackTimer = new QLabel("00:00:00");
 
 	QPushButton* pauseTimerBtn = new QPushButton(" Pause ");
 	connect(pauseTimerBtn, &QPushButton::pressed, this, &ChessUIQt::OnPauseButtonClicked);
 
 	QLabel* whiteTimerLbl = new QLabel("    White timer: ");
-	m_WhiteTimer = new QLabel("10:00:00");
+	m_WhiteTimer = new QLabel("00:00:00");
 
 	timerContainer->setFixedWidth(400);
 
@@ -106,6 +136,14 @@ void ChessUIQt::InitializeTimers(QGridLayout* mainGridLayout)
 
 	timerContainer->setLayout(timerGrid);
 	mainGridLayout->addWidget(timerContainer, 2, 1, 1, 2, Qt::AlignCenter);
+}
+
+void ChessUIQt::DisplayTimers()
+{
+	auto gameType = game->GetStatus()->GetGameType();
+
+	m_BlackTimer->setText(GetInitialTime(gameType));
+	m_WhiteTimer->setText(GetInitialTime(gameType));
 }
 
 void ChessUIQt::InitializeHistory(QGridLayout* mainGridLayout)
@@ -194,6 +232,18 @@ void ChessUIQt::InitializeCapturedPiecesDisplay(QGridLayout* mainGridLayout)
 
 	mainGridLayout->addWidget(leftCapturedPieces, 1, 1, 1, 1);
 	mainGridLayout->addWidget(rightCapturedPieces, 1, 3, 1, 1);
+}
+
+void ChessUIQt::CenterOnScreen()
+{
+	QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
+
+	// Calculate the center position
+	int x = (screenGeometry.width() - width()) / 2;
+	int y = (screenGeometry.height() - height()) / 2;
+
+	// Move the main widget to the center
+	move(x-300, y-120);
 }
 
 static PieceColor ConvertColorEnum(EPieceColor color)
@@ -369,22 +419,25 @@ void ChessUIQt::RunMethod(std::function<void(void)> func)
 void ChessUIQt::ResetTimerDisplay()
 {
 	int time = game->GetStatus()->GetTime(EPlayer::White);
-	int minutes = time / 60;
-	int seconds = time % 60;
+	int minutes = (time / 1000) / 60;
+	int seconds = (time / 1000) % 60;
+	int remainingMilliseconds = time % 1000;
 
 	// Convert minutes and seconds to a nicely formatted string
-	QString timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
-		.arg(seconds, 2, 10, QChar('0'));
+	QString timeStr = QString("%1:%2:%3").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds / 10, 2, 10, QChar('0'));
 
 	m_WhiteTimer->setText(timeStr);
 
 
 	time = game->GetStatus()->GetTime(EPlayer::Black);
-	minutes = time / 60;
-	seconds = time % 60;
+	minutes = (time / 1000) / 60;
+	seconds = (time / 1000) % 60;
+	remainingMilliseconds = time % 1000;
 
-	timeStr = QString("%1:%2").arg(minutes, 2, 10, QChar('0'))
-		.arg(seconds, 2, 10, QChar('0'));
+	// Convert minutes and seconds to a nicely formatted string
+	timeStr = QString("%1:%2:%3").arg(minutes, 2, 10, QChar('0'))
+		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds / 10, 2, 10, QChar('0'));
 
 	m_BlackTimer->setText(timeStr);
 }
@@ -429,11 +482,13 @@ void ChessUIQt::OnRestartButtonClicked()
 
 void ChessUIQt::OnDrawButtonClicked()
 {
-	QMessageBox::StandardButton reply;
-	reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
+
 	try
 	{
 		game->PlayerComand(EComand::Draw);
+		QMessageBox::StandardButton reply;
+		reply = QMessageBox::question(this, "Draw proposal", "Do you accept a draw?", QMessageBox::Yes | QMessageBox::No);
+
 		if (reply == QMessageBox::Yes) {
 			QMessageBox msgBox;
 			msgBox.setText("Draw Accepted. Winner is: None.");
@@ -500,7 +555,7 @@ void ChessUIQt::UpdateHistory()
 	{
 		if (status->GetCurrentPlayer() != EPlayer::White)
 		{
-			QString itemText = QString::number(movesPGN.size());
+			QString itemText = QString::number(movesPGN.size() / 2 + 1);
 			QListWidgetItem* item = new QListWidgetItem(itemText);
 			item->setFlags(item->flags() | Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 			m_moveNumberList->addItem(item);
@@ -535,16 +590,16 @@ void ChessUIQt::UpdateTimers()
 
 	// Convert minutes and seconds to a nicely formatted string
 	QString timeStr = QString("%1:%2:%3").arg(minutes, 2, 10, QChar('0'))
-		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds, 2, 10, QChar('0'));
+		.arg(seconds, 2, 10, QChar('0')).arg(remainingMilliseconds / 10, 2, 10, QChar('0'));
 
 	// Update the QLabel text
-	//RunMethod([&, timeStr]()
-	//	{
-	if ((int)currentPlayer)
-		m_BlackTimer->setText(timeStr);
-	else
-		m_WhiteTimer->setText(timeStr);
-	//	});
+	RunMethod([&, timeStr, currentPlayer]()
+		{
+			if ((int)currentPlayer)
+				m_BlackTimer->setText(timeStr);
+			else
+				m_WhiteTimer->setText(timeStr);
+		});
 }
 
 void ChessUIQt::UpdateBoard()
@@ -659,6 +714,8 @@ void ChessUIQt::OnPawnUpgrade()
 			break;
 		}
 	}
+	auto turn = game->GetStatus()->GetCurrentPlayer();
+	m_MessageLabel->setText(turn == EPlayer::Black ? "Waiting for black player" : "Waiting for white player");
 	UpdateHistory();
 	UpdateBoard();
 }

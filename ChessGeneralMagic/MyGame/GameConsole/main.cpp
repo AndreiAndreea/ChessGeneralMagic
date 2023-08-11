@@ -86,7 +86,7 @@ bool IsComandDrawConsole(std::string comand)
 
 int main()
 {
-	IGamePtr game = IGame::Produce();
+	IGamePtr game = IGame::Produce(TODO);
 	PrintBoard(game);
 	std::cout << "\n";
 	while (!game->IsGameOver())

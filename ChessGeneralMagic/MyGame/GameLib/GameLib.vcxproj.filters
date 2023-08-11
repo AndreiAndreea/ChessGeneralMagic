@@ -168,6 +168,9 @@
     <ClInclude Include="NotStatePausedException.h">
       <Filter>Header Files\API\Exceptions\MethodExceptions</Filter>
     </ClInclude>
+    <ClInclude Include="EGameType.h">
+      <Filter>Header Files\API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">

@@ -1,7 +1,10 @@
+#pragma once
+
 #include <thread>
 #include <chrono>
 #include <atomic>
 #include "EPlayer.h"
+#include "EGameType.h"
 #include "TimeInfo.h"
 
 #include <vector>
@@ -11,44 +14,55 @@
 
 
 using Callback = std::function<void()>;
+using TimeConfig = std::chrono::milliseconds;
 
 class ChessTimer
 {
 public:
-	ChessTimer();
+	ChessTimer(EGameType type);
 	~ChessTimer();
 
 	void StartTimer();
-	void StopTimer();
+
 	void PauseTimer();
 	void ResumeTimer();
 
-	void SetCallbackNotifyUI(Callback cb);
-	void SetCallbackNotifyGameOver(Callback cb);
-	void NotifyTimer();
-	void NotifyGameOver();
+	int GetTimerDuration(EPlayer player) const;
+	EGameType GetType() const;
 
-	void UpdateTurn();
-
-	bool IsTimerRunning() const;
+	bool IsTimeOut() const;
 
 	void Reset();
 
-	int GetTimerDuration(EPlayer player) const;
+	void SetCallbackNotifyUI(Callback cb);
+	void SetCallbackNotifyGameOver(Callback cb);
+
+	void UpdateTurn();
+
+	//bool IsTimerRunning() const;
+
 
 private:
-	bool IsTimeOut() const;
+	void StopTimer();
+
+	void InitializeTimerDuration();
+
+	void NotifyTimer();
+	void NotifyGameOver();
+
 	void TimerThread();
 
 private:
+	EGameType m_type;
+
 	std::thread m_timerThread;
 
 	std::atomic<bool> isTimerRunning;
 	std::atomic<bool> currentPlayerTurn;
 	std::atomic<bool> isPaused;
 
-	std::atomic<std::chrono::milliseconds> whiteTimerDuration;
-	std::atomic<std::chrono::milliseconds> blackTimerDuration;
+	std::atomic<TimeConfig> whiteTimerDuration;
+	std::atomic<TimeConfig> blackTimerDuration;
 
 	Callback notifyUI;
 	Callback notifyGameOver;

@@ -14,6 +14,7 @@ class Game : public IGame, public IGameStatus
 {
 public:
 	Game();
+	Game(EGameType type);
 	Game(int turn, EGameState state, ConfigMatrix m);
 	
 	// subject methods
@@ -37,6 +38,8 @@ public:
 	IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const override;
 	IPieceInfoPtr GetPieceInfo(Position pos) const override;
 	int GetTime(EPlayer player) const override;
+
+	EGameType GetGameType() const override;
 	std::string GetFEN() const override;
 	std::string GetPGN() const override;
 

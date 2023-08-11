@@ -3,13 +3,19 @@
 
 using namespace std::chrono_literals;
 
-ChessTimer::ChessTimer()
+ChessTimer::ChessTimer(EGameType type)
 	: isTimerRunning(false)
 	, isPaused(false)
 	, currentPlayerTurn(0)
-	, whiteTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(5s))
-	, blackTimerDuration(std::chrono::duration_cast<std::chrono::milliseconds>(1min))
-{}
+	, m_type(type)
+{
+	InitializeTimerDuration();
+
+	if (type != EGameType::NoTimer)
+		StartTimer();
+}
+
+
 
 ChessTimer::~ChessTimer()
 {
@@ -34,6 +40,27 @@ void ChessTimer::StopTimer()
 		m_condition.notify_one();
 		if (m_timerThread.joinable())
 			m_timerThread.join();
+	}
+}
+
+void ChessTimer::InitializeTimerDuration()
+{
+	switch (m_type)
+	{
+	case EGameType::Rapid:
+		whiteTimerDuration = std::chrono::duration_cast<TimeConfig>(30min);
+		blackTimerDuration = std::chrono::duration_cast<TimeConfig>(30min);
+		break;
+	case EGameType::Blitz:
+		whiteTimerDuration = std::chrono::duration_cast<TimeConfig>(10min);
+		blackTimerDuration = std::chrono::duration_cast<TimeConfig>(10min);
+		break;
+	case EGameType::Bullet:
+		whiteTimerDuration = std::chrono::duration_cast<TimeConfig>(3min);
+		blackTimerDuration = std::chrono::duration_cast<TimeConfig>(3min);
+		break;
+	case EGameType::NoTimer:
+		break;
 	}
 }
 
@@ -67,6 +94,7 @@ void ChessTimer::NotifyTimer()
 
 void ChessTimer::NotifyGameOver()
 {
+
 	if (notifyGameOver)
 		notifyGameOver();
 }
@@ -76,16 +104,15 @@ void ChessTimer::UpdateTurn()
 	currentPlayerTurn = !currentPlayerTurn;
 }
 
-bool ChessTimer::IsTimerRunning() const
-{
-	return isTimerRunning;
-}
+//bool ChessTimer::IsTimerRunning() const
+//{
+//	return isTimerRunning;
+//}
 
 void ChessTimer::Reset()
 {
-	whiteTimerDuration = std::chrono::duration_cast<std::chrono::milliseconds>(10min);
-	blackTimerDuration = std::chrono::duration_cast<std::chrono::milliseconds>(10min);
-	isTimerRunning = false;
+	InitializeTimerDuration();
+	isPaused = true;
 	m_condition.notify_one();
 	currentPlayerTurn = 0;
 }
@@ -93,6 +120,11 @@ void ChessTimer::Reset()
 int ChessTimer::GetTimerDuration(EPlayer player) const
 {
 	return (int)player ? blackTimerDuration.load().count() : whiteTimerDuration.load().count();
+}
+
+EGameType ChessTimer::GetType() const
+{
+	return m_type;
 }
 
 bool ChessTimer::IsTimeOut() const
@@ -110,19 +142,21 @@ void ChessTimer::TimerThread()
 		std::unique_lock<std::mutex> lock(m_mutex);
 		m_condition.wait_for(lock, 1ms, [this, currentTurn]
 			{
+				bool ceva = (currentTurn != currentPlayerTurn.load()) || isPaused.load() || !isTimerRunning.load() || IsTimeOut();
 				return (currentTurn != currentPlayerTurn.load()) || isPaused.load() || !isTimerRunning.load() || IsTimeOut();
 			});
 
 		if (IsTimeOut())
 		{
+			isPaused = true;
+			m_condition.notify_one();
 			NotifyGameOver();
-			return;
 		}
 
 		currentTurn = currentPlayerTurn.load();
 
 		auto currentTime = std::chrono::steady_clock::now();
-		auto elapsedTime = std::chrono::milliseconds(std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - startTime));
+		auto elapsedTime = TimeConfig(std::chrono::duration_cast<TimeConfig>(currentTime - startTime));
 
 		startTime = std::chrono::steady_clock::now();
 

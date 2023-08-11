@@ -18,11 +18,17 @@ Game::Game()
 	: m_turn(0)
 	, m_state(EGameState::Playing)
 	, m_moves(1)
-	, m_timer()
+	, m_timer(EGameType::NoTimer)
+{}
+
+Game::Game(EGameType type)
+	: m_turn(0)
+	, m_state(EGameState::Playing)
+	, m_moves(1)
+	, m_timer(type)
 {
 	m_timer.SetCallbackNotifyUI(std::bind(&Game::NotifyUITimer, this));
 	m_timer.SetCallbackNotifyGameOver(std::bind(&Game::NotifyGameOver, this));
-	m_timer.StartTimer();
 }
 
 Game::Game(int turn, EGameState state, ConfigMatrix m)
@@ -30,14 +36,15 @@ Game::Game(int turn, EGameState state, ConfigMatrix m)
 	, m_turn(turn)
 	, m_board(m)
 	, m_moves(1)
+	, m_timer(EGameType::NoTimer)
 {
 	if (m_turn)
 		m_pgnMovesVect.push_back({ "-", "-" });
 }
 
-IGamePtr IGame::Produce()
+IGamePtr IGame::Produce(EGameType type)
 {
-	return std::make_shared<Game>();
+	return std::make_shared<Game>(type);
 }
 
 Board Game::GetBoard() const
@@ -159,8 +166,9 @@ void Game::UpdatePGNUpgradePawn(EPieceType type)
 
 void Game::UpdatePGNDraw()
 {
-	if (m_turn)
+	if (m_turn && m_pgnMovesVect.size())
 	{
+
 		m_pgnMovesVect[m_pgnMovesVect.size() - 1].second = "1/2-1/2";
 	}
 	else
@@ -255,7 +263,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 	if (m_board.IsStaleMate(color) || m_board.IsThreefoldRepetitionDraw() || m_board.IsInsufficientMaterial())
 	{
 		UpdateState(EGameState::Draw);
-		m_timer.StopTimer();
+		m_timer.PauseTimer();
 		UpdatePGNDraw();
 		NotifyGameOver();
 	}
@@ -266,7 +274,7 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 	if (m_board.IsCheckmate(colorUpdated))
 	{
 		UpdateState(colorUpdated == EPieceColor::White ? EGameState::BlackWon : EGameState::WhiteWon);
-		m_timer.StopTimer();
+		m_timer.PauseTimer();
 		UpdatePGNMate(m_board);
 		NotifyGameOver();
 	}
@@ -276,7 +284,6 @@ void Game::MakeMove(Position startPos, Position endPos, bool isLoadingPGN)
 
 void Game::ResetGame()
 {
-	m_timer.StopTimer();
 	m_turn = 0;
 	m_pgn = {};
 	m_pgnBuilder.Reset();
@@ -285,7 +292,7 @@ void Game::ResetGame()
 	UpdateState(EGameState::Playing);
 	m_board.ResetBoard();
 	m_timer.Reset();
-	m_timer.StartTimer();
+	m_timer.ResumeTimer();
 }
 
 void Game::NotifyMoveMade(Position startPos, Position endPos, PositionList prevPossibleMoves)
@@ -332,6 +339,13 @@ void Game::NotifyPawnUpgrade()
 
 void Game::NotifyGameOver()
 {
+	if (m_timer.IsTimeOut())
+		if (m_timer.GetTimerDuration(EPlayer::White) <= 0)
+			UpdateState(EGameState::BlackWon);
+		else
+			UpdateState(EGameState::BlackWon);
+
+
 	for (auto it = m_observers.begin(); it != m_observers.end();)
 	{
 		if (auto sp = it->lock())
@@ -520,6 +534,11 @@ int Game::GetTime(EPlayer player) const
 	return m_timer.GetTimerDuration(player);
 }
 
+EGameType Game::GetGameType() const
+{
+	return m_timer.GetType();
+}
+
 std::string Game::GetPGNMovesSection() const
 {
 	return m_pgnBuilder.GetPGNMovesSection();
@@ -553,7 +572,7 @@ void Game::InitializeGamePGN(const std::string& pgnStr)
 			UpdatePGNMate(m_board);
 
 			auto color = m_turn ? EPieceColor::Black : EPieceColor::White;
-			if(!m_board.IsCheckmate(color))
+			if (!m_board.IsCheckmate(color))
 				UpdatePGNCheck(m_board);
 		}
 	}
@@ -713,7 +732,7 @@ bool Game::IsDraw() const
 	return m_state == EGameState::Draw;
 }
 
-EPlayer Game::GetCurrentPlayer() const 
+EPlayer Game::GetCurrentPlayer() const
 {
 	return m_turn ? EPlayer::Black : EPlayer::White;
 }

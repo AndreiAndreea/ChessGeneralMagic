@@ -28,16 +28,19 @@ public:
     ChessUIQt(QWidget *parent = nullptr);
     ~ChessUIQt() override;
 
+
     void InitializeMessage(QGridLayout* mainGridLayout);
     void InitializeButtons(QGridLayout* mainGridLayout);
     void InitializeTimers(QGridLayout* mainGridLayout);
     void InitializeHistory(QGridLayout* mainGridLayout);
     void InitializeBoard(QGridLayout* mainGridLayout);
     void InitializeCapturedPiecesDisplay(QGridLayout* mainGridLayout);
+	void CenterOnScreen();
 
     //Modify if necessary with your history representation
     void UpdateHistory();
     void UpdateTimers();
+    void DisplayTimers();
     //Modify if necessary with your board representation
     void UpdateBoard();
     //Modify if necessary with your possible moves representation

@@ -5,6 +5,8 @@
 #include "EPieceType.h"
 #include "EComand.h"
 #include "Position.h"
+#include "EGameType.h"
+
 
 #include <memory>
 #include <string>
@@ -19,7 +21,7 @@ using FullMoveList = std::vector<FullMove>;
 class IGame
 {
 public:
-	static IGamePtr Produce();
+	static IGamePtr Produce(EGameType type);
 
 	// subject methods
 	virtual void AddListener(IGameListenerPtr listener) = 0;

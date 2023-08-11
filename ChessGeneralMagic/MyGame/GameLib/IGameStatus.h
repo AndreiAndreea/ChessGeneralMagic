@@ -6,6 +6,7 @@
 #include "EPlayer.h"
 #include "IPieceInfo.h"
 #include "TimeInfo.h"
+#include "EGameType.h"
 
 #include <string>
 
@@ -27,6 +28,8 @@ public:
 	virtual EPlayer GetCurrentPlayer() const = 0;
 	virtual IPieceInfoPtrList GetCapturedPieces(EPieceColor color) const = 0;
 	virtual PositionList GetPossibleMoves(Position pos) const = 0;
+
+	virtual EGameType GetGameType() const = 0;
 
 	virtual int GetTime(EPlayer player) const = 0; 
 
